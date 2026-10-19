@@ -8,6 +8,14 @@ const _objCameraHeight = 1.5;
 const _objCameraTargetY = 0.0;
 const _objCameraFov = 20.0;
 const _objModelScale = 5.0;
+// The package's own OBJ normalization only looks at the largest positive
+// coordinate, so models ended up with very different sizes. Meshes are loaded
+// raw and scaled here so their bounding sphere has the same on-screen radius:
+// closed (ball) models are all ~0.71 raw radius, anything bigger is an
+// open/stand model.
+const _objClosedTargetRadius = 0.5;
+const _objOpenTargetRadius = 0.42;
+const _objClosedMaxRadius = 0.85;
 const _objModelOffsetY = 0.35;
 const _objInitialRotationX = 0.0;
 const _objInitialRotationY = -32.0;
@@ -16,11 +24,13 @@ const _objRotationDegreesPerSecond = 10.0;
 const _objLargePreviewOffsetY = 60.0;
 const _objClosedPreviewOffsetY = 10.0;
 const _objSmallPreviewOffsetY = 20.0;
+const _objDeckPreviewOffsetY = 11.0;
 
 class _BakuganObjViewer extends StatefulWidget {
   final String modelPath;
   final String? texturePath;
   final double cameraDistance;
+  final double modelScale;
   final bool enableTouch;
   final bool autoRotate;
   final VoidCallback? onTap;
@@ -30,6 +40,7 @@ class _BakuganObjViewer extends StatefulWidget {
     required this.modelPath,
     required this.texturePath,
     required this.cameraDistance,
+    this.modelScale = 1.0,
     required this.enableTouch,
     required this.autoRotate,
     this.onTap,
@@ -81,7 +92,7 @@ class _BakuganObjViewerState extends State<_BakuganObjViewer> {
     });
 
     try {
-      final meshes = await obj_mesh.loadObj(widget.modelPath, true);
+      final meshes = await obj_mesh.loadObj(widget.modelPath, false);
       final texture = widget.texturePath == null
           ? null
           : await _loadTexture(widget.texturePath!);
@@ -114,9 +125,28 @@ class _BakuganObjViewerState extends State<_BakuganObjViewer> {
       final modelCenterX = minX.isFinite ? (minX + maxX) / 2 : 0.0;
       final modelCenterY = minY.isFinite ? (minY + maxY) / 2 : 0.0;
       final modelCenterZ = minZ.isFinite ? (minZ + maxZ) / 2 : 0.0;
+      var modelRadius = 0.0;
+      for (final mesh in meshes) {
+        for (final vertex in mesh.vertices) {
+          final dx = vertex.x - modelCenterX;
+          final dy = vertex.y - modelCenterY;
+          final dz = vertex.z - modelCenterZ;
+          modelRadius = max(modelRadius, sqrt(dx * dx + dy * dy + dz * dz));
+        }
+      }
+      final targetRadius = modelRadius <= _objClosedMaxRadius
+          ? _objClosedTargetRadius
+          : _objOpenTargetRadius;
+      final modelScale = modelRadius > 0
+          ? _objModelScale * targetRadius / modelRadius
+          : _objModelScale;
       final modelRoot = obj_object.Object(scene: scene);
       modelRoot.position.y = _objModelOffsetY;
-      modelRoot.scale.setValues(_objModelScale, _objModelScale, _objModelScale);
+      modelRoot.scale.setValues(
+        modelScale * widget.modelScale,
+        modelScale * widget.modelScale,
+        modelScale * widget.modelScale,
+      );
       modelRoot.rotation.x = _rotationX;
       modelRoot.rotation.y = _rotationY;
       modelRoot.rotation.z = _rotationZ;
@@ -177,7 +207,8 @@ class _BakuganObjViewerState extends State<_BakuganObjViewer> {
     if (oldWidget.modelPath != widget.modelPath ||
         oldWidget.texturePath != widget.texturePath) {
       _loadModel();
-    } else if (oldWidget.cameraDistance != widget.cameraDistance) {
+    } else if (oldWidget.cameraDistance != widget.cameraDistance ||
+        oldWidget.modelScale != widget.modelScale) {
       _loadModel();
     } else if (oldWidget.autoRotate != widget.autoRotate) {
       _startRotation();
@@ -261,6 +292,8 @@ class BakuganPreview extends StatefulWidget {
   final BakuganVariant variant;
   final bool isLarge;
   final bool isDeck;
+  // Multiplies the OBJ model size inside the frame (1.0 = default).
+  final double modelScale;
   final bool isSelected;
   final String? speciesName;
   final bool isTaken;
@@ -289,6 +322,7 @@ class BakuganPreview extends StatefulWidget {
     required this.variant,
     this.isLarge = false,
     this.isDeck = false,
+    this.modelScale = 1.0,
     this.isSelected = false,
     this.speciesName,
     this.isTaken = false,
@@ -670,7 +704,10 @@ class _BakuganPreviewState extends State<BakuganPreview>
                         ? _objClosedPreviewOffsetY
                         : _objLargePreviewOffsetY,
                   )
-                : Offset(0, _objSmallPreviewOffsetY),
+                : Offset(
+                    0,
+                    isDeck ? _objDeckPreviewOffsetY : _objSmallPreviewOffsetY,
+                  ),
             child: _BakuganObjViewer(
               key: ValueKey(
                 'obj_${widget.variant.texturePath}_${widget.isLarge}',
@@ -680,6 +717,7 @@ class _BakuganPreviewState extends State<BakuganPreview>
               cameraDistance: _showClosedObj
                   ? _objClosedCameraDistance
                   : _objCameraDistance,
+              modelScale: widget.modelScale,
               enableTouch: widget.isLarge && !widget.disableInteraction,
               autoRotate: widget.isLarge && widget.autoRotate,
               onTap: widget.isLarge ? _toggleOpenClose : null,
@@ -1043,6 +1081,48 @@ class PlayerSlot extends StatelessWidget {
   }
 }
 
+class BakuganDeckPreview extends StatelessWidget {
+  final BakuganVariant variant;
+  final double scale;
+  final double borderRadius;
+  final bool autoRotate;
+  final bool disableInteraction;
+
+  const BakuganDeckPreview({
+    super.key,
+    required this.variant,
+    this.scale = 0.78,
+    this.borderRadius = 6,
+    this.autoRotate = false,
+    this.disableInteraction = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(borderRadius),
+      child: Stack(
+        fit: StackFit.expand,
+        clipBehavior: Clip.hardEdge,
+        children: [
+          Transform.scale(
+            alignment: Alignment.center,
+            scale: scale,
+            child: SizedBox.expand(
+              child: BakuganPreview(
+                variant: variant,
+                isDeck: true,
+                autoRotate: autoRotate,
+                disableInteraction: disableInteraction,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class CharacterMiniature extends StatelessWidget {
   final String char;
   final bool isSelected;
@@ -1266,6 +1346,9 @@ class BakuganModal extends StatelessWidget {
   final double gridOpacity;
   final EdgeInsets insetPadding;
   final EdgeInsets contentPadding;
+  // Horizontal padding of the title row and the action row. Defaults to
+  // [contentPadding]; use a smaller one to keep them near the corners.
+  final EdgeInsets? edgePadding;
   final bool showCloseButton;
 
   const BakuganModal({
@@ -1283,6 +1366,7 @@ class BakuganModal extends StatelessWidget {
       vertical: 24,
     ),
     this.contentPadding = const EdgeInsets.fromLTRB(40, 0, 40, 36),
+    this.edgePadding,
     this.showCloseButton = true,
   });
 
@@ -1379,9 +1463,9 @@ class BakuganModal extends StatelessWidget {
                               ),
                               child: Padding(
                                 padding: EdgeInsets.fromLTRB(
-                                  contentPadding.left + 12,
+                                  (edgePadding ?? contentPadding).left + 12,
                                   22,
-                                  contentPadding.right,
+                                  (edgePadding ?? contentPadding).right,
                                   16,
                                 ),
                                 child: Row(
@@ -1504,7 +1588,8 @@ class BakuganModal extends StatelessWidget {
                                       alignment: Alignment.bottomRight,
                                       child: Padding(
                                         padding: EdgeInsets.only(
-                                          right: contentPadding.right,
+                                          right: (edgePadding ?? contentPadding)
+                                              .right,
                                           bottom: 8,
                                         ),
                                         child: Wrap(
@@ -1836,38 +1921,36 @@ class DescriptionHeaderActionButton extends StatelessWidget {
   }
 }
 
-class FramedDescriptionPanel extends StatelessWidget {
-  final double width;
-  final String esText;
-  final double maxHeight;
+class FramedPanelFrame extends StatelessWidget {
+  final double? width;
+  final double? height;
+  final double? maxHeight;
   final List<Color> frameGradient;
   final Color accentColor;
-  final String? title;
-  final Widget? headerAction;
+  final double childSkew;
+  final EdgeInsetsGeometry padding;
+  final Widget child;
 
-  const FramedDescriptionPanel({
+  const FramedPanelFrame({
     super.key,
-    required this.width,
-    required this.esText,
-    required this.maxHeight,
+    this.width,
+    this.height,
+    this.maxHeight,
     required this.frameGradient,
     required this.accentColor,
-    this.title,
-    this.headerAction,
+    this.childSkew = -0.04,
+    this.padding = const EdgeInsets.fromLTRB(16, 14, 16, 14),
+    required this.child,
   });
 
   @override
   Widget build(BuildContext context) {
-    const double panelSkew = -0.12;
-    const double textInnerSkew = -0.04;
-    final bool hasTitle = (title ?? '').trim().isNotEmpty;
-    final int bodyMaxLines = hasTitle ? 3 : 4;
-
     return Transform(
       alignment: Alignment.center,
-      transform: Matrix4.skewX(panelSkew),
+      transform: Matrix4.skewX(-0.12),
       child: Container(
         width: width,
+        height: height,
         padding: const EdgeInsets.all(3),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
@@ -1891,7 +1974,9 @@ class FramedDescriptionPanel extends StatelessWidget {
         ),
         child: Container(
           clipBehavior: Clip.antiAlias,
-          constraints: BoxConstraints(maxHeight: maxHeight),
+          constraints: maxHeight == null
+              ? null
+              : BoxConstraints(maxHeight: maxHeight!),
           decoration: BoxDecoration(
             color: const Color(0xFF05080D),
             borderRadius: BorderRadius.circular(13),
@@ -1921,78 +2006,178 @@ class FramedDescriptionPanel extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
+                padding: padding,
                 child: Transform(
                   alignment: Alignment.center,
-                  transform: Matrix4.skewX(textInnerSkew),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      if (hasTitle) ...[
-                        Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                title!.toUpperCase(),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  color: accentColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  fontStyle: FontStyle.italic,
-                                  letterSpacing: 1.6,
-                                  shadows: [
-                                    Shadow(
-                                      color: accentColor.withValues(
-                                        alpha: 0.30,
-                                      ),
-                                      blurRadius: 8,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                            if (headerAction != null) ...[
-                              const SizedBox(width: 12),
-                              Transform.translate(
-                                offset: const Offset(0, -4),
-                                child: headerAction!,
-                              ),
-                            ],
-                          ],
-                        ),
-                        Container(
-                          height: 1.2,
-                          color: accentColor.withValues(alpha: 0.28),
-                        ),
-                        const SizedBox(height: 12),
-                      ],
-                      AutoSizeText(
-                        esText,
-                        maxLines: bodyMaxLines,
-                        minFontSize: 10,
-                        stepGranularity: 0.5,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.96),
-                          fontSize: 14.5,
-                          fontWeight: FontWeight.w800,
-                          height: 1.28,
-                          shadows: const [
-                            Shadow(
-                              color: Colors.black87,
-                              offset: Offset(1, 1),
-                              blurRadius: 3,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                  transform: Matrix4.skewX(childSkew),
+                  child: child,
                 ),
               ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class FramedDescriptionPanel extends StatelessWidget {
+  final double width;
+  final String esText;
+  final double maxHeight;
+  final List<Color> frameGradient;
+  final Color accentColor;
+  final String? title;
+  final Widget? headerAction;
+
+  const FramedDescriptionPanel({
+    super.key,
+    required this.width,
+    required this.esText,
+    required this.maxHeight,
+    required this.frameGradient,
+    required this.accentColor,
+    this.title,
+    this.headerAction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final bool hasTitle = (title ?? '').trim().isNotEmpty;
+    final int bodyMaxLines = hasTitle ? 3 : 4;
+
+    return FramedPanelFrame(
+      width: width,
+      maxHeight: maxHeight,
+      frameGradient: frameGradient,
+      accentColor: accentColor,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (hasTitle) ...[
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title!.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: accentColor,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w900,
+                      fontStyle: FontStyle.italic,
+                      letterSpacing: 1.6,
+                      shadows: [
+                        Shadow(
+                          color: accentColor.withValues(alpha: 0.30),
+                          blurRadius: 8,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                if (headerAction != null) ...[
+                  const SizedBox(width: 12),
+                  Transform.translate(
+                    offset: const Offset(0, -4),
+                    child: headerAction!,
+                  ),
+                ],
+              ],
+            ),
+            Container(height: 1.2, color: accentColor.withValues(alpha: 0.28)),
+            const SizedBox(height: 12),
+          ],
+          AutoSizeText(
+            esText,
+            maxLines: bodyMaxLines,
+            minFontSize: 10,
+            stepGranularity: 0.5,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.96),
+              fontSize: 14.5,
+              fontWeight: FontWeight.w800,
+              height: 1.28,
+              shadows: const [
+                Shadow(
+                  color: Colors.black87,
+                  offset: Offset(1, 1),
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Skewed, framed action button that matches the panels and tabs
+/// ([FramedPanelFrame]); shows either [text] or [icon].
+class FramedActionButton extends StatelessWidget {
+  final String? text;
+  final IconData? icon;
+  final VoidCallback onPressed;
+  final double width;
+  final double height;
+  final List<Color> gradient;
+  final Color accentColor;
+  final bool useCancelSound;
+  final double textFontSize;
+  final double iconSize;
+
+  const FramedActionButton({
+    super.key,
+    this.text,
+    this.icon,
+    required this.onPressed,
+    this.width = 250,
+    this.height = 85,
+    this.gradient = _inventoryCyanGradient,
+    this.accentColor = Colors.cyanAccent,
+    this.useCancelSound = false,
+    this.textFontSize = 28,
+    this.iconSize = 36,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return _PressScale(
+      onPressed: () {
+        unawaited(
+          useCancelSound ? _playUiCancelSound() : _playUiConfirmSound(),
+        );
+        onPressed();
+      },
+      child: FramedPanelFrame(
+        width: width,
+        height: height,
+        frameGradient: gradient,
+        accentColor: accentColor,
+        childSkew: 0.12,
+        padding: EdgeInsets.zero,
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              if (icon != null) Icon(icon, color: accentColor, size: iconSize),
+              if (icon != null && text != null) const SizedBox(width: 12),
+              if (text != null)
+                Text(
+                  text!,
+                  style: TextStyle(
+                    fontFamily: 'button_font',
+                    color: Colors.white,
+                    fontSize: textFontSize,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 1.5,
+                    shadows: [Shadow(color: accentColor, blurRadius: 14)],
+                  ),
+                ),
             ],
           ),
         ),
@@ -2339,20 +2524,19 @@ class PlayerArenaInfo extends StatelessWidget {
                         ],
                       ),
                       child: Container(
+                        clipBehavior: Clip.antiAlias,
                         decoration: BoxDecoration(
                           color: Colors.black,
                           borderRadius: BorderRadius.circular(6),
                         ),
                         child: Stack(
+                          clipBehavior: Clip.hardEdge,
                           children: [
                             if (hasBakugan && !isRemoved)
                               Positioned.fill(
-                                child: IgnorePointer(
-                                  ignoring: true,
-                                  child: BakuganPreview(
-                                    variant: variant!,
-                                    isDeck: true,
-                                  ),
+                                child: BakuganDeckPreview(
+                                  variant: variant!,
+                                  borderRadius: 6,
                                 ),
                               ),
                             if (isRemoved)

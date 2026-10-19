@@ -2830,13 +2830,10 @@ class _HistoryBakuganMiniCard extends StatelessWidget {
                 height: 102,
                 child: variant == null
                     ? const SizedBox.expand()
-                    : BakuganPreview(
+                    : BakuganDeckPreview(
                         variant: variant,
-                        speciesName: variant.speciesName,
-                        isDeck: true,
                         autoRotate: false,
                         disableInteraction: true,
-                        showGPower: false,
                       ),
               ),
             ),
@@ -3146,14 +3143,10 @@ class _HistoryBattleBakuganMini extends StatelessWidget {
                           ),
                         ),
                         if (variant != null)
-                          BakuganPreview(
+                          BakuganDeckPreview(
                             variant: variant,
-                            speciesName: variant.speciesName,
-                            isDeck: true,
                             autoRotate: false,
                             disableInteraction: true,
-                            showGPower: false,
-                            showGridBackground: false,
                           ),
                       ],
                     ),

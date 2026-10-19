@@ -677,9 +677,8 @@ class _BakuganSelectScreenState extends State<BakuganSelectScreen> {
                             ),
                           ),
                           child: hasBakugan
-                              ? BakuganPreview(
+                              ? BakuganDeckPreview(
                                   variant: variant!,
-                                  isDeck: true,
                                   autoRotate: false,
                                 )
                               : const Icon(Icons.add, color: Colors.white24),
@@ -1103,19 +1102,16 @@ class _BakuganSelectScreenState extends State<BakuganSelectScreen> {
                                                   BorderRadius.circular(8),
                                               child: hasBakugan
                                                   ? Stack(
+                                                      clipBehavior:
+                                                          Clip.hardEdge,
                                                       children: [
-                                                        // COUNTER-SKEW to fix deformation
-                                                        Transform(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          transform:
-                                                              Matrix4.skewX(
-                                                                0.15,
+                                                        Positioned.fill(
+                                                          child:
+                                                              BakuganDeckPreview(
+                                                                variant:
+                                                                    variant!,
+                                                                borderRadius: 8,
                                                               ),
-                                                          child: BakuganPreview(
-                                                            variant: variant!,
-                                                            isDeck: true,
-                                                          ),
                                                         ),
                                                         Positioned(
                                                           top: 4,

@@ -172,18 +172,6 @@ class _InventoryScreenState extends State<InventoryScreen> {
     });
   }
 
-  List<BakuganVariant> get _allVariants => [
-    for (final bakugan in availableBakugans) ...bakugan.variants,
-  ];
-
-  List<BakuganVariant> get _activeVariants => [
-    for (final variant in _allVariants)
-      if ((_savedGPowerByInventoryKey[bakuganVariantKey(variant)] ?? 0) > 0)
-        variant.copyWith(
-          gPower: _savedGPowerByInventoryKey[bakuganVariantKey(variant)],
-        ),
-  ];
-
   Future<void> _openBakuganCarousel() async {
     await Navigator.of(context).push(
       _zoomRoute(
@@ -250,6 +238,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       label: 'BAKUGAN',
                       subtitle: 'Manage the Bakugan available in selection',
                       color: Colors.cyanAccent,
+                      gradient: _inventoryCyanGradient,
                       emblem: Image.asset(
                         'assets/images/logo.png',
                         fit: BoxFit.contain,
@@ -261,6 +250,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       label: 'CARDS',
                       subtitle: 'Browse every card in the app',
                       color: Colors.amberAccent,
+                      gradient: _gateDescriptionBorderGradients['gold']!,
                       emblem: const Icon(
                         Icons.style_rounded,
                         color: Colors.amberAccent,
@@ -277,6 +267,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         label: 'BAKUGAN',
                         subtitle: 'Manage the Bakugan available in selection',
                         color: Colors.cyanAccent,
+                        gradient: _inventoryCyanGradient,
                         emblem: Image.asset(
                           'assets/images/logo.png',
                           fit: BoxFit.contain,
@@ -290,6 +281,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         label: 'CARDS',
                         subtitle: 'Browse every card in the app',
                         color: Colors.amberAccent,
+                        gradient: _gateDescriptionBorderGradients['gold']!,
                         emblem: const Icon(
                           Icons.style_rounded,
                           color: Colors.amberAccent,
@@ -382,50 +374,24 @@ class _InventoryScreenState extends State<InventoryScreen> {
               ],
             ),
           ),
-          _buildInventoryCounter(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInventoryCounter() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 11),
-      decoration: BoxDecoration(
-        color: Colors.black.withValues(alpha: 0.58),
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.cyanAccent.withValues(alpha: 0.38)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          Text(
-            '${_activeVariants.length} / ${_allVariants.length}',
-            style: const TextStyle(
-              color: Colors.cyanAccent,
-              fontSize: 24,
-              fontWeight: FontWeight.w900,
-            ),
-          ),
-          const Text(
-            'VARIANTS ACTIVE',
-            style: TextStyle(
-              color: Colors.white60,
-              fontFamily: 'button_font',
-              fontSize: 10,
-              letterSpacing: 1,
-            ),
-          ),
         ],
       ),
     );
   }
 }
 
+const List<Color> _inventoryCyanGradient = [
+  Color(0xFF0C3B42),
+  Color(0xFF27AEB9),
+  Color(0xFF8CEBF2),
+  Color(0xFF082A2F),
+];
+
 class _InventoryEntryButton extends StatelessWidget {
   final String label;
   final String subtitle;
   final Color color;
+  final List<Color> gradient;
   final Widget emblem;
   final VoidCallback onTap;
 
@@ -433,6 +399,7 @@ class _InventoryEntryButton extends StatelessWidget {
     required this.label,
     required this.subtitle,
     required this.color,
+    required this.gradient,
     required this.emblem,
     required this.onTap,
   });
@@ -444,55 +411,41 @@ class _InventoryEntryButton extends StatelessWidget {
         unawaited(_playUiConfirmSound());
         onTap();
       },
-      child: Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.skewX(-0.12),
-        child: Container(
-          height: 260,
-          padding: const EdgeInsets.fromLTRB(28, 24, 28, 20),
-          decoration: BoxDecoration(
-            color: Colors.black.withValues(alpha: 0.72),
-            borderRadius: BorderRadius.circular(18),
-            border: Border.all(color: color.withValues(alpha: 0.72), width: 2),
-            boxShadow: [
-              BoxShadow(
-                color: color.withValues(alpha: 0.22),
-                blurRadius: 26,
-                spreadRadius: 2,
+      child: FramedPanelFrame(
+        height: 260,
+        frameGradient: gradient,
+        accentColor: color,
+        childSkew: 0.12,
+        padding: const EdgeInsets.fromLTRB(28, 24, 28, 20),
+        child: SizedBox(
+          width: double.infinity,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(child: emblem),
+              const SizedBox(height: 12),
+              Text(
+                label,
+                style: TextStyle(
+                  color: color,
+                  fontFamily: 'button_font',
+                  fontSize: 24,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
+                ),
+              ),
+              const SizedBox(height: 6),
+              Text(
+                subtitle,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white60,
+                  fontFamily: 'button_font',
+                  fontSize: 11,
+                  letterSpacing: 0.8,
+                ),
               ),
             ],
-          ),
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.skewX(0.12),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Expanded(child: emblem),
-                const SizedBox(height: 12),
-                Text(
-                  label,
-                  style: TextStyle(
-                    color: color,
-                    fontFamily: 'button_font',
-                    fontSize: 24,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 2,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  subtitle,
-                  textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white60,
-                    fontFamily: 'button_font',
-                    fontSize: 11,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-              ],
-            ),
           ),
         ),
       ),
@@ -500,66 +453,112 @@ class _InventoryEntryButton extends StatelessWidget {
   }
 }
 
-class _InventoryToggleButton extends StatelessWidget {
-  final IconData icon;
+class _InventoryFilterTab extends StatelessWidget {
+  static const List<Color> _neutralGradient = [
+    Color(0xFF2A2F36),
+    Color(0xFF4A5059),
+    Color(0xFF2A2F36),
+  ];
+
+  static const List<Color> _activeGradient = [
+    Color(0xFF5A606A),
+    Color(0xFF9AA1AC),
+    Color(0xFF5A606A),
+  ];
+
   final String label;
-  final Color color;
+  final IconData icon;
+  final String? leadingAsset;
+  final Color accentColor;
   final bool active;
+  final bool enabled;
+  final bool dropdown;
+  final double height;
   final VoidCallback onTap;
 
-  const _InventoryToggleButton({
-    required this.icon,
+  const _InventoryFilterTab({
     required this.label,
-    required this.color,
-    required this.active,
+    required this.icon,
+    required this.accentColor,
+    required this.height,
     required this.onTap,
+    this.leadingAsset,
+    this.active = false,
+    this.enabled = true,
+    this.dropdown = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: active ? 1 : 0.72,
-      child: Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.skewX(-0.15),
-        child: GestureDetector(
-          onTap: onTap,
+    // Never tinted: an active tab just gets a brighter neutral border.
+    final gradient = active ? _activeGradient : _neutralGradient;
+    return GestureDetector(
+      onTap: enabled ? onTap : null,
+      child: AnimatedOpacity(
+        opacity: enabled ? 1 : 0.45,
+        duration: const Duration(milliseconds: 160),
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.skewX(-0.15),
           child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            height: height,
+            padding: const EdgeInsets.fromLTRB(3, 3, 3, 0),
             decoration: BoxDecoration(
-              color: Colors.black.withValues(alpha: 0.38),
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(
-                color: color.withValues(alpha: active ? 0.9 : 0.45),
-                width: 1.6,
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(7),
               ),
-              boxShadow: [
-                BoxShadow(
-                  color: color.withValues(alpha: active ? 0.18 : 0.08),
-                  blurRadius: 16,
-                  spreadRadius: 1,
-                ),
-              ],
+              gradient: LinearGradient(
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+                colors: gradient,
+              ),
             ),
-            child: Transform(
-              alignment: Alignment.center,
-              transform: Matrix4.skewX(0.15),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(icon, color: color, size: 20),
-                  const SizedBox(width: 9),
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontFamily: 'button_font',
-                      fontSize: 11,
-                      color: Colors.white,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: 0.8,
+            child: ClipRRect(
+              borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(5),
+              ),
+              child: ColoredBox(
+                color: const Color(0xFF05080D),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 22),
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.skewX(0.15),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        if (leadingAsset != null)
+                          Image.asset(
+                            leadingAsset!,
+                            width: 22,
+                            height: 22,
+                            fit: BoxFit.contain,
+                          )
+                        else
+                          Icon(icon, color: Colors.white, size: 20),
+                        const SizedBox(width: 10),
+                        Text(
+                          label,
+                          style: const TextStyle(
+                            fontFamily: 'button_font',
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1.1,
+                          ),
+                        ),
+                        if (dropdown) ...[
+                          const SizedBox(width: 8),
+                          const Icon(
+                            Icons.expand_more_rounded,
+                            color: Colors.white70,
+                            size: 18,
+                          ),
+                        ],
+                      ],
                     ),
                   ),
-                ],
+                ),
               ),
             ),
           ),
@@ -580,6 +579,7 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
   final TextEditingController _searchController = TextEditingController();
   late final Future<List<CardCatalogEntry>> _cardsFuture;
   String _query = '';
+  final Set<String> _selectedClasses = <String>{};
 
   @override
   void initState() {
@@ -595,15 +595,57 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
 
   List<CardCatalogEntry> _filteredCards(List<CardCatalogEntry> cards) {
     final query = _query.trim().toLowerCase();
-    if (query.isEmpty) return cards;
+    if (query.isEmpty && _selectedClasses.isEmpty) return cards;
     return cards
         .where(
           (card) =>
-              card.name.toLowerCase().contains(query) ||
-              card.typeLabel.toLowerCase().contains(query) ||
-              card.description.toLowerCase().contains(query),
+              (_selectedClasses.isEmpty ||
+                  _selectedClasses.contains(card.cardClass)) &&
+              (card.name.toLowerCase().contains(query) ||
+                  card.typeLabel.toLowerCase().contains(query) ||
+                  card.description.toLowerCase().contains(query)),
         )
         .toList();
+  }
+
+  Widget _buildSearchField() {
+    return TextField(
+      controller: _searchController,
+      onChanged: (value) => setState(() => _query = value),
+      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
+      decoration: const InputDecoration(
+        isDense: true,
+        hintText: 'Search cards',
+        hintStyle: TextStyle(color: Colors.white38),
+        border: InputBorder.none,
+        enabledBorder: InputBorder.none,
+        focusedBorder: InputBorder.none,
+        contentPadding: EdgeInsets.symmetric(vertical: 10),
+      ),
+    );
+  }
+
+  Widget _buildBody(AsyncSnapshot<List<CardCatalogEntry>> snapshot) {
+    if (!snapshot.hasData && !snapshot.hasError) {
+      return const Center(
+        child: CircularProgressIndicator(color: Colors.amberAccent),
+      );
+    }
+    return _CardCarousel(
+      cards: snapshot.hasData
+          ? _filteredCards(snapshot.data!)
+          : const <CardCatalogEntry>[],
+      searchField: _buildSearchField(),
+      selectedClasses: _selectedClasses,
+      onToggleClass: (cardClass) => setState(() {
+        final wasSelected = _selectedClasses.contains(cardClass);
+        _selectedClasses.clear();
+        if (!wasSelected) _selectedClasses.add(cardClass);
+      }),
+      emptyMessage: snapshot.hasError
+          ? 'CARD LIBRARY UNAVAILABLE\n${snapshot.error}'
+          : 'NO CARDS MATCH YOUR SEARCH',
+    );
   }
 
   @override
@@ -666,101 +708,13 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
                             ),
                           ),
                         ),
-                        FutureBuilder<List<CardCatalogEntry>>(
-                          future: _cardsFuture,
-                          builder: (context, snapshot) => Text(
-                            snapshot.hasData
-                                ? '${_filteredCards(snapshot.data!).length} CARDS'
-                                : 'CARDS',
-                            style: const TextStyle(
-                              color: Colors.amberAccent,
-                              fontFamily: 'button_font',
-                              fontWeight: FontWeight.w900,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ),
                       ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(42, 4, 42, 10),
-                    child: TextField(
-                      controller: _searchController,
-                      onChanged: (value) => setState(() => _query = value),
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w700,
-                      ),
-                      decoration: InputDecoration(
-                        hintText: 'Search cards',
-                        hintStyle: const TextStyle(color: Colors.white38),
-                        prefixIcon: const Icon(
-                          Icons.search_rounded,
-                          color: Colors.amberAccent,
-                        ),
-                        filled: true,
-                        fillColor: Colors.black.withValues(alpha: 0.62),
-                        contentPadding: const EdgeInsets.symmetric(
-                          vertical: 18,
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.14),
-                          ),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          borderSide: BorderSide(
-                            color: Colors.white.withValues(alpha: 0.14),
-                          ),
-                        ),
-                        focusedBorder: const OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(16)),
-                          borderSide: BorderSide(
-                            color: Colors.amberAccent,
-                            width: 1.6,
-                          ),
-                        ),
-                      ),
                     ),
                   ),
                   Expanded(
                     child: FutureBuilder<List<CardCatalogEntry>>(
                       future: _cardsFuture,
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(
-                            child: Text(
-                              'CARD LIBRARY UNAVAILABLE\n${snapshot.error}',
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(color: Colors.white70),
-                            ),
-                          );
-                        }
-                        if (!snapshot.hasData) {
-                          return const Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.amberAccent,
-                            ),
-                          );
-                        }
-                        final cards = _filteredCards(snapshot.data!);
-                        if (cards.isEmpty) {
-                          return const Center(
-                            child: Text(
-                              'NO CARDS MATCH YOUR SEARCH',
-                              style: TextStyle(
-                                color: Colors.white60,
-                                fontFamily: 'button_font',
-                                letterSpacing: 1.3,
-                              ),
-                            ),
-                          );
-                        }
-                        return _CardCarousel(cards: cards);
-                      },
+                      builder: (context, snapshot) => _buildBody(snapshot),
                     ),
                   ),
                 ],
@@ -773,10 +727,207 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
   }
 }
 
+/// Skewed framed panel with the search bar on top. When [card] is null a
+/// neutral frame is used.
+class _CardLibraryFrame extends StatelessWidget {
+  final CardCatalogEntry? card;
+  final Widget searchField;
+  final Widget body;
+  final double? width;
+  final double? height;
+
+  const _CardLibraryFrame({
+    required this.card,
+    required this.searchField,
+    required this.body,
+    this.width,
+    this.height,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final accent = card == null
+        ? Colors.amberAccent
+        : _inventoryCardAccent(card!);
+    final gradient = card == null
+        ? _gateDescriptionBorderGradients['silver']!
+        : _inventoryCardGradient(card!);
+    return FramedPanelFrame(
+      width: width,
+      height: height,
+      frameGradient: gradient,
+      accentColor: accent,
+      childSkew: 0,
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.skewX(0.12),
+                child: Icon(Icons.search_rounded, color: accent, size: 22),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: searchField),
+            ],
+          ),
+          Container(height: 1.2, color: accent.withValues(alpha: 0.28)),
+          Expanded(child: body),
+        ],
+      ),
+    );
+  }
+}
+
+class _FrameTab extends StatelessWidget {
+  static const List<Color> _neutralGradient = [
+    Color(0xFF2A2F36),
+    Color(0xFF4A5059),
+    Color(0xFF2A2F36),
+  ];
+  static const Duration _duration = Duration(milliseconds: 240);
+
+  final String cardClass;
+  final double height;
+  final bool selected;
+  final bool dimmed;
+  final VoidCallback onTap;
+
+  const _FrameTab({
+    required this.cardClass,
+    required this.height,
+    required this.selected,
+    required this.dimmed,
+    required this.onTap,
+  });
+
+  BoxDecoration _borderDecoration(List<Color> colors) {
+    return BoxDecoration(
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(7)),
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: colors,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final classGradient =
+        _gateDescriptionBorderGradients[cardClass] ??
+        _abilityDescriptionBorderGradients[cardClass]!;
+    final name = cardClass[0].toUpperCase() + cardClass.substring(1);
+    final width = height;
+    return GestureDetector(
+      onTap: onTap,
+      // The selected tab sinks into the panel's top border, which has the
+      // same colour, so both read as one shape.
+      child: AnimatedSlide(
+        offset: Offset(0, selected ? 4 / height : 0),
+        duration: _duration,
+        curve: Curves.easeOutCubic,
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.skewX(-0.12),
+          child: SizedBox(
+            width: width,
+            height: height,
+            child: Stack(
+              fit: StackFit.expand,
+              clipBehavior: Clip.none,
+              children: [
+                AnimatedContainer(
+                  duration: _duration,
+                  decoration: _borderDecoration(
+                    selected ? classGradient : _neutralGradient,
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(3, 3, 3, 0),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(
+                      top: Radius.circular(5),
+                    ),
+                    child: ColoredBox(
+                      color: const Color(0xFF05080D),
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(24, 11, 24, 11),
+                            child: AnimatedScale(
+                              scale: selected ? 1.04 : 1,
+                              duration: _duration,
+                              curve: Curves.easeOutBack,
+                              child: Transform(
+                                alignment: Alignment.center,
+                                transform: Matrix4.skewX(0.12),
+                                child: Image.asset(
+                                  'assets/frames/Final $name Frame.png',
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+                          IgnorePointer(
+                            child: AnimatedOpacity(
+                              opacity: dimmed ? 0.55 : 0,
+                              duration: _duration,
+                              child: const ColoredBox(color: Colors.black),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                // Fades the tab's dark fill into the panel so no seam shows
+                // where the selected tab meets it.
+                Positioned(
+                  left: 3,
+                  right: 3,
+                  bottom: -10,
+                  height: 10,
+                  child: IgnorePointer(
+                    child: AnimatedOpacity(
+                      opacity: selected ? 1 : 0,
+                      duration: _duration,
+                      child: const DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [Color(0xFF05080D), Color(0x0005080D)],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class _CardCarousel extends StatefulWidget {
   final List<CardCatalogEntry> cards;
+  final Widget searchField;
+  final Set<String> selectedClasses;
+  final ValueChanged<String> onToggleClass;
+  final String emptyMessage;
 
-  const _CardCarousel({required this.cards});
+  const _CardCarousel({
+    required this.cards,
+    required this.searchField,
+    required this.selectedClasses,
+    required this.onToggleClass,
+    required this.emptyMessage,
+  });
 
   @override
   State<_CardCarousel> createState() => _CardCarouselState();
@@ -789,7 +940,7 @@ class _CardCarouselState extends State<_CardCarousel> {
   @override
   void initState() {
     super.initState();
-    _controller = PageController(viewportFraction: 0.32);
+    _controller = PageController(viewportFraction: 1 / 3);
   }
 
   @override
@@ -809,101 +960,300 @@ class _CardCarouselState extends State<_CardCarousel> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final selectedIndex = _selectedIndex.clamp(0, widget.cards.length - 1);
-    final card = widget.cards[selectedIndex];
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final descriptionWidth = min(940.0, constraints.maxWidth - 64);
-        return Column(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_rounded, size: 32),
-                    color: Colors.white70,
-                    onPressed: () {
-                      unawaited(_playUiConfirmSound());
-                      _controller.previousPage(
-                        duration: const Duration(milliseconds: 260),
-                        curve: Curves.easeOut,
-                      );
-                    },
-                  ),
-                  Expanded(
-                    child: PageView.builder(
-                      controller: _controller,
-                      itemCount: widget.cards.length,
-                      onPageChanged: (index) {
-                        setState(() => _selectedIndex = index);
-                        unawaited(_playUiConfirmSound());
-                      },
-                      itemBuilder: (context, index) {
-                        final item = widget.cards[index];
-                        final selected = index == _selectedIndex;
-                        return LayoutBuilder(
-                          builder: (context, itemConstraints) {
-                            final cardWidth = min(
-                              440.0,
-                              itemConstraints.maxWidth * 0.88,
+  Widget _arrowButton({
+    required IconData icon,
+    required bool visible,
+    required VoidCallback onTap,
+  }) {
+    return Opacity(
+      opacity: visible ? 1 : 0,
+      child: IgnorePointer(ignoring: !visible, child: _arrowIcon(icon, onTap)),
+    );
+  }
+
+  Widget _arrowIcon(IconData icon, VoidCallback onTap) {
+    return IconButton(
+      iconSize: 52,
+      icon: Icon(icon),
+      color: Colors.white70,
+      onPressed: () {
+        if (!_controller.hasClients) return;
+        unawaited(_playUiConfirmSound());
+        onTap();
+      },
+    );
+  }
+
+  Widget _buildCardPager() {
+    return PageView.builder(
+      controller: _controller,
+      itemCount: widget.cards.length,
+      onPageChanged: (index) {
+        setState(() => _selectedIndex = index);
+        unawaited(_playUiConfirmSound());
+      },
+      itemBuilder: (context, index) {
+        final item = widget.cards[index];
+        final selected = index == _selectedIndex;
+        return LayoutBuilder(
+          builder: (context, itemConstraints) {
+            final cardWidth = min(
+              itemConstraints.maxHeight * 0.92 * _gateCardAspectRatio,
+              itemConstraints.maxWidth * 0.9,
+            );
+            final nearby = (index - _selectedIndex).abs() <= 1;
+            return AnimatedOpacity(
+              opacity: nearby ? 1 : 0,
+              duration: const Duration(milliseconds: 180),
+              child: IgnorePointer(
+                ignoring: !nearby,
+                child: AnimatedScale(
+                  scale: selected ? 1 : 0.8,
+                  duration: const Duration(milliseconds: 180),
+                  child: Center(
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.skewX(0.12),
+                      child: InteractiveCard(
+                        imagePath: item.imagePath,
+                        width: cardWidth,
+                        onTap: () {
+                          if (!selected) {
+                            _controller.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 260),
+                              curve: Curves.easeOut,
                             );
-                            return AnimatedScale(
-                              scale: selected ? 1 : 0.84,
-                              duration: const Duration(milliseconds: 180),
-                              child: Center(
-                                child: InteractiveCard(
-                                  imagePath: item.imagePath,
-                                  width: cardWidth,
-                                  onTap: () {},
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
+                          }
+                        },
+                      ),
                     ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.arrow_forward_ios_rounded, size: 32),
-                    color: Colors.white70,
-                    onPressed: () {
-                      unawaited(_playUiConfirmSound());
-                      _controller.nextPage(
-                        duration: const Duration(milliseconds: 260),
-                        curve: Curves.easeOut,
-                      );
-                    },
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 4, 24, 18),
-              child: FramedDescriptionPanel(
-                width: descriptionWidth,
-                esText: card.description.isEmpty
-                    ? AppLocalizations.current.noDescription
-                    : card.description,
-                maxHeight: 220,
-                frameGradient: _inventoryCardGradient(card),
-                accentColor: _inventoryCardAccent(card),
-                title: card.name,
-                headerAction: Text(
-                  '${card.typeLabel}  /  ${card.cardClass.toUpperCase()}',
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 0.8,
                   ),
                 ),
               ),
-            ),
-          ],
+            );
+          },
         );
       },
+    );
+  }
+
+  Widget _buildDescription(CardCatalogEntry card, Color accent) {
+    // Same gap above the title as below the text (the panel supplies the
+    // bottom padding).
+    return Padding(
+      padding: const EdgeInsets.only(top: 14),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  card.name.toUpperCase(),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: accent,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic,
+                    letterSpacing: 1.6,
+                    shadows: [
+                      Shadow(
+                        color: accent.withValues(alpha: 0.30),
+                        blurRadius: 8,
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Text(
+                '${card.typeLabel}  /  ${card.cardClass.toUpperCase()}',
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ],
+          ),
+          Container(
+            height: 1.2,
+            margin: const EdgeInsets.only(top: 4, bottom: 18),
+            color: accent.withValues(alpha: 0.28),
+          ),
+          AutoSizeText(
+            card.description.isEmpty
+                ? AppLocalizations.current.noDescription
+                : card.description,
+            maxLines: 4,
+            minFontSize: 10,
+            stepGranularity: 0.5,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+              color: Colors.white.withValues(alpha: 0.96),
+              fontSize: 14.5,
+              fontWeight: FontWeight.w800,
+              height: 1.28,
+              shadows: const [
+                Shadow(
+                  color: Colors.black87,
+                  offset: Offset(1, 1),
+                  blurRadius: 3,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static const List<String> _frameClasses = [
+    'copper',
+    'silver',
+    'gold',
+    'blue',
+    'green',
+    'red',
+  ];
+
+  Widget _buildClassTabs(double height) {
+    // Neighbouring tabs overlap by one border width so they share that edge
+    // instead of showing two borders side by side; the selected tab paints
+    // last so its border stays on top.
+    const borderWidth = 3.0;
+    final step = height - borderWidth;
+    final ordered = [
+      ..._frameClasses.where((c) => !widget.selectedClasses.contains(c)),
+      ..._frameClasses.where(widget.selectedClasses.contains),
+    ];
+    return SizedBox(
+      width: step * _frameClasses.length + borderWidth,
+      height: height,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          for (final cardClass in ordered)
+            Positioned(
+              key: ValueKey(cardClass),
+              left: _frameClasses.indexOf(cardClass) * step,
+              top: 0,
+              child: _FrameTab(
+                cardClass: cardClass,
+                height: height,
+                selected: widget.selectedClasses.contains(cardClass),
+                dimmed:
+                    widget.selectedClasses.isNotEmpty &&
+                    !widget.selectedClasses.contains(cardClass),
+                onTap: () {
+                  unawaited(_playUiConfirmSound());
+                  widget.onToggleClass(cardClass);
+                },
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final hasCards = widget.cards.isNotEmpty;
+    final card = hasCards
+        ? widget.cards[_selectedIndex.clamp(0, widget.cards.length - 1)]
+        : null;
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 12),
+      child: Row(
+        children: [
+          _arrowButton(
+            icon: Icons.arrow_back_ios_rounded,
+            visible: hasCards && _selectedIndex > 0,
+            onTap: () => _controller.previousPage(
+              duration: const Duration(milliseconds: 260),
+              curve: Curves.easeOut,
+            ),
+          ),
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // The panel skew shifts its corners sideways by 0.06 * height.
+                const tabHeight = 112.0;
+                final panelHeight = constraints.maxHeight * 0.8;
+                // The panel skew shifts its corners sideways by 0.06 * height.
+                final skewAllowance = panelHeight * 0.12;
+                final panelWidth = min(
+                  1300.0,
+                  constraints.maxWidth - skewAllowance,
+                );
+                return Center(
+                  // Taller than the panel so the tabs stay inside the hit
+                  // area; shifted back up so the panel keeps its position.
+                  child: Transform.translate(
+                    offset: const Offset(0, -tabHeight / 2),
+                    child: SizedBox(
+                      width: panelWidth + skewAllowance + 6,
+                      height: panelHeight + tabHeight,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: skewAllowance / 2,
+                            bottom: 0,
+                            child: _CardLibraryFrame(
+                              card: card,
+                              searchField: widget.searchField,
+                              width: panelWidth,
+                              height: panelHeight,
+                              body: card == null
+                                  ? Center(
+                                      child: Text(
+                                        widget.emptyMessage,
+                                        textAlign: TextAlign.center,
+                                        style: const TextStyle(
+                                          color: Colors.white60,
+                                          fontFamily: 'button_font',
+                                          letterSpacing: 1.3,
+                                        ),
+                                      ),
+                                    )
+                                  : Column(
+                                      children: [
+                                        Expanded(child: _buildCardPager()),
+                                        _buildDescription(
+                                          card,
+                                          _inventoryCardAccent(card),
+                                        ),
+                                      ],
+                                    ),
+                            ),
+                          ),
+                          Positioned(
+                            top: 0,
+                            right: 15,
+                            child: _buildClassTabs(tabHeight),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          _arrowButton(
+            icon: Icons.arrow_forward_ios_rounded,
+            visible: hasCards && _selectedIndex < widget.cards.length - 1,
+            onTap: () => _controller.nextPage(
+              duration: const Duration(milliseconds: 260),
+              curve: Curves.easeOut,
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -1225,36 +1575,6 @@ class _BakuganInventoryCarouselScreenState
     _queueInventorySave();
   }
 
-  Widget _buildInventoryToolbar(BoxConstraints constraints) {
-    return Wrap(
-      alignment: WrapAlignment.center,
-      crossAxisAlignment: WrapCrossAlignment.center,
-      spacing: 12,
-      runSpacing: 8,
-      children: [
-        _BakuganCompactToolbar(
-          width: min(1200.0, max(900.0, constraints.maxWidth - 280)),
-          selectedAttribute: _selectedAttribute,
-          sortMode: _sortMode,
-          sortLabel: _sortModeLabel(_sortMode),
-          sortIcon: _sortModeIcon(_sortMode),
-          colorForAttribute: _colorForAttribute,
-          onAttributeTap: _openAttributePicker,
-          onSortTap: _openSortPicker,
-          collectionMode: _collectionMode,
-          onCollectionModeToggle: () => _setCollectionMode(!_collectionMode),
-        ),
-        _InventoryToggleButton(
-          icon: Icons.clear_all_rounded,
-          label: 'CLEAR ALL G POWER',
-          color: Colors.redAccent,
-          active: _activeVariants.isNotEmpty,
-          onTap: _clearAllGPower,
-        ),
-      ],
-    );
-  }
-
   void _setAttributeFilter(String? attribute) {
     final currentSpeciesName =
         _visibleBakugans.isNotEmpty &&
@@ -1487,44 +1807,80 @@ class _BakuganInventoryCarouselScreenState
                 builder: (context, constraints) {
                   final isCompact = constraints.maxWidth < 1800;
                   final horizontalPadding = isCompact ? 16.0 : 44.0;
-                  final topSpacing = isCompact ? 18.0 : 42.0;
 
                   if (visibleBakugans.isEmpty) {
                     return _buildEmptyFilteredState(
                       horizontalPadding: horizontalPadding,
-                      topSpacing: topSpacing,
-                      constraints: constraints,
                     );
                   }
 
                   final bakugan = _currentBakugan;
-                  final stageHeight = min(
-                    540.0,
-                    max(360.0, constraints.maxHeight - 390 - topSpacing),
-                  );
                   final carouselWidth = max(520.0, constraints.maxWidth - 128);
+                  // The species carousel is nudged up over the stage area.
+                  final carouselOverlap = isCompact ? 4.0 : 80.0;
 
                   return Column(
                     children: [
-                      _buildCarouselHeader(
-                        horizontalPadding: horizontalPadding,
-                        topSpacing: topSpacing,
-                        constraints: constraints,
-                      ),
+                      _buildCarouselHeader(),
                       Expanded(
-                        child: Transform.translate(
-                          offset: Offset(0, isCompact ? -4 : -40),
-                          child: Center(
-                            child: _buildSelectionStage(
-                              bakugan: bakugan,
-                              constraints: constraints,
-                              stageHeight: stageHeight,
-                            ),
-                          ),
+                        child: LayoutBuilder(
+                          builder: (context, area) {
+                            // Up to 540 high: the attribute rail spacing and the
+                            // name plate offsets are tuned for that height.
+                            final stageHeight = min(
+                              540.0,
+                              max(
+                                360.0,
+                                area.maxHeight -
+                                    carouselOverlap -
+                                    _filterTabHeight -
+                                    8,
+                              ),
+                            );
+                            final stageWidth = min(
+                              1250.0,
+                              max(720.0, constraints.maxWidth - 32),
+                            );
+                            // The preview frame is skewed, which pushes its top
+                            // edge to the right by 0.075 * height.
+                            final skewExtra = stageHeight * 0.075;
+                            // Sits just above the species carousel, which is
+                            // nudged up over the bottom of this area.
+                            return Align(
+                              alignment: Alignment.bottomCenter,
+                              child: Padding(
+                                padding: EdgeInsets.only(
+                                  bottom: carouselOverlap + 190,
+                                ),
+                                child: SizedBox(
+                                  width: stageWidth + skewExtra,
+                                  height: stageHeight + _filterTabHeight,
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        left: 0,
+                                        bottom: 0,
+                                        child: _buildSelectionStage(
+                                          bakugan: bakugan,
+                                          stageWidth: stageWidth,
+                                          stageHeight: stageHeight,
+                                        ),
+                                      ),
+                                      Positioned(
+                                        top: 0,
+                                        right: 28,
+                                        child: _buildFilterTabs(),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
                         ),
                       ),
                       Transform.translate(
-                        offset: Offset(0, isCompact ? -4 : -80),
+                        offset: Offset(0, -carouselOverlap),
                         child: _buildSpeciesCarousel(
                           visibleBakugans: visibleBakugans,
                           width: carouselWidth,
@@ -1557,86 +1913,121 @@ class _BakuganInventoryCarouselScreenState
     );
   }
 
-  Widget _buildCarouselHeader({
-    required double horizontalPadding,
-    required double topSpacing,
-    required BoxConstraints constraints,
-  }) {
+  static const double _filterTabHeight = 56;
+
+  Widget _buildCarouselHeader() {
     return Padding(
-      padding: EdgeInsets.only(
-        top: topSpacing,
-        left: horizontalPadding,
-        right: horizontalPadding,
-      ),
-      child: Transform(
-        alignment: Alignment.center,
-        transform: Matrix4.skewX(-0.08),
-        child: Container(
-          width: double.infinity,
-          clipBehavior: Clip.antiAlias,
-          padding: const EdgeInsets.fromLTRB(16, 10, 16, 14),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Colors.black.withValues(alpha: 0.54),
-                const Color(0xCC071018),
-                Colors.black.withValues(alpha: 0.42),
-              ],
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+              size: 28,
             ),
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: Colors.cyanAccent.withValues(alpha: 0.22),
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.3),
-                blurRadius: 22,
-                spreadRadius: 2,
+            onPressed: () {
+              unawaited(_playUiCancelSound());
+              Navigator.of(context).pop();
+            },
+          ),
+          const SizedBox(width: 12),
+          const Expanded(
+            child: Text(
+              'BAKUGAN COLLECTION',
+              style: TextStyle(
+                fontFamily: 'title_font',
+                fontSize: 42,
+                color: Colors.white,
+                letterSpacing: 2,
+                shadows: [Shadow(color: Colors.cyan, blurRadius: 18)],
               ),
-            ],
-          ),
-          child: Transform(
-            alignment: Alignment.center,
-            transform: Matrix4.skewX(0.08),
-            child: Stack(
-              alignment: Alignment.topCenter,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 4),
-                  child: _buildInventoryToolbar(constraints),
-                ),
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: IconButton(
-                    icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                    color: Colors.white,
-                    onPressed: () {
-                      unawaited(_playUiCancelSound());
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ),
-              ],
             ),
           ),
-        ),
+        ],
       ),
     );
   }
 
-  Widget _buildEmptyFilteredState({
-    required double horizontalPadding,
-    required double topSpacing,
-    required BoxConstraints constraints,
-  }) {
+  /// Filter tabs sitting on the top edge of the preview. Neighbouring tabs
+  /// overlap by their border width so they share one edge.
+  Widget _buildFilterTabs() {
+    final canSort = _selectedAttribute != null;
+    final tabs = <Widget>[
+      _InventoryFilterTab(
+        label: _selectedAttribute == null
+            ? 'ATTRIBUTE: ALL'
+            : 'ATTRIBUTE: ${_selectedAttribute!.toUpperCase()}',
+        icon: Icons.filter_alt_rounded,
+        leadingAsset: _selectedAttribute == null
+            ? null
+            : 'assets/images/attributes/${_selectedAttribute!}_game.png',
+        accentColor: _selectedAttribute == null
+            ? Colors.blueAccent
+            : _colorForAttribute(_selectedAttribute!),
+        active: _selectedAttribute != null,
+        dropdown: true,
+        height: _filterTabHeight,
+        onTap: _openAttributePicker,
+      ),
+      _InventoryFilterTab(
+        label: 'ORDER: ${_sortModeLabel(_sortMode)}',
+        icon: _sortModeIcon(_sortMode),
+        accentColor: Colors.blueAccent,
+        active: canSort,
+        enabled: canSort,
+        dropdown: true,
+        height: _filterTabHeight,
+        onTap: _openSortPicker,
+      ),
+      _InventoryFilterTab(
+        label: _collectionMode
+            ? 'COLLECTION MODE: OWNED'
+            : 'COLLECTION MODE: ALL',
+        icon: _collectionMode
+            ? Icons.inventory_2_rounded
+            : Icons.grid_view_rounded,
+        // Same colour as the preview frame so the active tab blends with it.
+        accentColor: _visibleBakugans.isEmpty
+            ? Colors.cyanAccent
+            : _currentVariant.color,
+        active: _collectionMode,
+        height: _filterTabHeight,
+        onTap: () => _setCollectionMode(!_collectionMode),
+      ),
+      _InventoryFilterTab(
+        label: 'CLEAR ALL G POWER',
+        icon: Icons.clear_all_rounded,
+        accentColor: Colors.redAccent,
+        enabled: _activeVariants.isNotEmpty,
+        height: _filterTabHeight,
+        onTap: _clearAllGPower,
+      ),
+    ];
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < tabs.length; i++)
+          Transform.translate(offset: Offset(-3.0 * i, 0), child: tabs[i]),
+      ],
+    );
+  }
+
+  Widget _buildEmptyFilteredState({required double horizontalPadding}) {
     return Column(
       children: [
-        _buildCarouselHeader(
-          horizontalPadding: horizontalPadding,
-          topSpacing: topSpacing,
-          constraints: constraints,
+        _buildCarouselHeader(),
+        Padding(
+          padding: EdgeInsets.fromLTRB(
+            horizontalPadding,
+            8,
+            horizontalPadding + 28,
+            0,
+          ),
+          child: Align(
+            alignment: Alignment.centerRight,
+            child: _buildFilterTabs(),
+          ),
         ),
         Expanded(
           child: Padding(
@@ -1656,10 +2047,9 @@ class _BakuganInventoryCarouselScreenState
 
   Widget _buildSelectionStage({
     required Bakugan bakugan,
-    required BoxConstraints constraints,
+    required double stageWidth,
     required double stageHeight,
   }) {
-    final stageWidth = min(900.0, max(720.0, constraints.maxWidth - 32));
     final attributeRailWidth = min(140.0, stageWidth * 0.16);
     final previewLeft = attributeRailWidth - 40;
 
@@ -1681,6 +2071,7 @@ class _BakuganInventoryCarouselScreenState
                 ),
                 variant: _currentVariant,
                 isLarge: true,
+                modelScale: 0.85,
                 speciesName: bakugan.name,
               ),
             ),
