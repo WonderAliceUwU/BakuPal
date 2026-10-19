@@ -53,6 +53,7 @@ flutter:
     - assets/images/scoreboard_bg.png
     - assets/images/logo.png
     - assets/images/cards/anverse.png
+    - assets/frames/
     - assets/images/cards/cards.json
     - assets/images/cards/cards_expansion.json
     - assets/images/cards/base/
