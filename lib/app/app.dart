@@ -2,6 +2,11 @@ part of '../main.dart';
 
 final GlobalKey<NavigatorState> _appNavigatorKey = GlobalKey<NavigatorState>();
 final ValueNotifier<bool> _isAppSettingsOpen = ValueNotifier<bool>(false);
+// True while the scoreboard shows its own pause button next to BATTLE, so the
+// app-wide settings/pause button is hidden.
+final ValueNotifier<bool> _scoreboardOwnsPauseButton = ValueNotifier<bool>(
+  false,
+);
 final ValueNotifier<MatchPauseController?> _matchPauseController =
     ValueNotifier<MatchPauseController?>(null);
 
@@ -206,21 +211,26 @@ class _AppVolumeSurface extends StatelessWidget {
               valueListenable: _isAppSettingsOpen,
               builder: (context, isOpen, _) {
                 if (isOpen) return const SizedBox.shrink();
-                return ValueListenableBuilder<MatchPauseController?>(
-                  valueListenable: _matchPauseController,
-                  builder: (context, pauseController, _) {
-                    if (pauseController != null) {
-                      return const Positioned(
-                        bottom: 40,
-                        left: 0,
-                        right: 0,
-                        child: Center(child: _AppSettingsButton(isPause: true)),
-                      );
-                    }
-                    return const Positioned(
-                      top: 22,
-                      right: 24,
-                      child: _AppSettingsButton(),
+                return ValueListenableBuilder<bool>(
+                  valueListenable: _scoreboardOwnsPauseButton,
+                  builder: (context, ownsPause, _) {
+                    if (ownsPause) return const SizedBox.shrink();
+                    return ValueListenableBuilder<MatchPauseController?>(
+                      valueListenable: _matchPauseController,
+                      builder: (context, pauseController, _) {
+                        if (pauseController != null) {
+                          return const Positioned(
+                            bottom: 24,
+                            right: 24,
+                            child: _AppSettingsButton(isPause: true),
+                          );
+                        }
+                        return const Positioned(
+                          top: 22,
+                          right: 24,
+                          child: _AppSettingsButton(),
+                        );
+                      },
                     );
                   },
                 );
@@ -401,7 +411,17 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
     return BakuganModal(
       title: l10n.settingsTitle,
       icon: Icons.settings_rounded,
-      width: 820,
+      width: 900,
+      // The modal is skewed, so content needs extra side padding or its
+      // corners get clipped by the slanted edges.
+      // The pause options make the modal taller, which slants its edges
+      // further, so only then does the content need the extra side room.
+      contentPadding: matchPauseController != null
+          ? const EdgeInsets.fromLTRB(110, 0, 110, 36)
+          : const EdgeInsets.fromLTRB(64, 0, 64, 36),
+      edgePadding: matchPauseController != null
+          ? const EdgeInsets.symmetric(horizontal: 64)
+          : const EdgeInsets.symmetric(horizontal: 40),
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: SingleChildScrollView(
         child: Column(
@@ -423,39 +443,54 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
                 color: Colors.cyanAccent,
               ),
               const SizedBox(height: 12),
-              BakuganButton(
+              FramedActionButton(
                 text: 'RESUME',
                 icon: Icons.play_arrow_rounded,
+                gradient: _gateDescriptionBorderGradients['silver']!,
+                accentColor: const Color(0xFFE8EDF2),
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(matchPauseController.onAction('resume'));
                 },
                 width: double.infinity,
                 height: 64,
+                textFontSize: 26,
+                iconSize: 30,
               ),
-              const SizedBox(height: 10),
-              BakuganButton(
+              const SizedBox(height: 14),
+              FramedActionButton(
                 text: 'RESTART',
                 icon: Icons.restart_alt_rounded,
-                color: Colors.orangeAccent,
+                gradient: const [
+                  Color(0xFF5A2E0B),
+                  Color(0xFFE08A2E),
+                  Color(0xFFFFC27A),
+                  Color(0xFF3A1E06),
+                ],
+                accentColor: Colors.orangeAccent,
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(matchPauseController.onAction('selection'));
                 },
                 width: double.infinity,
                 height: 64,
+                textFontSize: 26,
+                iconSize: 30,
               ),
-              const SizedBox(height: 10),
-              BakuganButton(
+              const SizedBox(height: 14),
+              FramedActionButton(
                 text: 'EXIT TO MENU',
                 icon: Icons.home_rounded,
-                color: Colors.redAccent,
+                gradient: _abilityDescriptionBorderGradients['red']!,
+                accentColor: Colors.redAccent,
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(matchPauseController.onAction('main_menu'));
                 },
                 width: double.infinity,
                 height: 64,
+                textFontSize: 26,
+                iconSize: 30,
               ),
             ],
             const SizedBox(height: 24),

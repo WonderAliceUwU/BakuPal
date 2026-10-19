@@ -95,6 +95,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       onAction: _handlePauseAction,
     );
     _matchPauseController.value = _matchPauseMenuController;
+    _scoreboardOwnsPauseButton.value = true;
     _loadMatchAbilityCards();
     _loadArenaPlaylistAndStart();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2176,6 +2177,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   @override
   void dispose() {
+    _scoreboardOwnsPauseButton.value = false;
     if (identical(_matchPauseController.value, _matchPauseMenuController)) {
       _matchPauseController.value = null;
     }
@@ -2188,6 +2190,14 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     _arenaPlayerB.dispose();
     _sfxPlayer.dispose();
     super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!identical(_matchPauseController.value, _matchPauseMenuController)) {
+      _matchPauseController.value = _matchPauseMenuController;
+    }
   }
 
   @override
@@ -2270,7 +2280,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           if (selectionMode) ...[
-                            BakuganButton(
+                            FramedActionButton(
                               text: 'BACK',
                               onPressed: () {
                                 setState(() {
@@ -2286,10 +2296,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                               useCancelSound: true,
                               width: 180,
                               height: 85,
+                              gradient:
+                                  _gateDescriptionBorderGradients['silver']!,
+                              accentColor: const Color(0xFFE8EDF2),
                             ),
                             const SizedBox(width: 14),
                           ],
-                          BakuganButton(
+                          FramedActionButton(
                             text: !selectionMode
                                 ? 'BATTLE'
                                 : (leftBakugan != null && rightBakugan != null
@@ -2393,6 +2406,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                 };
 
                                 _pauseArenaPlaylist();
+                                _scoreboardOwnsPauseButton.value = false;
                                 Navigator.push(
                                   context,
                                   _fadeRoute(
@@ -2431,6 +2445,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                   ),
                                 ).then((result) async {
                                   if (!mounted) return;
+                                  _scoreboardOwnsPauseButton.value = true;
                                   final resultMap = result is Map
                                       ? Map<String, dynamic>.from(result)
                                       : const <String, dynamic>{};
@@ -2736,15 +2751,30 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                 });
                               }
                             },
-                            color:
+                            gradient:
                                 (selectionMode &&
                                     (leftBakugan == null ||
                                         rightBakugan == null))
-                                ? Colors.grey
-                                : null,
+                                ? _gateDescriptionBorderGradients['silver']!
+                                : _inventoryCyanGradient,
+                            accentColor:
+                                (selectionMode &&
+                                    (leftBakugan == null ||
+                                        rightBakugan == null))
+                                ? Colors.blueGrey
+                                : Colors.cyanAccent,
                             width: 300,
                             height: 85,
                           ),
+                          if (!selectionMode) ...[
+                            const SizedBox(width: 14),
+                            FramedActionButton(
+                              icon: Icons.pause_rounded,
+                              onPressed: _openAppSettingsDialog,
+                              width: 85,
+                              height: 85,
+                            ),
+                          ],
                         ],
                       ),
                     ),
