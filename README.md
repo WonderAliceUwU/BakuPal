@@ -11,7 +11,7 @@
 <p>A fan-made companion app for real-life Bakugan players and game Masters, heavily inspired by the game.</p>
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-02569B?logo=flutter&logoColor=white)
-![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Android%20%7C%20iOS-111827)
+![Platform](https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux%20%7C%20Android%20%7C%20iOS-111827)
 ![Status](https://img.shields.io/badge/status-in%20development-F59E0B)
 
 </div>
@@ -62,6 +62,22 @@ and swaps as the action unfolds. It also has a music playlist with all the origi
 <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 33 31" src="https://github.com/user-attachments/assets/a8dd2a4d-2dfe-4a48-8eac-a3ea4dea3329" />
 </p>
 
+### You decide how much the app does
+
+Pick an automation level in the settings, even in the middle of a match:
+
+- **Manual**: the app adds no bonuses and applies no effects. The manual tools
+  are always visible, and you set G-Power, results and the winner yourself.
+- **Assisted**: the app adds the bonuses and applies the effects it knows,
+  with a manual fallback always in view.
+- **Auto**: the app takes care of bonuses and the effects it knows, with no
+  manual buttons in the way.
+
+Manual tools include adjusting a Bakugan's G-Power or attribute, choosing or
+changing the result of a battle, an edit mode for the piles and the points,
+and a WIN? button to confirm the match. Every screen has a **HELP** button in
+the settings menu.
+
 <img src="assets/readme_assets/seasons-and-elo.png" alt="Seasons and elo" width="700"/>
 
 Organize your games into seasons and follow player progression with an
@@ -93,6 +109,16 @@ safe across devices or installations.
 
 3D Models thanks to MrZangestsu and sprites thanks to Jeppa <3.
 Built with Flutter and made for the Bakugan community.
+
+## Download
+
+Builds for Windows, macOS and Linux are published in
+[Releases](../../releases). Beta builds are marked as pre-releases.
+
+- **Windows**: unzip `bakupal-windows-x64.zip` and run the `.exe`.
+- **macOS**: unzip `bakupal-macos.zip`. The app is not signed yet, so the first
+  time use right click, Open.
+- **Linux**: extract `bakupal-linux-x64.tar.gz` and run the executable inside.
 
 ## Do you want to build it yourself?
 
