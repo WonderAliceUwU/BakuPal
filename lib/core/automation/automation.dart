@@ -29,16 +29,16 @@ extension AutomationLevelX on AutomationLevel {
     switch (this) {
       case AutomationLevel.manual:
         return es
-            ? 'La app no suma bonus ni aplica efectos: tú pones el G-Power con el botón + y decides cada resultado.'
-            : 'The app adds no bonuses and applies no effects: you set G-Power with the + button and decide each result.';
+            ? 'La app no suma bonus ni aplica efectos. Los botones manuales están siempre visibles.'
+            : 'The app adds no bonuses and applies no effects. The manual buttons are always visible.';
       case AutomationLevel.assisted:
         return es
-            ? 'La app suma los bonus y aplica los efectos que conoce, pero la victoria la confirmas tú con WIN?. Los botones manuales siguen a la vista.'
-            : 'The app adds the bonuses and applies the effects it knows, but you confirm the win with WIN?. The manual buttons stay in view.';
+            ? 'La app suma los bonus y aplica los efectos que conoce, con un respaldo manual siempre a la vista.'
+            : 'The app adds the bonuses and applies the effects it knows, with a manual fallback always in view.';
       case AutomationLevel.auto:
         return es
-            ? 'La app suma los bonus, aplica los efectos que conoce y declara la victoria sola, sin botones manuales. Cambia a Asistido para corregir algo.'
-            : 'The app adds the bonuses, applies the effects it knows and declares the win by itself, with no manual buttons. Switch to Assisted to fix anything.';
+            ? 'La app se encarga de los bonus y de los efectos que conoce, sin botones manuales de por medio.'
+            : 'The app takes care of the bonuses and the effects it knows, with no manual buttons in the way.';
     }
   }
 
