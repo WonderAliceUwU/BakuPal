@@ -101,3 +101,5 @@ jobs:
         with:
           files: dist/*
           generate_release_notes: true
+          # Tags like v1.0.0-beta.1 are published as pre-releases.
+          prerelease: ${{ contains(github.ref_name, '-') }}
