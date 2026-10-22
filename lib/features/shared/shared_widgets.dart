@@ -1350,6 +1350,9 @@ class BakuganModal extends StatelessWidget {
   final Widget child;
   final List<Widget> actions;
   final IconData? icon;
+  // Replaces [icon] in the title row when a custom widget is needed (e.g. an
+  // attribute logo).
+  final Widget? leading;
   final Color accentColor;
   final double width;
   final bool showGridBackground;
@@ -1367,6 +1370,7 @@ class BakuganModal extends StatelessWidget {
     required this.child,
     this.actions = const [],
     this.icon,
+    this.leading,
     this.accentColor = Colors.cyanAccent,
     this.width = 760,
     this.showGridBackground = true,
@@ -1483,17 +1487,19 @@ class BakuganModal extends StatelessWidget {
                                       CrossAxisAlignment.baseline,
                                   textBaseline: TextBaseline.alphabetic,
                                   children: [
-                                    if (icon != null) ...[
+                                    if (icon != null || leading != null) ...[
                                       Baseline(
                                         baseline: 29,
                                         baselineType: TextBaseline.alphabetic,
                                         child: Transform.translate(
                                           offset: const Offset(0, 7),
-                                          child: Icon(
-                                            icon!,
-                                            color: accentColor,
-                                            size: 36,
-                                          ),
+                                          child:
+                                              leading ??
+                                              Icon(
+                                                icon!,
+                                                color: accentColor,
+                                                size: 36,
+                                              ),
                                         ),
                                       ),
                                       const SizedBox(width: 14),
@@ -2128,6 +2134,9 @@ class FramedDescriptionPanel extends StatelessWidget {
 
 /// Skewed, framed action button that matches the panels and tabs
 /// ([FramedPanelFrame]); shows either [text] or [icon].
+/// A frame gradient with one colour only, for buttons with a solid border.
+List<Color> _solidFrame(Color color) => [color, color, color, color];
+
 class FramedActionButton extends StatelessWidget {
   final String? text;
   final IconData? icon;
@@ -2191,6 +2200,68 @@ class FramedActionButton extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+// "+50" followed, to its right, by the attribute logos stacked on top of each
+// other (Pyrus, Aquos, Subterra, Haos, Darkus, Ventus). Shown to the left of a
+// card that gives a bonus while it is in a used pile.
+class GlobalGateBonusBadge extends StatelessWidget {
+  static const List<String> _attributeOrder = [
+    'pyrus',
+    'aquos',
+    'subterra',
+    'haos',
+    'darkus',
+    'ventus',
+  ];
+
+  final GateCard card;
+  final double width;
+
+  const GlobalGateBonusBadge({super.key, required this.card, this.width = 78});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          for (final bonus in card.usedPileGlobalBonuses) ...[
+            Text(
+              '+${bonus.value}',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w900,
+                shadows: [Shadow(blurRadius: 8, color: Colors.black)],
+              ),
+            ),
+            const SizedBox(width: 6),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                for (final attribute
+                    in [...bonus.attributes]..sort(
+                      (a, b) => _attributeOrder
+                          .indexOf(a)
+                          .compareTo(_attributeOrder.indexOf(b)),
+                    ))
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 1),
+                    child: Image.asset(
+                      'assets/images/attributes/${attribute}_game.png',
+                      width: 19,
+                      height: 19,
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ],
       ),
     );
   }
@@ -2448,6 +2519,11 @@ class PlayerArenaInfo extends StatelessWidget {
   final Set<int> selectedBakuganIndices;
   final Function(int)? onBakuganTap;
   final Function(int)? onBakuganLongPress;
+  // Edit mode (match screen): each Bakugan gets a corner button to send it out
+  // of the game or, when it is out, to bring it back.
+  final bool isEditing;
+  final Function(int)? onBakuganOut;
+  final Function(int)? onBakuganBack;
   final List<MatchBakuganPileState>? bakuganPileStates;
   final bool isSelecting;
   final bool isExpanded;
@@ -2474,6 +2550,9 @@ class PlayerArenaInfo extends StatelessWidget {
     this.selectedBakuganIndices = const {},
     this.onBakuganTap,
     this.onBakuganLongPress,
+    this.isEditing = false,
+    this.onBakuganOut,
+    this.onBakuganBack,
     this.bakuganPileStates,
     this.isSelecting = false,
     this.isExpanded = false,
@@ -2586,9 +2665,9 @@ class PlayerArenaInfo extends StatelessWidget {
                     ? standingGradient
                     : isRemoved
                     ? const [
-                        Color(0xFF2A0E0E),
-                        Color(0xFF111111),
-                        Color(0xFF050505),
+                        Color(0xFFFF5252),
+                        Color(0xFFB71C1C),
+                        Color(0xFF5A1010),
                       ]
                     : isUsed
                     ? usedGradient
@@ -2612,7 +2691,16 @@ class PlayerArenaInfo extends StatelessWidget {
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut,
                         width: slotSize,
-                        height: slotSize,
+                        // The state label sits below the Bakugan, part of the
+                        // frame, so the Bakugan keeps its whole square.
+                        // (label strip + frame padding) minus what is taken
+                        // from the Bakugan's own space, so the tile does not
+                        // get too long.
+                        height:
+                            slotSize +
+                            (hasBakugan && bakuganPileStates != null
+                                ? (isExpanded ? 18.0 + 4 - 12 : 14.0 + 4 - 10)
+                                : 0),
                         margin: EdgeInsets.only(
                           right: isMirrored ? 0 : slotGap,
                           left: isMirrored ? slotGap : 0,
@@ -2645,42 +2733,116 @@ class PlayerArenaInfo extends StatelessWidget {
                             color: Colors.black,
                             borderRadius: BorderRadius.circular(6),
                           ),
-                          child: Stack(
-                            clipBehavior: Clip.hardEdge,
+                          child: Column(
                             children: [
-                              if (hasBakugan && !isRemoved)
-                                Positioned.fill(
-                                  child: BakuganDeckPreview(
-                                    variant: variant!,
-                                    borderRadius: 6,
-                                  ),
+                              Expanded(
+                                child: Stack(
+                                  clipBehavior: Clip.hardEdge,
+                                  children: [
+                                    // A doomed Bakugan keeps its model, dimmed.
+                                    if (hasBakugan)
+                                      Positioned.fill(
+                                        child: Opacity(
+                                          opacity: isRemoved ? 0.4 : 1,
+                                          child: BakuganDeckPreview(
+                                            variant: variant!,
+                                            borderRadius: 6,
+                                          ),
+                                        ),
+                                      ),
+                                    Positioned.fill(
+                                      child: Container(
+                                        color: Colors.white.withValues(
+                                          alpha: 0.01,
+                                        ),
+                                      ),
+                                    ),
+                                    if (isEditing && hasBakugan)
+                                      Positioned(
+                                        top: 3,
+                                        right: 3,
+                                        child: GestureDetector(
+                                          behavior: HitTestBehavior.opaque,
+                                          onTap: () => isRemoved
+                                              ? onBakuganBack?.call(i)
+                                              : onBakuganOut?.call(i),
+                                          child: Transform(
+                                            alignment: Alignment.center,
+                                            transform: Matrix4.skewX(0.15),
+                                            // Just the sign (no circle), with a shadow so it
+                                            // reads over the Bakugan.
+                                            child: SizedBox(
+                                              width: 30,
+                                              height: 30,
+                                              child: Icon(
+                                                isRemoved
+                                                    ? Icons.add
+                                                    : Icons.remove,
+                                                size: 26,
+                                                color: isRemoved
+                                                    ? Colors.greenAccent
+                                                    : Colors.redAccent,
+                                                shadows: const [
+                                                  Shadow(
+                                                    color: Colors.black,
+                                                    blurRadius: 6,
+                                                  ),
+                                                  Shadow(
+                                                    color: Colors.black,
+                                                    blurRadius: 2,
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                  ],
                                 ),
-                              if (isRemoved)
-                                Positioned.fill(
+                              ),
+                              if (hasBakugan && bakuganPileStates != null)
+                                Container(
+                                  height: isExpanded ? 18 : 14,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    border: Border(
+                                      top: BorderSide(
+                                        color: isRemoved
+                                            ? Colors.redAccent
+                                            : isStanding
+                                            ? standingGradient.first
+                                            : isUsed
+                                            ? const Color(0xFF8A919E)
+                                            : Colors.blueAccent,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
                                   child: Transform(
                                     alignment: Alignment.center,
                                     transform: Matrix4.skewX(0.15),
-                                    child: Center(
-                                      child: Text(
-                                        'OUT',
-                                        style: TextStyle(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.32,
-                                          ),
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w900,
-                                          fontStyle: FontStyle.italic,
-                                          letterSpacing: 2,
-                                        ),
+                                    child: Text(
+                                      isRemoved
+                                          ? 'DOOMED'
+                                          : isStanding
+                                          ? 'STAND'
+                                          : isUsed
+                                          ? 'USED'
+                                          : 'UNUSED',
+                                      style: TextStyle(
+                                        color: isRemoved
+                                            ? Colors.redAccent
+                                            : isStanding
+                                            ? standingGradient.first
+                                            : Colors.white70,
+                                        fontSize: isExpanded ? 10 : 8,
+                                        fontWeight: FontWeight.w900,
+                                        letterSpacing: 0.8,
                                       ),
                                     ),
                                   ),
                                 ),
-                              Positioned.fill(
-                                child: Container(
-                                  color: Colors.white.withValues(alpha: 0.01),
-                                ),
-                              ),
                             ],
                           ),
                         ),
