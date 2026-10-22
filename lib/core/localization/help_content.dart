@@ -86,8 +86,12 @@ const Map<String, _HelpTopic> _helpTopics = {
         'SAVEGAME exports the whole app (players, inventory, history, leaderboard) to a JSON file, or restores it from one.',
       ),
       _HelpTip(
-        'El botón de ajustes de arriba a la derecha cambia el volumen y los idiomas. El idioma de la interfaz y el de las cartas son independientes.',
-        'The settings button at the top right changes volume and languages. The interface language and the card text language are independent.',
+        'El botón de ajustes de arriba a la derecha cambia el volumen y los idiomas, y tiene AYUDA con las instrucciones de cada pantalla. El idioma de la interfaz y el de las cartas son independientes.',
+        'The settings button at the top right changes volume and languages, and has HELP with the instructions of each screen. The interface language and the card text language are independent.',
+      ),
+      _HelpTip(
+        'AUTOMATIZACIÓN, en los ajustes, decide cuánto resuelve la app. MANUAL: no suma bonus ni aplica efectos y los botones manuales están siempre visibles. ASISTIDO: aplica lo que conoce y deja un respaldo manual a la vista. AUTO: lo hace todo sola, sin botones manuales. Se puede cambiar en mitad de una partida.',
+        'AUTOMATION, in the settings, decides how much the app resolves. MANUAL: it adds no bonuses and applies no effects, and the manual buttons are always visible. ASSISTED: it applies what it knows and keeps a manual fallback in view. AUTO: it does it all by itself, with no manual buttons. You can change it in the middle of a match.',
       ),
     ],
   ),
@@ -138,32 +142,36 @@ const Map<String, _HelpTopic> _helpTopics = {
     titleEn: 'SCOREBOARD',
     tips: [
       _HelpTip(
-        'Toca las 3 barras de puntos de un jugador (o equipo) para sumarle un punto. Con 3 puntos gana la partida.',
-        'Tap a player\'s (or team\'s) 3 point bars to add a point. At 3 points they win the match.',
+        'Los puntos se ganan al ganar una batalla. Si hay que corregirlos, usa el modo de edición (el lápiz).',
+        'Points are won by winning battles. To fix them, use the edit mode (the pencil).',
       ),
       _HelpTip(
-        'Toca un Bakugan de tu reserva para ponerlo en juego. Mantén pulsado un Bakugan para marcarlo como usado, o para devolverlo a la reserva si te equivocaste.',
-        'Tap a Bakugan in your pile to put it in play. Long-press a Bakugan to mark it as used, or to put it back if you made a mistake.',
+        'Debajo de cada Bakugan se lee su estado: UNUSED (en la pila), STAND (en juego), USED o DOOMED (fuera del juego). Al tocarlo pasa de UNUSED a STAND, a USED y vuelve a UNUSED.',
+        'Under each Bakugan you can read its state: UNUSED (in the pile), STAND (in play), USED or DOOMED (out of the game). Tapping it goes from UNUSED to STAND, to USED and back to UNUSED.',
       ),
       _HelpTip(
-        'BATALLA: elige un Bakugan en juego de cada bando y pulsa FIGHT! para ir a la arena. BACK cancela.',
-        'BATTLE: pick one Bakugan in play from each side and press FIGHT! to go to the arena. BACK cancels.',
+        'BATALLA: elige un Bakugan en STAND de cada bando y pulsa FIGHT! para ir a la arena. BACK cancela.',
+        'BATTLE: pick one Bakugan in STAND from each side and press FIGHT! to go to the arena. BACK cancels.',
       ),
       _HelpTip(
-        'Cuando un jugador tiene sus 3 Bakugan en juego aparece STAY: devuelve el más antiguo a la reserva y suma un punto.',
-        'When a player has all 3 Bakugan in play, STAY appears: it sends the oldest one back to the pile and adds a point.',
+        'Cuando un jugador tiene sus 3 Bakugan en STAND aparece STAY como cuarto recuadro: devuelve el más antiguo a UNUSED y suma un punto.',
+        'When a player has all 3 Bakugan in STAND, STAY appears as a fourth tile: it sends the oldest one back to UNUSED and adds a point.',
       ),
       _HelpTip(
-        'Las cartas boca abajo junto al perfil son cartas de habilidad: tócalas para presentar una. Tócala después para leer su efecto.',
-        'The face-down cards by the profile are ability cards: tap one to present a card. Tap it afterwards to read its effect.',
+        'Las cartas boca abajo junto al perfil son de habilidad: tócalas para presentar una y búscala por nombre. Mantén pulsada una presentada para darle la vuelta: se atenúa y su efecto se anula. Las habilidades globales salen también en el centro.',
+        'The face-down cards by the profile are ability cards: tap one to present a card and search it by name. Long-press a presented one to flip it: it dims and its effect is cancelled. Global abilities also show in the centre.',
       ),
       _HelpTip(
-        'Mantén pulsada una habilidad presentada para darle la vuelta: queda atenuada y su efecto se anula. Vuelve a mantener pulsado para reactivarla.',
-        'Long-press a presented ability to flip it: it dims and its effect is cancelled. Long-press again to re-enable it.',
+        'El + del centro (Manual y Asistido) añade una carta de puerta que sigue en efecto, como Forest Fire, con su bonus y los atributos que afecta. Tócala para leerla y quitarla.',
+        'The + in the centre (Manual and Assisted) adds a Gate card that stays in effect, like Forest Fire, with its bonus and the attributes it affects. Tap it to read it and remove it.',
       ),
       _HelpTip(
-        'Dentro de la descripción de una carta, el botón de arriba a la derecha la devuelve a la pila de cartas sin usar.',
-        'Inside a card description, the button at the top right sends the card back to the unused pile.',
+        'Modo de edición (el lápiz, en Manual y Asistido): los jugadores se amplían, cada Bakugan tiene un − para mandarlo a DOOMED (y un + para devolverlo) y los puntos tienen + y −. DONE sale del modo.',
+        'Edit mode (the pencil, in Manual and Assisted): the players expand, each Bakugan has a − to send it to DOOMED (and a + to bring it back) and the points have + and −. DONE leaves the mode.',
+      ),
+      _HelpTip(
+        'Con 3 puntos aparece WIN? junto a la puntuación para confirmar la victoria (en Auto se declara sola). En la pantalla de victoria, KEEP BRAWLING la retira, restaura la clasificación y deja la victoria automática apagada el resto de la partida.',
+        'With 3 points, WIN? appears next to the score to confirm the win (in Auto it is declared by itself). On the victory screen, KEEP BRAWLING takes it back, restores the leaderboard and keeps the automatic win off for the rest of the match.',
       ),
     ],
   ),
@@ -172,12 +180,20 @@ const Map<String, _HelpTopic> _helpTopics = {
     titleEn: 'ARENA',
     tips: [
       _HelpTip(
-        'Toca la carta boca abajo del centro para elegir la carta de puerta que se revela. Después, tócala para terminar el combate y ver quién gana.',
-        'Tap the face-down card in the centre to choose the Gate card that is revealed. Then tap it to end the fight and see who wins.',
+        'Toca la carta boca abajo del centro para elegir la carta de puerta que se revela. Después, tócala para terminar el combate: en Asistido y Auto gana el Bakugan con más G-Power (salvo que la carta diga otra cosa); en Manual sale una ventana para elegir ganador o empate.',
+        'Tap the face-down card in the centre to choose the Gate card that is revealed. Then tap it to end the fight: in Assisted and Auto the Bakugan with the most G-Power wins (unless the card says otherwise); in Manual a window asks you to pick a winner or a tie.',
       ),
       _HelpTip(
-        'Gana el Bakugan con más G-Power, salvo que la carta de puerta diga otra cosa. Si hay empate, el resultado es TIE.',
-        'The Bakugan with the most G-Power wins, unless the Gate card says otherwise. On a tie, the result is a TIE.',
+        'Tras el resultado, CHANGE RESULT (Manual y Asistido) permite cambiarlo antes de salir con OK.',
+        'After the result, CHANGE RESULT (Manual and Assisted) lets you change it before leaving with OK.',
+      ),
+      _HelpTip(
+        'El + junto al G-Power de cada Bakugan (Manual y Asistido) abre una ventana para sumar o restar G-Power y, con el desplegable ATTRIBUTE, cambiar su atributo. APPLY aplica las dos cosas; RESET quita el ajuste manual.',
+        "The + beside each Bakugan's G-Power (Manual and Assisted) opens a window to add or remove G-Power and, with the ATTRIBUTE dropdown, change its attribute. APPLY applies both; RESET removes the manual adjustment.",
+      ),
+      _HelpTip(
+        'En Manual la app no suma bonus ni aplica efectos de cartas: el G-Power es el impreso más lo que pongas tú. En Asistido y Auto sí los aplica (los efectos que conoce).',
+        'In Manual the app adds no bonuses and applies no card effects: the G-Power is the printed one plus what you set. In Assisted and Auto it applies them (the effects it knows).',
       ),
       _HelpTip(
         'A los lados puedes presentar cartas de habilidad durante el combate. Las que aparecen atenuadas fueron anuladas en el marcador.',
@@ -204,20 +220,16 @@ const Map<String, _HelpTopic> _helpTopics = {
     titleEn: 'INVENTORY · BAKUGAN',
     tips: [
       _HelpTip(
-        'Mantén pulsado un atributo para añadir ese Bakugan a tu colección: escribe sus G-Power. Si lo dejas en 0 no cuenta como parte de la colección.',
-        'Long-press an attribute to add that Bakugan to your collection: enter its G-Power. If you leave it at 0 it does not count as part of the collection.',
+        'Toca un atributo para previsualizarlo. La pestaña EDIT fija el G-Power del atributo seleccionado: con 0 (o vacío) no cuenta como parte de la colección.',
+        'Tap an attribute to preview it. The EDIT tab sets the G-Power of the selected attribute: with 0 (or empty) it does not count as part of the collection.',
       ),
       _HelpTip(
-        'Un toque en un atributo solo lo previsualiza.',
-        'A single tap on an attribute only previews it.',
-      ),
-      _HelpTip(
-        'Las pestañas de arriba filtran por atributo y ordenan por G-Power (el orden necesita un atributo elegido). MODO COLECCIÓN alterna entre ver solo los que tienes o todos.',
+        'Las pestañas de arriba filtran por atributo y ordenan por G-Power (el orden necesita un atributo elegido). COLLECTION MODE alterna entre ver solo los que tienes o todos.',
         'The tabs at the top filter by attribute and sort by G-Power (sorting needs an attribute selected). COLLECTION MODE switches between showing only the ones you own or all of them.',
       ),
       _HelpTip(
-        'CLEAR ALL G POWER vacía toda tu colección.',
-        'CLEAR ALL G POWER empties your whole collection.',
+        'RESET ALL, junto al botón de ajustes, pone a cero el G-Power de toda tu colección (pide confirmación).',
+        'RESET ALL, next to the settings button, sets the G-Power of your whole collection to zero (it asks for confirmation).',
       ),
     ],
   ),
@@ -228,6 +240,10 @@ const Map<String, _HelpTopic> _helpTopics = {
       _HelpTip(
         'Desliza o toca una carta lateral para centrarla. Los filtros de clase de arriba ocultan las demás.',
         'Swipe or tap a side card to centre it. The class filters at the top hide the others.',
+      ),
+      _HelpTip(
+        'PERSISTENT, junto al buscador, muestra solo las cartas que siguen en efecto mientras están en una pila de usadas. Se combina con el buscador y con el color.',
+        'PERSISTENT, next to the search, shows only the cards that stay in effect while they are in a used pile. It combines with the search and the colour.',
       ),
     ],
   ),
