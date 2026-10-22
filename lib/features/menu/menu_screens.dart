@@ -988,14 +988,23 @@ class _LeaderboardScreenState extends State<LeaderboardScreen> {
     }
   }
 
+  // Swap in the already-loaded store so the screen updates in the same frame,
+  // like _setEloPaused does, instead of waiting on a fresh load.
+  Future<void> _showStore(LeaderboardStore store) async {
+    if (!mounted) return;
+    setState(() {
+      _isEloPaused = store.isEloPaused;
+      _leaderboardFuture = Future.value(store);
+    });
+  }
+
   Future<void> _startPlayerSeason(String name) async {
     await LeaderboardRepository.instance.startPlayerSeason(name);
-    await _reload();
+    await _showStore(await LeaderboardRepository.instance.loadStore());
   }
 
   Future<void> _startCurrentSeason() async {
-    await LeaderboardRepository.instance.startCurrentSeason();
-    await _reload();
+    await _showStore(await LeaderboardRepository.instance.startCurrentSeason());
   }
 
   Future<void> _setEloPaused(bool isPaused) async {
@@ -3458,7 +3467,7 @@ class _BattleModeScreenState extends State<BattleModeScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   BakuganButton(
-                    text: '1 VS 1',
+                    text: l10n.battleRoyale.replaceAll(' ', '\n'),
                     onPressed: () {
                       Navigator.push(
                         context,
