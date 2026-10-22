@@ -28,7 +28,7 @@ battle assistant, keeping the calculations and match state under control
 so everyone can focus on the game.
 
 <p align="center">
-  <img src="assets/readme_assets/home_undo.jpeg" alt="home screen" width="700"/>
+<img width="5120" height="2880" alt="home" src="https://github.com/user-attachments/assets/4bb85829-5562-4071-901b-c05de4797c9b" />
 </p>
 
 <img src="assets/readme_assets/track-your-collection.png" alt="Track yout collection" width="700"/>
@@ -37,10 +37,7 @@ Keep track of the Bakugan and cards in your physical collection.
 Browse them by attribute, type, and variant.
 
 <p align="center">
-  <!-- Replace with: docs/screenshots/bakugan-inventory.png -->
-  <img src="docs/screenshots/bakugan-inventory.png" alt="Bakugan inventory" width="360" style="max-width: 100%; height: auto;">
-  <!-- Replace with: docs/screenshots/card-inventory.png -->
-  <img src="docs/screenshots/card-inventory.png" alt="Card inventory" width="360" style="max-width: 100%; height: auto;">
+  <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 22 49 56" src="https://github.com/user-attachments/assets/e6035582-98ab-43af-8e94-a7486910acda" />
 </p>
 
 <img src="assets/readme_assets/set-up-your-match.png" alt="Set-up your match" width="700"/>
@@ -49,10 +46,8 @@ Prepare a complete match before playing: choose the format, players,
 teams, and Bakugan taking part in the battle.
 
 <p align="center">
-  <!-- Replace with: docs/screenshots/match-setup.png -->
-  <img src="docs/screenshots/match-setup.png" alt="Match setup" width="360" style="max-width: 100%; height: auto;">
-  <!-- Replace with: docs/screenshots/one-vs-one.png -->
-  <img src="docs/screenshots/one-vs-one.png" alt="1 vs 1 setup" width="360" style="max-width: 100%; height: auto;">
+  <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 22 55 56" src="https://github.com/user-attachments/assets/c026cece-f30e-4eeb-a0d8-2636d9bb91de" />
+  <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 04 52" src="https://github.com/user-attachments/assets/bd15f7d7-c21c-4a3e-90d1-d9f61f3f8634" />
 </p>
 
 <img src="assets/readme_assets/battles-fully-automated.png" alt="Battles fully automated" width="700"/>
@@ -62,10 +57,9 @@ tracks the battle state and handles power changes, bonuses, abilities,
 and swaps as the action unfolds. It also has a music playlist with all the original game soundtrack.
 
 <p align="center">
-  <!-- Replace with: docs/screenshots/battle-arena.png -->
-  <img src="docs/screenshots/battle-arena.png" alt="Battle arena" width="360" style="max-width: 100%; height: auto;">
-  <!-- Replace with: docs/screenshots/team-battle.png -->
-  <img src="docs/screenshots/team-battle.png" alt="Team battle" width="360" style="max-width: 100%; height: auto;">
+<img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 53 17" src="https://github.com/user-attachments/assets/006b1fb7-b4b4-495a-91f8-73618fbed668" />
+<img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 30 07" src="https://github.com/user-attachments/assets/bc9424b0-81fe-4c7f-ae60-2a0f5ae30fdc" />
+<img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 33 31" src="https://github.com/user-attachments/assets/a8dd2a4d-2dfe-4a48-8eac-a3ea4dea3329" />
 </p>
 
 <img src="assets/readme_assets/seasons-and-elo.png" alt="Seasons and elo" width="700"/>
@@ -74,8 +68,7 @@ Organize your games into seasons and follow player progression with an
 ELO rating system.
 
 <p align="center">
-  <!-- Replace with: docs/screenshots/seasons-elo.png -->
-  <img src="docs/screenshots/seasons-elo.png" alt="Seasons and ELO" width="360" style="max-width: 100%; height: auto;">
+  <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 54 32" src="https://github.com/user-attachments/assets/4540cc1c-6325-4259-ae18-ebd56adab891" />
 </p>
 
 
@@ -85,8 +78,7 @@ Review previous matches, results, players, and battle details so every
 session becomes part of your play history.
 
 <p align="center">
-  <!-- Replace with: docs/screenshots/match-history.png -->
-  <img src="docs/screenshots/match-history.png" alt="Match history" width="360" style="max-width: 100%; height: auto;">
+  <img width="5120" height="2880" alt="Screenshot 2026-10-19 at 23 54 02" src="https://github.com/user-attachments/assets/65dffb87-e02e-4f86-9843-2874f8585da1" />
 </p>
 
 
@@ -96,10 +88,6 @@ session becomes part of your play history.
 Back up and restore saved matches so tournament and campaign data stays
 safe across devices or installations.
 
-<p align="center">
-  <!-- Replace with: docs/screenshots/backup.png -->
-  <img src="docs/screenshots/backup.png" alt="Backup system" width="360" style="max-width: 100%; height: auto;">
-</p>
 
 <img src="assets/readme_assets/credits.png" alt="Credits" width="700"/>
 
