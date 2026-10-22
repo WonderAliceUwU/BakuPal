@@ -62,6 +62,9 @@ jobs:
   linux:
     # Pinned: ubuntu-latest is moving to a newer image (October 2026).
     runs-on: ubuntu-24.04
+    # The release is published even if the Linux build fails; the error lines
+    # are reported as annotations to fix it.
+    continue-on-error: true
     steps:
       - uses: actions/checkout@v4
         with:
@@ -77,7 +80,14 @@ jobs:
           cache: true
       - run: flutter config --enable-linux-desktop
       - run: flutter pub get
-      - run: flutter build linux --release
+      - name: Build Linux
+        run: |
+          set -o pipefail
+          flutter build linux --release -v 2>&1 | tee build.log
+      - name: Report Linux build errors
+        if: failure()
+        run: |
+          grep -n -i -E "error|fatal|not found|undefined reference|could not|failed" build.log | tail -40 | while IFS= read -r line; do echo "::error::${line//$'\r'/}"; done
       - name: Package
         run: tar -czf bakupal-linux-x64.tar.gz -C build/linux/x64/release/bundle .
       - uses: actions/upload-artifact@v4

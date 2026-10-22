@@ -22,6 +22,7 @@ the game instead of the maths.
 - **macOS**: unzip `bakupal-macos.zip`. The app is not signed yet: the first
   time, right click, Open.
 - **Linux**: extract `bakupal-linux-x64.tar.gz` and run the executable inside.
+  If that file is not attached to this release, the Linux build is not ready yet.
 
 ## Beta: what is still missing
 
