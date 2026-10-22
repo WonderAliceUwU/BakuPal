@@ -31,6 +31,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 part 'app/app.dart';
 part 'core/localization/language_settings.dart';
 part 'core/localization/help_content.dart';
+part 'core/automation/automation.dart';
 part 'core/data/models.dart';
 part 'core/data/cards.dart';
 part 'features/menu/menu_screens.dart';
@@ -90,6 +91,7 @@ void main() async {
     await _bgMusicPlayer.stop();
   } catch (_) {}
   await LanguageController.instance.init();
+  await AutomationController.instance.init();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const BakuganApp());
 }

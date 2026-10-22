@@ -240,6 +240,7 @@ class AppLocalizations {
   String get savegame => 'SAVEGAME';
   String get backupImport => isEs ? 'COPIA / IMPORTAR' : 'BACKUP / IMPORT';
   String get help => isEs ? 'AYUDA' : 'HELP';
+  String get automation => isEs ? 'AUTOMATIZACIÓN' : 'AUTOMATION';
   String get settingsTitle => isEs ? 'AJUSTES' : 'SETTINGS';
   String get volume => isEs ? 'VOLUMEN' : 'VOLUME';
   String get languageLabel => isEs ? 'IDIOMA' : 'LANGUAGE';
@@ -330,8 +331,7 @@ class AppLocalizations {
       ? 'La temporada actual terminará y se formará el ranking.'
       : 'The current season will end and the ranking will be formed.';
   String get startSeason => isEs ? 'INICIAR TEMPORADA' : 'START SEASON';
-  String get startPlayerElo =>
-      isEs ? 'INICIAR TEMPORADA' : 'START SEASON';
+  String get startPlayerElo => isEs ? 'INICIAR TEMPORADA' : 'START SEASON';
   String get pauseElo => isEs ? 'PAUSAR ELO' : 'PAUSE ELO';
   String get resumeElo => isEs ? 'REANUDAR ELO' : 'RESUME ELO';
   String get eloPausedTitle => isEs ? 'PAUSADO' : 'PAUSED';

@@ -1364,6 +1364,10 @@ class LeaderboardRepository {
     return _persistStore(store.copyWith(currentLeaderboard: data));
   }
 
+  /// Writes back a store saved earlier (used to undo a declared match win).
+  Future<LeaderboardStore> restoreStore(LeaderboardStore store) =>
+      _persistStore(store);
+
   Future<LeaderboardStore> _persistStore(LeaderboardStore store) async {
     final normalized = _normalizeStore(store);
     final file = await _dataFile();
