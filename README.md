@@ -138,4 +138,11 @@ flutter run
 
 Bakugan Companion is an evolving project. New game modes, more customizability, more cards effects and bakugan are in the way.
 
+Known gaps in the beta:
+
+- Some card effects are not automated yet. Use the manual tools (or Manual
+  mode) to resolve them by hand.
+- Many 2D images of the Bakugan in monster form are still missing; the battle
+  screen shows the 3D model when there is none.
+
 Check releases for more updates.

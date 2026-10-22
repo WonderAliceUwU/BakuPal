@@ -23,8 +23,13 @@ the game instead of the maths.
   time, right click, Open.
 - **Linux**: extract `bakupal-linux-x64.tar.gz` and run the executable inside.
 
-## Beta
+## Beta: what is still missing
 
-This is a beta. Many card effects are not automated yet (use the manual tools
-for those) and bugs are expected. Please report anything odd as an issue.
+This is a beta, so expect rough edges:
 
+- **Card effects**: some card effects are not automated yet. In Assisted and
+  Auto the app applies the ones it knows; for the rest, use the manual tools
+  (or Manual mode) and resolve them by hand.
+- **Bakugan images**: many 2D images of the Bakugan in monster form are still
+  missing. Where there is none, the battle screen shows the 3D model instead.
+- Bugs are expected. Please report anything odd as an issue.
