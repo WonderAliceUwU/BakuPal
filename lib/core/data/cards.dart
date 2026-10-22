@@ -30,6 +30,8 @@ class GateCard {
   final String cardClass;
   final bool hasEffect;
   final List<dynamic> effects;
+  // 'global' or 'owner' for cards that stay in effect while in a used pile.
+  final String? persistent;
 
   const GateCard({
     required this.key,
@@ -41,20 +43,19 @@ class GateCard {
     required this.cardClass,
     required this.hasEffect,
     this.effects = const [],
+    this.persistent,
   });
 
   int bonusFor(String attribute) => attributes[attribute.toLowerCase()] ?? 0;
 
   String descriptionFor(AppLanguage lang) {
-    if (lang == AppLanguage.es) {
-      return (descriptionEs?.trim().isNotEmpty ?? false)
-          ? descriptionEs!
-          : (descriptionEn ?? '');
-    } else {
-      return (descriptionEn?.trim().isNotEmpty ?? false)
-          ? descriptionEn!
-          : (descriptionEs ?? '');
-    }
+    return lang == AppLanguage.es
+        ? ((descriptionEs?.trim().isNotEmpty ?? false)
+              ? descriptionEs!
+              : (descriptionEn ?? ''))
+        : ((descriptionEn?.trim().isNotEmpty ?? false)
+              ? descriptionEn!
+              : (descriptionEs ?? ''));
   }
 
   bool _matchesNamedTargets(BakuganVariant variant, dynamic targetsRaw) {
@@ -392,6 +393,22 @@ class GateCard {
         effect is Map && effect['type'] == 'return_all_used_ability_cards',
   );
 
+  // Bonuses this card gives while in a used pile, as (+value, attributes).
+  List<({int value, List<String> attributes})> get usedPileGlobalBonuses => [
+    for (final effect in effects)
+      if (effect is Map &&
+          effect['type'] == 'used_pile_global_attribute_bonus' &&
+          effect['value'] is num &&
+          effect['attributes'] is List)
+        (
+          value: (effect['value'] as num).toInt(),
+          attributes: [
+            for (final attribute in effect['attributes'] as List)
+              attribute.toString().toLowerCase(),
+          ],
+        ),
+  ];
+
   bool get hasUsedPileGlobalAttributeBonus => effects.any(
     (effect) =>
         effect is Map && effect['type'] == 'used_pile_global_attribute_bonus',
@@ -681,6 +698,8 @@ class AbilityCard {
   final String cardClass;
   final Set<String> timings;
   final List<dynamic> effects;
+  // 'global' or 'owner' for cards that stay in effect while in a used pile.
+  final String? persistent;
 
   const AbilityCard({
     required this.key,
@@ -692,20 +711,19 @@ class AbilityCard {
     required this.cardClass,
     required this.timings,
     this.effects = const [],
+    this.persistent,
   });
 
   int bonusFor(String attribute) => attributes[attribute.toLowerCase()] ?? 0;
 
   String descriptionFor(AppLanguage lang) {
-    if (lang == AppLanguage.es) {
-      return (descriptionEs?.trim().isNotEmpty ?? false)
-          ? descriptionEs!
-          : (descriptionEn ?? '');
-    } else {
-      return (descriptionEn?.trim().isNotEmpty ?? false)
-          ? descriptionEn!
-          : (descriptionEs ?? '');
-    }
+    return lang == AppLanguage.es
+        ? ((descriptionEs?.trim().isNotEmpty ?? false)
+              ? descriptionEs!
+              : (descriptionEn ?? ''))
+        : ((descriptionEn?.trim().isNotEmpty ?? false)
+              ? descriptionEn!
+              : (descriptionEs ?? ''));
   }
 
   int calculateBonus(BakuganVariant variant) {
@@ -1382,9 +1400,10 @@ void _loadStage2LegacyGlbModels(
 
     final speciesSlug = _assetSlug(relativePath.first);
     final speciesName = _speciesNameFromSlug(speciesSlug);
-    final fileName = relativePath.last
-        .toLowerCase()
-        .replaceFirst(RegExp(r'\.[^.]+$'), '');
+    final fileName = relativePath.last.toLowerCase().replaceFirst(
+      RegExp(r'\.[^.]+$'),
+      '',
+    );
     final normalizedFileName = _assetSlug(fileName);
 
     for (final attribute in _normalBakuganAttributes) {
@@ -1435,9 +1454,10 @@ void _loadStage3LegacyImageModels(
 
     final speciesSlug = _assetSlug(relativePath.first);
     final speciesName = _speciesNameFromSlug(speciesSlug);
-    final fileName = relativePath.last
-        .toLowerCase()
-        .replaceFirst(RegExp(r'\.[^.]+$'), '');
+    final fileName = relativePath.last.toLowerCase().replaceFirst(
+      RegExp(r'\.[^.]+$'),
+      '',
+    );
     final normalizedFileName = _assetSlug(fileName);
 
     for (final attribute in _normalBakuganAttributes) {
@@ -1484,4 +1504,32 @@ Future<void> _loadFallback() async {
       ],
     ),
   ];
+}
+
+/// Checks the condition of a "prevent gate capture after a close loss" effect
+/// (Subterra...). Returns null when the effect applies, or the reason it does
+/// not: the card has to be played by the loser, with a Bakugan of the required
+/// attribute, and the loss has to be by less than the margin on the card.
+String? closeLossEffectBlockedReason({
+  required Object? condition,
+  required bool playerIsLoser,
+  required String loserAttribute,
+  required int margin,
+}) {
+  final requiredAttribute = condition is Map
+      ? condition['your_attribute']?.toString().toLowerCase()
+      : null;
+  final maxMargin = condition is Map && condition['loss_margin_lt'] is num
+      ? (condition['loss_margin_lt'] as num).toInt()
+      : null;
+
+  if (!playerIsLoser) return 'It has to be played by the player who lost.';
+  if (requiredAttribute != null &&
+      loserAttribute.toLowerCase() != requiredAttribute) {
+    return 'The losing Bakugan has to be ${requiredAttribute.toUpperCase()}.';
+  }
+  if (maxMargin != null && margin >= maxMargin) {
+    return 'The loss was by $margin G; it has to be less than $maxMargin G.';
+  }
+  return null;
 }

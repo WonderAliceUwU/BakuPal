@@ -2075,6 +2075,7 @@
       "file": "BA208_GA_SM_forest_fire.png",
       "name": "Forest Fire",
       "type": "gate",
+      "persistent": "global",
       "card_class": "gold",
       "attributes": {
         "pyrus": 60,
@@ -2135,6 +2136,7 @@
       "file": "BA210_GA_SM_lightning_storm.png",
       "name": "Lightning Storm",
       "type": "gate",
+      "persistent": "global",
       "card_class": "gold",
       "attributes": {
         "pyrus": 120,
@@ -3015,6 +3017,7 @@
       "file": "BA240_AB_SM_darkus2.png",
       "name": "Darkus 2",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -3046,6 +3049,7 @@
       "file": "BA241_AB_SM_pyrus2.png",
       "name": "Pyrus 2",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -4390,6 +4394,7 @@
       "file": "BA287_AB_darknesstovictory_44.png",
       "name": "Darkness to Victory",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -5807,6 +5812,7 @@
       "file": "BA336_AB_lars_lion_45d.png",
       "name": "Lars Lion",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,

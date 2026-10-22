@@ -9,6 +9,8 @@ class CardCatalogEntry {
   final String descriptionEn;
   final String descriptionEs;
   final Map<String, int> attributes;
+  // 'global' or 'owner' for cards that stay in effect while in a used pile.
+  final String? persistent;
 
   const CardCatalogEntry({
     required this.key,
@@ -19,6 +21,7 @@ class CardCatalogEntry {
     required this.descriptionEn,
     required this.descriptionEs,
     required this.attributes,
+    this.persistent,
   });
 
   String descriptionFor(AppLanguage lang) {
@@ -100,6 +103,7 @@ Future<List<CardCatalogEntry>> loadCardCatalog() async {
         descriptionEn: descriptions['en']?.toString() ?? '',
         descriptionEs: descriptions['es']?.toString() ?? '',
         attributes: attributes,
+        persistent: data['persistent']?.toString(),
       ),
     );
   }
@@ -580,6 +584,7 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
   late final Future<List<CardCatalogEntry>> _cardsFuture;
   String _query = '';
   final Set<String> _selectedClasses = <String>{};
+  bool _onlyPersistent = false;
 
   @override
   void initState() {
@@ -595,10 +600,13 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
 
   List<CardCatalogEntry> _filteredCards(List<CardCatalogEntry> cards) {
     final query = _query.trim().toLowerCase();
-    if (query.isEmpty && _selectedClasses.isEmpty) return cards;
+    if (query.isEmpty && _selectedClasses.isEmpty && !_onlyPersistent) {
+      return cards;
+    }
     return cards
         .where(
           (card) =>
+              (!_onlyPersistent || card.persistent != null) &&
               (_selectedClasses.isEmpty ||
                   _selectedClasses.contains(card.cardClass)) &&
               (card.name.toLowerCase().contains(query) ||
@@ -609,19 +617,58 @@ class _InventoryCardsScreenState extends State<InventoryCardsScreen> {
   }
 
   Widget _buildSearchField() {
-    return TextField(
-      controller: _searchController,
-      onChanged: (value) => setState(() => _query = value),
-      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w700),
-      decoration: const InputDecoration(
-        isDense: true,
-        hintText: 'Search cards',
-        hintStyle: TextStyle(color: Colors.white38),
-        border: InputBorder.none,
-        enabledBorder: InputBorder.none,
-        focusedBorder: InputBorder.none,
-        contentPadding: EdgeInsets.symmetric(vertical: 10),
-      ),
+    return Row(
+      children: [
+        Expanded(
+          child: TextField(
+            controller: _searchController,
+            onChanged: (value) => setState(() => _query = value),
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w700,
+            ),
+            decoration: const InputDecoration(
+              isDense: true,
+              hintText: 'Search cards',
+              hintStyle: TextStyle(color: Colors.white38),
+              border: InputBorder.none,
+              enabledBorder: InputBorder.none,
+              focusedBorder: InputBorder.none,
+              contentPadding: EdgeInsets.symmetric(vertical: 10),
+            ),
+          ),
+        ),
+        const SizedBox(width: 10),
+        // Cards that stay in effect while they are in a used pile.
+        GestureDetector(
+          onTap: () {
+            unawaited(_playUiConfirmSound());
+            setState(() => _onlyPersistent = !_onlyPersistent);
+          },
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+            decoration: BoxDecoration(
+              color: _onlyPersistent
+                  ? Colors.amberAccent
+                  : Colors.black.withValues(alpha: 0.35),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(
+                color: _onlyPersistent ? Colors.amberAccent : Colors.white38,
+              ),
+            ),
+            child: Text(
+              'PERSISTENT',
+              style: TextStyle(
+                color: _onlyPersistent ? Colors.black : Colors.white70,
+                fontSize: 11,
+                fontWeight: FontWeight.w900,
+                letterSpacing: 0.8,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

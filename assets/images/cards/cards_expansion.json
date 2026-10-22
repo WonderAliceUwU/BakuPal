@@ -507,7 +507,7 @@
       ],
       "rules": []
     },
-    "rainbow": {
+    "rainbow_20_48e": {
       "set_number": "20/48e",
       "file": "BA367_GA_20_GBL.png",
       "name": "Rainbow",
@@ -632,6 +632,7 @@
       "file": "BA371_GA_24_GBL.png",
       "name": "Opposite Attributes Gate",
       "type": "gate",
+      "persistent": "owner",
       "card_class": "copper",
       "attributes": {
         "pyrus": 70,
@@ -678,6 +679,7 @@
       "file": "BA372_AB_25_GBL.png",
       "name": "Rip Tide",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -711,6 +713,7 @@
       "file": "BA373_AB_26_GBL.png",
       "name": "Hard Rain",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -744,6 +747,7 @@
       "file": "BA374_AB_27_GBL.png",
       "name": "Lightning",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -783,6 +787,7 @@
       "file": "BA375_AB_28_GBL.png",
       "name": "Stormy Night",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -995,7 +1000,7 @@
       ],
       "rules": []
     },
-    "powder_keg": {
+    "powder_keg_35_48e": {
       "set_number": "35/48e",
       "file": "BA382_AB_35_GBL.png",
       "name": "Powder Keg",
@@ -1355,6 +1360,7 @@
       "file": "BA393_AB_46_GBL.png",
       "name": "Hercules",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -2897,6 +2903,7 @@
       "file": "BA464_AB_GBL_25.png",
       "name": "Rainbow Portal",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -2937,6 +2944,7 @@
       "file": "BA465_AB_GBL_26.png",
       "name": "Rainbow Prism",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "red",
       "attributes": {
         "pyrus": null,
@@ -5477,6 +5485,7 @@
       "file": "Power_Card_Alpha_45-48n.png",
       "name": "Power Card Alpha",
       "type": "ability",
+      "persistent": "global",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -5509,6 +5518,7 @@
       "file": "Power_Card_Zeta_46-48n.png",
       "name": "Power Card Zeta",
       "type": "ability",
+      "persistent": "global",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -5541,6 +5551,7 @@
       "file": "Counter_Trap_Alpha_47-48n.png",
       "name": "Counter Trap Alpha",
       "type": "ability",
+      "persistent": "global",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -5573,6 +5584,7 @@
       "file": "Counter_Trap_Beta_48-48n.png",
       "name": "Counter Trap Beta",
       "type": "ability",
+      "persistent": "global",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -8516,6 +8528,7 @@
       "file": "47q_Brilliant_Night.png",
       "name": "Brilliant Night",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
@@ -8556,6 +8569,7 @@
       "file": "48q_Dust_Devil.png",
       "name": "Dust Devil",
       "type": "ability",
+      "persistent": "owner",
       "card_class": "green",
       "attributes": {
         "pyrus": null,
