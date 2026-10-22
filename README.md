@@ -107,7 +107,7 @@ safe across devices or installations.
 
 <img src="assets/readme_assets/credits.png" alt="Credits" width="700"/>
 
-3D Models thanks to MrZangestsu and sprites thanks to Jeppa <3.
+3D Models thanks to MrZangestsu and sprites thanks to Jeppa, Strike and Shira <3.
 Built with Flutter and made for the Bakugan community.
 
 ## Download
