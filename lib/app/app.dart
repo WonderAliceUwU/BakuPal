@@ -113,10 +113,6 @@ Route _zoomRoute(Widget page) {
     settings: RouteSettings(name: _helpTopicForPage(page)),
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      // Going back fades out, like the other screens, instead of shrinking.
-      if (animation.status == AnimationStatus.reverse) {
-        return FadeTransition(opacity: animation, child: child);
-      }
       return ScaleTransition(
         scale: Tween<double>(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
@@ -125,7 +121,6 @@ Route _zoomRoute(Widget page) {
       );
     },
     transitionDuration: const Duration(milliseconds: 800),
-    reverseTransitionDuration: const Duration(milliseconds: 600),
   );
 }
 
