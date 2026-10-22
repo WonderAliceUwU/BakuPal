@@ -28,6 +28,7 @@ class BakuganApp extends StatelessWidget {
         return MaterialApp(
           title: 'Bakugan Stadium App',
           navigatorKey: _appNavigatorKey,
+          navigatorObservers: [_HelpTopicObserver()],
           debugShowCheckedModeBanner: false,
           theme: ThemeData(
             brightness: Brightness.dark,
@@ -98,6 +99,7 @@ class _BakuganResponsiveSurface extends StatelessWidget {
 
 Route _fadeRoute(Widget page) {
   return PageRouteBuilder(
+    settings: RouteSettings(name: _helpTopicForPage(page)),
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
       return FadeTransition(opacity: animation, child: child);
@@ -108,8 +110,13 @@ Route _fadeRoute(Widget page) {
 
 Route _zoomRoute(Widget page) {
   return PageRouteBuilder(
+    settings: RouteSettings(name: _helpTopicForPage(page)),
     pageBuilder: (context, animation, secondaryAnimation) => page,
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+      // Going back fades out, like the other screens, instead of shrinking.
+      if (animation.status == AnimationStatus.reverse) {
+        return FadeTransition(opacity: animation, child: child);
+      }
       return ScaleTransition(
         scale: Tween<double>(begin: 0.0, end: 1.0).animate(
           CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
@@ -118,6 +125,7 @@ Route _zoomRoute(Widget page) {
       );
     },
     transitionDuration: const Duration(milliseconds: 800),
+    reverseTransitionDuration: const Duration(milliseconds: 600),
   );
 }
 
@@ -335,13 +343,27 @@ Future<void> _openAppSettingsDialog() async {
   if (navigatorContext == null) return;
 
   final matchPauseController = _matchPauseController.value;
+  final helpTopic = _currentHelpTopic.value;
   if (matchPauseController != null) {
     await matchPauseController.onOpen();
   }
 
+  // Closing the dialog without picking a pause option (tapping outside, the
+  // close button, or after reading the help) must still resume the match.
+  var matchActionTaken = false;
+  final trackedPauseController = matchPauseController == null
+      ? null
+      : MatchPauseController(
+          onOpen: matchPauseController.onOpen,
+          onAction: (action) {
+            matchActionTaken = true;
+            return matchPauseController.onAction(action);
+          },
+        );
+
   _isAppSettingsOpen.value = true;
   try {
-    await showGeneralDialog<void>(
+    final result = await showGeneralDialog<String>(
       context: navigatorContext,
       barrierDismissible: true,
       barrierLabel: 'Settings',
@@ -360,7 +382,8 @@ Future<void> _openAppSettingsDialog() async {
               ),
               Center(
                 child: AppSettingsDialog(
-                  matchPauseController: _matchPauseController.value,
+                  matchPauseController: trackedPauseController,
+                  helpTopic: helpTopic,
                 ),
               ),
             ],
@@ -378,6 +401,12 @@ Future<void> _openAppSettingsDialog() async {
         );
       },
     );
+    if (result == 'help' && helpTopic != null) {
+      await _openHelpDialog(helpTopic);
+    }
+    if (matchPauseController != null && !matchActionTaken) {
+      await matchPauseController.onAction('resume');
+    }
   } finally {
     _isAppSettingsOpen.value = false;
   }
@@ -385,8 +414,13 @@ Future<void> _openAppSettingsDialog() async {
 
 class AppSettingsDialog extends StatefulWidget {
   final MatchPauseController? matchPauseController;
+  final String? helpTopic;
 
-  const AppSettingsDialog({super.key, this.matchPauseController});
+  const AppSettingsDialog({
+    super.key,
+    this.matchPauseController,
+    this.helpTopic,
+  });
 
   @override
   State<AppSettingsDialog> createState() => _AppSettingsDialogState();
@@ -407,6 +441,7 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations(_selectedUiLang);
     final matchPauseController = widget.matchPauseController;
+    final helpTopic = widget.helpTopic;
 
     return BakuganModal(
       title: l10n.settingsTitle,
@@ -486,6 +521,22 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
                 onPressed: () {
                   Navigator.of(context).pop();
                   unawaited(matchPauseController.onAction('main_menu'));
+                },
+                width: double.infinity,
+                height: 64,
+                textFontSize: 26,
+                iconSize: 30,
+              ),
+            ],
+            if (helpTopic != null) ...[
+              const SizedBox(height: 24),
+              FramedActionButton(
+                text: l10n.help,
+                icon: Icons.help_outline_rounded,
+                gradient: _gateDescriptionBorderGradients['gold']!,
+                accentColor: Colors.amberAccent,
+                onPressed: () {
+                  Navigator.of(context).pop('help');
                 },
                 width: double.infinity,
                 height: 64,

@@ -30,6 +30,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 part 'app/app.dart';
 part 'core/localization/language_settings.dart';
+part 'core/localization/help_content.dart';
 part 'core/data/models.dart';
 part 'core/data/cards.dart';
 part 'features/menu/menu_screens.dart';

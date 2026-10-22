@@ -239,6 +239,7 @@ class AppLocalizations {
   String get inventory => isEs ? 'INVENTARIO' : 'INVENTORY';
   String get savegame => 'SAVEGAME';
   String get backupImport => isEs ? 'COPIA / IMPORTAR' : 'BACKUP / IMPORT';
+  String get help => isEs ? 'AYUDA' : 'HELP';
   String get settingsTitle => isEs ? 'AJUSTES' : 'SETTINGS';
   String get volume => isEs ? 'VOLUMEN' : 'VOLUME';
   String get languageLabel => isEs ? 'IDIOMA' : 'LANGUAGE';
@@ -262,6 +263,7 @@ class AppLocalizations {
   // --- BATTLE MODE SELECTION ---
   String get selectBattleMode =>
       isEs ? 'SELECCIONAR MODO' : 'SELECT BATTLE MODE';
+  String get battleRoyale => 'BATTLE ROYALE';
   String get duel1vs1 => isEs ? '1 VS 1' : '1 VS 1';
   String get duel1vs1Sub =>
       isEs ? '2 Jugadores • Duelo clásico' : '2 Players • Classic duel';
@@ -328,10 +330,11 @@ class AppLocalizations {
       ? 'La temporada actual terminará y se formará el ranking.'
       : 'The current season will end and the ranking will be formed.';
   String get startSeason => isEs ? 'INICIAR TEMPORADA' : 'START SEASON';
-  String get startPlayerElo => isEs ? 'INICIAR ELO' : 'START ELO';
+  String get startPlayerElo =>
+      isEs ? 'INICIAR TEMPORADA' : 'START SEASON';
   String get pauseElo => isEs ? 'PAUSAR ELO' : 'PAUSE ELO';
   String get resumeElo => isEs ? 'REANUDAR ELO' : 'RESUME ELO';
-  String get eloPausedTitle => isEs ? 'PAUSA' : 'PAUSE';
+  String get eloPausedTitle => isEs ? 'PAUSADO' : 'PAUSED';
   String get eloPausedDescription => isEs
       ? 'El Elo está pausado para todos los jugadores. Las partidas no modificarán la clasificación.'
       : 'Elo is paused for every player. Matches will not change the leaderboard.';
