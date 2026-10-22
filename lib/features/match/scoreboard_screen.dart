@@ -25,6 +25,12 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       TextEditingController();
   final FocusNode _matchCardNameFocusNode = FocusNode();
   Map<String, AbilityCard> _matchAbilityCards = {};
+  // Gate cards that stay in effect while in a used pile (Forest Fire...), so
+  // the game master can add them by hand.
+  Map<String, GateCard> _globalGateCards = {};
+  // Keys of owner-only gate cards staged as ability cards, so they are not
+  // recorded as used abilities in the match history.
+  final Set<String> _ownerGateCardKeys = {};
   bool _isLoadingMatchAbilityCards = true;
   List<String> _arenaPlaylist = const [];
   int _currentArenaTrackIndex = 0;
@@ -96,6 +102,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
     _matchPauseController.value = _matchPauseMenuController;
     _scoreboardOwnsPauseButton.value = true;
+    _currentHelpTopic.addListener(_claimPauseButtonIfOnTop);
+    AutomationController.instance.addListener(_onAutomationChanged);
     _loadMatchAbilityCards();
     _loadArenaPlaylistAndStart();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -316,12 +324,38 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           .toList();
 
       final Map<String, AbilityCard> loadedAbilityCards = {};
+      final Map<String, GateCard> loadedGlobalGateCards = {};
       for (final entry in cards.entries) {
         final key = entry.key;
         final value = entry.value;
         if (value is! Map) continue;
         final data = Map<String, dynamic>.from(value);
-        if ((data['type'] ?? '').toString().trim().toLowerCase() != 'ability') {
+        final cardType = (data['type'] ?? '').toString().trim().toLowerCase();
+        if (cardType == 'gate') {
+          final persistent = data['persistent']?.toString();
+          if (persistent != 'global' && persistent != 'owner') continue;
+          final gate = _gateCardFromData(key, data, assets);
+          if (persistent == 'global') {
+            loadedGlobalGateCards[key] = gate;
+          } else {
+            // Owner-only gate effects are staged in the owner's ability slots.
+            _ownerGateCardKeys.add(key);
+            loadedAbilityCards[key] = AbilityCard(
+              key: gate.key,
+              name: gate.name,
+              imagePath: gate.imagePath,
+              descriptionEn: gate.descriptionEn,
+              descriptionEs: gate.descriptionEs,
+              attributes: const {},
+              cardClass: gate.cardClass,
+              timings: const {},
+              effects: gate.effects,
+              persistent: persistent,
+            );
+          }
+          continue;
+        }
+        if (cardType != 'ability') {
           continue;
         }
 
@@ -385,6 +419,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         loadedAbilityCards[key] = AbilityCard(
           key: key,
           name: name,
+          persistent: data['persistent']?.toString(),
           imagePath: imagePath ?? 'assets/images/cards/anverse.png',
           descriptionEn: descriptionEn,
           descriptionEs: descriptionEs,
@@ -398,6 +433,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       if (!mounted) return;
       setState(() {
         _matchAbilityCards = loadedAbilityCards;
+        _globalGateCards = loadedGlobalGateCards;
         _isLoadingMatchAbilityCards = false;
       });
     } catch (_) {
@@ -406,6 +442,100 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         _isLoadingMatchAbilityCards = false;
       });
     }
+  }
+
+  GateCard _gateCardFromData(
+    String key,
+    Map<String, dynamic> data,
+    List<String> assets,
+  ) {
+    final effectsRaw = data['effects'];
+    final effects = effectsRaw is List
+        ? List<dynamic>.from(effectsRaw)
+        : const <dynamic>[];
+    final name = (data['name'] ?? '').toString().trim();
+    final descriptionsRaw = data['descriptions'];
+    final descriptions = descriptionsRaw is Map
+        ? Map<String, dynamic>.from(descriptionsRaw)
+        : const <String, dynamic>{};
+    final attributes = <String, int>{};
+    final attributesRaw = data['attributes'];
+    if (attributesRaw is Map) {
+      for (final attr in attributesRaw.entries) {
+        final amount = attr.value;
+        if (amount is num) {
+          attributes[attr.key.toString().toLowerCase()] = amount.toInt();
+        }
+      }
+    }
+    return GateCard(
+      key: key,
+      name: name,
+      persistent: data['persistent']?.toString(),
+      attributes: attributes,
+      imagePath:
+          _matchCardImagePath(
+            cardKey: key,
+            cardName: name,
+            assetPaths: assets,
+            fileName: data['file']?.toString(),
+          ) ??
+          'assets/images/cards/anverse.png',
+      descriptionEn: descriptions['en']?.toString(),
+      descriptionEs: descriptions['es']?.toString(),
+      cardClass: (data['card_class'] ?? 'silver').toString().toLowerCase(),
+      hasEffect: effects.isNotEmpty,
+      effects: effects,
+    );
+  }
+
+  List<GateCard> _rankGlobalGateCardMatches(String input) {
+    final query = _normalizeCardLookup(input);
+    final available = _globalGateCards.values
+        .where(
+          (card) =>
+              !_activeGlobalGateEffects.any((active) => active.key == card.key),
+        )
+        .toList();
+    if (query.isEmpty) return available;
+
+    final ranked =
+        available
+            .map((card) {
+              final name = _normalizeCardLookup(card.name);
+              final key = _normalizeCardLookup(card.key);
+              int score = 0;
+              if (name == query) score += 1000;
+              if (key == query) score += 900;
+              if (name.startsWith(query)) score += 400;
+              if (key.startsWith(query)) score += 300;
+              if (name.contains(query)) score += 150;
+              if (key.contains(query)) score += 100;
+              return (card: card, score: score);
+            })
+            .where((entry) => entry.score > 0)
+            .toList()
+          ..sort((a, b) => b.score.compareTo(a.score));
+    return ranked.map((entry) => entry.card).toList();
+  }
+
+  Future<void> _openGlobalGateEffectPicker() async {
+    if (_isLoadingMatchAbilityCards || selectionMode) return;
+
+    final selected = await _showMatchCardSearchDialog<GateCard>(
+      title: 'Add Global Gate Effect',
+      subtitle:
+          'Choose a gate card that stays in effect for every player while it is in a used pile.',
+      hint: 'Example: Forest Fire',
+      notFoundText: 'Gate card not found or already in effect.',
+      confirmLabel: 'ADD',
+      rank: _rankGlobalGateCardMatches,
+      nameOf: (card) => card.name,
+      keyOf: (card) => card.key,
+    );
+
+    if (selected == null || !mounted) return;
+    setState(() => _activeGlobalGateEffects.add(selected));
   }
 
   bool _isMatchStageAbilityCard(AbilityCard card) {
@@ -442,28 +572,23 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     return ranked.map((entry) => entry.card).toList();
   }
 
-  AbilityCard? _findMatchAbilityCard(String input) {
-    final query = _normalizeCardLookup(input);
-    if (query.isEmpty) return null;
-    final matches = _rankMatchAbilityCardMatches(input);
-    if (matches.isEmpty) return null;
-    final topMatch = matches.first;
-    final topName = _normalizeCardLookup(topMatch.name);
-    final topKey = _normalizeCardLookup(topMatch.key);
-    if (topName == query || topKey == query) {
-      return topMatch;
-    }
-    return null;
-  }
-
-  Future<void> _openMatchAbilityPrompt(int playerIndex, int slotIndex) async {
-    if (_isLoadingMatchAbilityCards || selectionMode) return;
-    if (_presentedMatchAbilities[playerIndex][slotIndex] != null) return;
-
+  // Search dialog shared by the ability and global gate pickers: a text field
+  // with a ranked suggestion list; picking a suggestion (or typing an exact
+  // name/key) returns that card.
+  Future<T?> _showMatchCardSearchDialog<T extends Object>({
+    required String title,
+    required String subtitle,
+    required String hint,
+    required String notFoundText,
+    required String confirmLabel,
+    required List<T> Function(String input) rank,
+    required String Function(T card) nameOf,
+    required String Function(T card) keyOf,
+  }) async {
     FocusManager.instance.primaryFocus?.unfocus();
     _matchCardNameController.clear();
 
-    final selectedCard = await showDialog<AbilityCard>(
+    return showDialog<T>(
       context: context,
       barrierDismissible: true,
       builder: (context) {
@@ -471,14 +596,18 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         return StatefulBuilder(
           builder: (context, setDialogState) {
             Future<void> submit() async {
-              final match = _findMatchAbilityCard(
-                _matchCardNameController.text,
-              );
+              final query = _normalizeCardLookup(_matchCardNameController.text);
+              final match = query.isEmpty
+                  ? null
+                  : rank(_matchCardNameController.text)
+                        .where(
+                          (card) =>
+                              _normalizeCardLookup(nameOf(card)) == query ||
+                              _normalizeCardLookup(keyOf(card)) == query,
+                        )
+                        .firstOrNull;
               if (match == null) {
-                setDialogState(() {
-                  errorText =
-                      'Ability card not found or not available outside battle.';
-                });
+                setDialogState(() => errorText = notFoundText);
                 return;
               }
               Navigator.of(context).pop(match);
@@ -501,9 +630,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Present Match Ability',
-                      style: TextStyle(
+                    Text(
+                      title,
+                      style: const TextStyle(
                         fontSize: 30,
                         fontWeight: FontWeight.w900,
                         color: Colors.white,
@@ -511,21 +640,19 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      'Choose an ability card with no battle timing to stage it on the match screen.',
+                      subtitle,
                       style: TextStyle(
                         fontSize: 16,
                         color: Colors.white.withValues(alpha: 0.78),
                       ),
                     ),
                     const SizedBox(height: 20),
-                    RawAutocomplete<AbilityCard>(
+                    RawAutocomplete<T>(
                       textEditingController: _matchCardNameController,
                       focusNode: _matchCardNameFocusNode,
-                      displayStringForOption: (option) => option.name,
+                      displayStringForOption: nameOf,
                       optionsBuilder: (textEditingValue) {
-                        return _rankMatchAbilityCardMatches(
-                          textEditingValue.text,
-                        );
+                        return rank(textEditingValue.text);
                       },
                       onSelected: (option) => Navigator.of(context).pop(option),
                       fieldViewBuilder:
@@ -546,7 +673,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                 fontWeight: FontWeight.w700,
                               ),
                               decoration: InputDecoration(
-                                hintText: 'Example: Marucho\'s Throw',
+                                hintText: hint,
                                 hintStyle: TextStyle(
                                   color: Colors.white.withValues(alpha: 0.35),
                                 ),
@@ -612,7 +739,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              card.name,
+                                              nameOf(card),
                                               style: const TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 16,
@@ -621,7 +748,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                                             ),
                                           ),
                                           Text(
-                                            card.key,
+                                            keyOf(card),
                                             style: TextStyle(
                                               color: Colors.white.withValues(
                                                 alpha: 0.55,
@@ -665,9 +792,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                               vertical: 14,
                             ),
                           ),
-                          child: const Text(
-                            'PRESENT',
-                            style: TextStyle(fontWeight: FontWeight.w900),
+                          child: Text(
+                            confirmLabel,
+                            style: const TextStyle(fontWeight: FontWeight.w900),
                           ),
                         ),
                       ],
@@ -680,6 +807,23 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         );
       },
     );
+  }
+
+  Future<void> _openMatchAbilityPrompt(int playerIndex, int slotIndex) async {
+    if (_isLoadingMatchAbilityCards || selectionMode) return;
+    if (_presentedMatchAbilities[playerIndex][slotIndex] != null) return;
+
+    final selectedCard = await _showMatchCardSearchDialog<AbilityCard>(
+      title: 'Present Match Ability',
+      subtitle:
+          'Choose an ability card with no battle timing to stage it on the match screen.',
+      hint: 'Example: Marucho\'s Throw',
+      notFoundText: 'Ability card not found or not available outside battle.',
+      confirmLabel: 'PRESENT',
+      rank: _rankMatchAbilityCardMatches,
+      nameOf: (card) => card.name,
+      keyOf: (card) => card.key,
+    );
 
     if (selectedCard != null) {
       _presentMatchAbility(playerIndex, slotIndex, selectedCard);
@@ -691,9 +835,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
     _playRevealSfx('ability_reveal.wav');
     final playerName = widget.players[playerIndex].name;
-    _abilitiesUsedByPlayer
-        .putIfAbsent(playerName, () => <String>{})
-        .add(card.name);
+    if (!_ownerGateCardKeys.contains(card.key)) {
+      _abilitiesUsedByPlayer
+          .putIfAbsent(playerName, () => <String>{})
+          .add(card.name);
+    }
 
     setState(() {
       _presentedMatchAbilities[playerIndex][slotIndex] = MatchPresentedAbility(
@@ -947,8 +1093,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         (card.descriptionEs?.trim().isNotEmpty ?? false);
     if (!hasDescription) return const SizedBox.shrink();
 
+    // Global ability cards reuse this panel, so fall back to the ability
+    // palette before the neutral silver one.
     final accentColor =
         _gateDescriptionAccentColors[card.cardClass] ??
+        _abilityDescriptionAccentColors[card.cardClass] ??
         _gateDescriptionAccentColors['silver']!;
 
     return FramedDescriptionPanel(
@@ -958,6 +1107,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       maxHeight: 300,
       frameGradient:
           _gateDescriptionBorderGradients[card.cardClass] ??
+          _abilityDescriptionBorderGradients[card.cardClass] ??
           _gateDescriptionBorderGradients['silver']!,
       accentColor: accentColor,
       headerAction: DescriptionHeaderActionButton(
@@ -1081,8 +1231,127 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
   }
 
+  static const double _globalGateBonusWidth = 78;
+  // Width / height of the card frame images in assets/frames.
+  static const double _gateFrameAspectRatio = 842 / 1122;
+
+  // "+50" and the attribute logos shown to the left of a global gate card.
+  Widget _buildGlobalGateBonusBadge(GateCard card) =>
+      GlobalGateBonusBadge(card: card, width: _globalGateBonusWidth);
+
+  Widget _buildGlobalGateAddButton() {
+    final hasAvailable = _globalGateCards.values.any(
+      (card) =>
+          !_activeGlobalGateEffects.any((active) => active.key == card.key),
+    );
+    // A manual tool: hidden in auto mode, where the app applies the card
+    // effects itself (switch to assisted to get it back).
+    if (selectionMode ||
+        !hasAvailable ||
+        !AutomationController.instance.level.showsManualTools) {
+      return const SizedBox.shrink();
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: _matchAbilityRailSpacing / 2),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTap: _openGlobalGateEffectPicker,
+        // An empty silver card frame with a "+" in its window, faded so it reads
+        // as a placeholder where the next gate effect card would go.
+        child: SizedBox(
+          width: 90,
+          height: 90,
+          // Same box the rail cards use: the frame is scaled to the 90 px
+          // height, like the card images next to it.
+          child: Center(
+            child: SizedBox(
+              height: 90,
+              child: Opacity(
+                opacity: 0.45,
+                child: AspectRatio(
+                  aspectRatio: _gateFrameAspectRatio,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.asset(
+                        'assets/frames/Final Silver Frame.png',
+                        fit: BoxFit.fill,
+                      ),
+                      const Align(
+                        alignment: Alignment(-0.06, -0.06),
+                        child: Icon(Icons.add, color: Colors.white, size: 36),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Presented ability cards that affect every player (Power Card Alpha...) are
+  // also shown in the centre rail, next to the active gate effects. They stay
+  // in their owner's slot too; tapping either one focuses the same card.
+  List<({int playerIndex, int slotIndex, MatchPresentedAbility presented})>
+  _globalPresentedAbilities() {
+    return [
+      for (int p = 0; p < _presentedMatchAbilities.length; p++)
+        for (int i = 0; i < _presentedMatchAbilities[p].length; i++)
+          if (_presentedMatchAbilities[p][i]?.card.persistent == 'global')
+            (
+              playerIndex: p,
+              slotIndex: i,
+              presented: _presentedMatchAbilities[p][i]!,
+            ),
+    ];
+  }
+
+  Widget _buildGlobalAbilityRailItem(
+    ({int playerIndex, int slotIndex, MatchPresentedAbility presented}) entry,
+  ) {
+    final isHidden =
+        _focusedMatchAbilityCard != null &&
+        _focusedMatchAbilityPlayerIndex == entry.playerIndex &&
+        _focusedMatchAbilityIndex == entry.slotIndex;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 260),
+      curve: Curves.easeInOutCubic,
+      width: isHidden ? 0 : 90,
+      height: 90,
+      margin: EdgeInsets.symmetric(
+        horizontal: isHidden ? 0 : _matchAbilityRailSpacing / 2,
+      ),
+      child: IgnorePointer(
+        ignoring: isHidden,
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 180),
+          opacity: isHidden ? 0 : (entry.presented.isActive ? 1.0 : 0.48),
+          child: InteractiveCard(
+            key: ValueKey(
+              'global_ability_${entry.playerIndex}_${entry.slotIndex}_${entry.presented.card.key}',
+            ),
+            imagePath: entry.presented.card.imagePath,
+            width: 90,
+            onTap: () =>
+                _focusPresentedAbility(entry.playerIndex, entry.slotIndex),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildGlobalGateEffectRail() {
-    if (_activeGlobalGateEffects.isEmpty) return const SizedBox.shrink();
+    final globalAbilities = _globalPresentedAbilities();
+    if (_activeGlobalGateEffects.isEmpty &&
+        _globalGateCards.isEmpty &&
+        globalAbilities.isEmpty) {
+      return const SizedBox.shrink();
+    }
 
     return Align(
       alignment: Alignment.bottomCenter,
@@ -1092,33 +1361,53 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           height: 104,
           child: Row(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(_activeGlobalGateEffects.length, (index) {
-              final card = _activeGlobalGateEffects[index];
-              final isHidden = _focusedGlobalGateCard == card;
+            children: [
+              ...List.generate(_activeGlobalGateEffects.length, (index) {
+                final card = _activeGlobalGateEffects[index];
+                final isHidden = _focusedGlobalGateCard == card;
 
-              return AnimatedContainer(
-                duration: const Duration(milliseconds: 260),
-                curve: Curves.easeInOutCubic,
-                width: isHidden ? 0 : 90,
-                height: 90,
-                margin: EdgeInsets.symmetric(
-                  horizontal: isHidden ? 0 : _matchAbilityRailSpacing / 2,
-                ),
-                child: IgnorePointer(
-                  ignoring: isHidden,
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 180),
-                    opacity: isHidden ? 0 : 1,
-                    child: InteractiveCard(
-                      key: ValueKey('global_match_gate_${card.key}_$index'),
-                      imagePath: card.imagePath,
-                      width: 90,
-                      onTap: () => _focusGlobalGateEffect(card),
+                return AnimatedContainer(
+                  duration: const Duration(milliseconds: 260),
+                  curve: Curves.easeInOutCubic,
+                  width: isHidden ? 0 : 90 + _globalGateBonusWidth,
+                  height: 90,
+                  margin: EdgeInsets.symmetric(
+                    horizontal: isHidden ? 0 : _matchAbilityRailSpacing / 2,
+                  ),
+                  child: IgnorePointer(
+                    ignoring: isHidden,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 180),
+                      opacity: isHidden ? 0 : 1,
+                      // Not clipped, so the card's hover zoom is not cut off;
+                      // the row is invisible while it collapses anyway.
+                      child: OverflowBox(
+                        minWidth: 0,
+                        maxWidth: 90 + _globalGateBonusWidth,
+                        alignment: Alignment.centerRight,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            _buildGlobalGateBonusBadge(card),
+                            InteractiveCard(
+                              key: ValueKey(
+                                'global_match_gate_${card.key}_$index',
+                              ),
+                              imagePath: card.imagePath,
+                              width: 90,
+                              onTap: () => _focusGlobalGateEffect(card),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              );
-            }),
+                );
+              }),
+              for (final entry in globalAbilities)
+                _buildGlobalAbilityRailItem(entry),
+              _buildGlobalGateAddButton(),
+            ],
           ),
         ),
       ),
@@ -1127,7 +1416,9 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   // STAY shows up as one more tile after the player's three Bakugan slots.
   Widget Function(double slotSize)? _stayTileBuilder(int playerIndex) {
-    if (selectionMode || !_canUseBakuganStay(playerIndex)) return null;
+    if (selectionMode || _editMode || !_canUseBakuganStay(playerIndex)) {
+      return null;
+    }
     return (slotSize) => BakuganStayTile(
       size: slotSize,
       onPressed: () => _triggerBakuganStay(playerIndex),
@@ -1135,7 +1426,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   }
 
   Widget? _buildProfileAbilityOverlay(int playerIndex, {required bool above}) {
-    if (selectionMode) {
+    if (selectionMode || _editMode) {
       return null;
     }
     final alignRight = playerIndex.isOdd;
@@ -1576,21 +1867,24 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     await _resumeArenaPlaylist();
   }
 
+  // Only in auto mode is the match won by itself at 3 points; in manual and
+  // assisted the game master confirms it with the WIN? button next to the score.
+  // After a win is undone, the automatic win stays off for the rest of the
+  // match (the WIN? button is used instead), also if the mode changes.
+  bool _autoWinSuspended = false;
+
+  bool get _declaresMatchWinnerAutomatically =>
+      !_autoWinSuspended &&
+      AutomationController.instance.level == AutomationLevel.auto;
+
   void _addPoint(int index, {bool playPointSound = true}) async {
     bool didWinMatch = false;
     setState(() {
       if (scores[index] < 3) {
         scores[index]++;
-        if (scores[index] >= 3) {
+        if (scores[index] >= 3 && _declaresMatchWinnerAutomatically) {
           didWinMatch = true;
-          _matchWinnerIndex = index;
-          selectionMode = false;
-          leftBakugan = null;
-          rightBakugan = null;
-          leftPlayer = null;
-          rightPlayer = null;
-          leftBakuganIdx = null;
-          rightBakuganIdx = null;
+          _setMatchWinnerState(index);
         }
       }
     });
@@ -1598,10 +1892,62 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       unawaited(_playPointCaptureSound());
     }
     if (didWinMatch) {
-      await _recordLeaderboardMatch(index);
-      await _recordMatchHistory(index);
-      await _playMatchWinSound();
+      await _recordMatchResult(index);
     }
+  }
+
+  void _setMatchWinnerState(int index) {
+    _matchWinnerIndex = index;
+    selectionMode = false;
+    leftBakugan = null;
+    rightBakugan = null;
+    leftPlayer = null;
+    rightPlayer = null;
+    leftBakuganIdx = null;
+    rightBakuganIdx = null;
+  }
+
+  // The leaderboard and history as they were before the result was recorded,
+  // so the win can be undone.
+  LeaderboardStore? _storeBeforeResult;
+
+  Future<void> _recordMatchResult(int index, {bool awaitSound = true}) async {
+    _storeBeforeResult = await LeaderboardRepository.instance.loadStore();
+    await _recordLeaderboardMatch(index);
+    await _recordMatchHistory(index);
+    if (awaitSound) {
+      await _playMatchWinSound();
+    } else {
+      unawaited(_playMatchWinSound());
+    }
+  }
+
+  // Takes a declared win back (KEEP BRAWLING): the match goes on, the records are restored and
+  // the automatic win is switched off for the rest of the match, so it is not
+  // declared again by itself (the WIN? button comes back).
+  Future<void> _undoMatchWin() async {
+    if (_matchWinnerIndex == null) return;
+    final snapshot = _storeBeforeResult;
+    if (snapshot != null) {
+      await LeaderboardRepository.instance.restoreStore(snapshot);
+      _storeBeforeResult = null;
+    }
+    if (!mounted) return;
+    setState(() {
+      _autoWinSuspended = true;
+      _matchWinnerIndex = null;
+    });
+    unawaited(_playArenaTrack(_currentArenaTrackIndex, immediate: true));
+  }
+
+  // Manual mode: the game master declares the winner.
+  Future<void> _declareMatchWinner(int index) async {
+    if (_matchWinnerIndex != null) return;
+    setState(() {
+      _editMode = false;
+      _setMatchWinnerState(index);
+    });
+    await _recordMatchResult(index);
   }
 
   Future<void> _showMatchInfoModal({
@@ -1993,6 +2339,8 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     bool isMirrored,
   ) {
     if (bakuganIndex >= player.deck.length) return;
+    // In edit mode a Bakugan is only doomed or not (corner button).
+    if (_editMode) return;
     final currentState = _bakuganPileStates[playerIndex][bakuganIndex];
     if (selectionMode) {
       if (currentState != MatchBakuganPileState.standing) return;
@@ -2037,30 +2385,19 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       return;
     }
 
-    if (currentState != MatchBakuganPileState.unused) return;
+    if (currentState == MatchBakuganPileState.removed) return;
 
+    // Pile -> in play -> used -> pile. "Out" is only set from the edit mode.
+    final next = switch (currentState) {
+      MatchBakuganPileState.unused => MatchBakuganPileState.standing,
+      MatchBakuganPileState.standing => MatchBakuganPileState.used,
+      _ => MatchBakuganPileState.unused,
+    };
     _playClick();
     setState(() {
-      _bakuganPileStates[playerIndex][bakuganIndex] =
-          MatchBakuganPileState.standing;
-      _bakuganStandOrder[playerIndex][bakuganIndex] = _nextStandOrder++;
-      _refreshUnusedPileIfNeeded(playerIndex);
-    });
-  }
-
-  void _handleBakuganLongPress(int playerIndex, int bakuganIndex) {
-    if (selectionMode) return;
-    final player = widget.players[playerIndex];
-    if (bakuganIndex >= player.deck.length) return;
-    final currentState = _bakuganPileStates[playerIndex][bakuganIndex];
-
-    _playClick();
-    setState(() {
-      _bakuganPileStates[playerIndex][bakuganIndex] =
-          currentState == MatchBakuganPileState.used
-          ? MatchBakuganPileState.unused
-          : MatchBakuganPileState.used;
-      _bakuganStandOrder[playerIndex][bakuganIndex] = null;
+      _bakuganPileStates[playerIndex][bakuganIndex] = next;
+      _bakuganStandOrder[playerIndex][bakuganIndex] =
+          next == MatchBakuganPileState.standing ? _nextStandOrder++ : null;
       _clearBattleSelectionForSlot(playerIndex, bakuganIndex);
       _refreshUnusedPileIfNeeded(playerIndex);
     });
@@ -2173,9 +2510,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
 
   @override
   void dispose() {
-    _scoreboardOwnsPauseButton.value = false;
+    _currentHelpTopic.removeListener(_claimPauseButtonIfOnTop);
+    AutomationController.instance.removeListener(_onAutomationChanged);
+    // A newer scoreboard (after Restart) may already own the pause button by
+    // the time this one is disposed, so only release what is still ours.
     if (identical(_matchPauseController.value, _matchPauseMenuController)) {
       _matchPauseController.value = null;
+      _scoreboardOwnsPauseButton.value = false;
     }
     _matchCardNameController.dispose();
     _matchCardNameFocusNode.dispose();
@@ -2188,10 +2529,68 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     super.dispose();
   }
 
+  // Between screens the pause button state can be left by another (older)
+  // scoreboard; whichever one is on top takes it back.
+  void _onAutomationChanged() {
+    if (mounted) setState(() {});
+  }
+
+  // --- Manual edit of the match (manual / assisted) -------------------------
+  // The pencil button turns the match screen into an edit mode: the players
+  // expand like when choosing a battle, every Bakugan gets a corner button to
+  // send it out of the game (or bring it back), and the points get "+" / "-".
+
+  bool _editMode = false;
+
+  void _setEditMode(bool value) {
+    setState(() {
+      _editMode = value;
+      if (value) {
+        selectionMode = false;
+        leftBakugan = null;
+        rightBakugan = null;
+        leftPlayer = null;
+        rightPlayer = null;
+        leftBakuganIdx = null;
+        rightBakuganIdx = null;
+      }
+    });
+  }
+
+  void _setBakuganOut(int playerIndex, int bakuganIndex, bool isOut) {
+    _playClick();
+    setState(() {
+      _bakuganPileStates[playerIndex][bakuganIndex] = isOut
+          ? MatchBakuganPileState.removed
+          : MatchBakuganPileState.unused;
+      _bakuganStandOrder[playerIndex][bakuganIndex] = null;
+      _clearBattleSelectionForSlot(playerIndex, bakuganIndex);
+    });
+  }
+
+  void _adjustScoreByHand(int scoreIndex, int delta) {
+    if (delta > 0) {
+      if (scores[scoreIndex] < 3) _addPoint(scoreIndex);
+      return;
+    }
+    if (scores[scoreIndex] <= 0 || _matchWinnerIndex != null) return;
+    _playClick();
+    setState(() => scores[scoreIndex]--);
+  }
+
+  void _claimPauseButtonIfOnTop() {
+    if (!mounted || ModalRoute.of(context)?.isCurrent != true) return;
+    _matchPauseController.value = _matchPauseMenuController;
+    _scoreboardOwnsPauseButton.value = true;
+  }
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    if (!identical(_matchPauseController.value, _matchPauseMenuController)) {
+    // Only the screen on top owns the pause menu (the arena takes it over
+    // while it is open).
+    if (ModalRoute.of(context)?.isCurrent == true &&
+        !identical(_matchPauseController.value, _matchPauseMenuController)) {
       _matchPauseController.value = _matchPauseMenuController;
     }
   }
@@ -2226,7 +2625,6 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
               child: Stack(
                 children: [
                   _buildArenaPlaylistBar(),
-                  _buildGlobalGateEffectRail(),
                   IgnorePointer(
                     child: Center(
                       child: Stack(
@@ -2252,6 +2650,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                       ),
                     ),
                   ),
+                  _buildGlobalGateEffectRail(),
 
                   if (!widget.isTeamBattle) ...[
                     _buildCornerPlayer(0, Alignment.topLeft),
@@ -2275,501 +2674,541 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          if (selectionMode) ...[
+                          if (_editMode)
                             FramedActionButton(
-                              text: 'BACK',
-                              onPressed: () {
-                                setState(() {
-                                  selectionMode = false;
-                                  leftBakugan = null;
-                                  rightBakugan = null;
-                                  leftPlayer = null;
-                                  rightPlayer = null;
-                                  leftBakuganIdx = null;
-                                  rightBakuganIdx = null;
-                                });
-                              },
-                              useCancelSound: true,
-                              width: 180,
+                              text: 'DONE',
+                              gradient: _solidFrame(const Color(0xFF3FD0DC)),
+                              onPressed: () => _setEditMode(false),
+                              width: 300,
                               height: 85,
-                              gradient:
-                                  _gateDescriptionBorderGradients['silver']!,
-                              accentColor: const Color(0xFFE8EDF2),
-                            ),
-                            const SizedBox(width: 14),
-                          ],
-                          FramedActionButton(
-                            text: !selectionMode
-                                ? 'BATTLE'
-                                : (leftBakugan != null && rightBakugan != null
-                                      ? 'FIGHT!'
-                                      : 'CHOOSE...'),
-                            onPressed: () {
-                              if (!selectionMode) {
-                                setState(() {
-                                  selectionMode = true;
-                                  leftBakugan = null;
-                                  rightBakugan = null;
-                                  leftPlayer = null;
-                                  rightPlayer = null;
-                                });
-                              } else if (leftBakugan != null &&
-                                  rightBakugan != null) {
-                                final leftPlayerIndex = widget.players.indexOf(
-                                  leftPlayer!,
-                                );
-                                final rightPlayerIndex = widget.players.indexOf(
-                                  rightPlayer!,
-                                );
-                                final leftScoreIndex = _scoreIndexForPlayer(
-                                  leftPlayer!,
-                                );
-                                final rightScoreIndex = _scoreIndexForPlayer(
-                                  rightPlayer!,
-                                );
-                                final leftUnusedBakuganIndices =
-                                    List.generate(
-                                          _bakuganPileStates[leftPlayerIndex]
-                                              .length,
-                                          (index) => index,
-                                        )
-                                        .where(
-                                          (index) =>
-                                              _bakuganPileStates[leftPlayerIndex][index] ==
-                                                  MatchBakuganPileState
-                                                      .unused &&
-                                              index != leftBakuganIdx,
-                                        )
-                                        .toList();
-                                final rightUnusedBakuganIndices =
-                                    List.generate(
-                                          _bakuganPileStates[rightPlayerIndex]
-                                              .length,
-                                          (index) => index,
-                                        )
-                                        .where(
-                                          (index) =>
-                                              _bakuganPileStates[rightPlayerIndex][index] ==
-                                                  MatchBakuganPileState
-                                                      .unused &&
-                                              index != rightBakuganIdx,
-                                        )
-                                        .toList();
-                                final leftUsedBakuganIndices =
-                                    List.generate(
-                                          _bakuganPileStates[leftPlayerIndex]
-                                              .length,
-                                          (index) => index,
-                                        )
-                                        .where(
-                                          (index) =>
-                                              _bakuganPileStates[leftPlayerIndex][index] ==
-                                                  MatchBakuganPileState.used &&
-                                              index != leftBakuganIdx,
-                                        )
-                                        .toList();
-                                final rightUsedBakuganIndices =
-                                    List.generate(
-                                          _bakuganPileStates[rightPlayerIndex]
-                                              .length,
-                                          (index) => index,
-                                        )
-                                        .where(
-                                          (index) =>
-                                              _bakuganPileStates[rightPlayerIndex][index] ==
-                                                  MatchBakuganPileState.used &&
-                                              index != rightBakuganIdx,
-                                        )
-                                        .toList();
-                                final usedBakuganIndicesByPlayer = {
-                                  for (
-                                    int playerIndex = 0;
-                                    playerIndex < _bakuganPileStates.length;
-                                    playerIndex++
-                                  )
-                                    playerIndex:
-                                        List.generate(
-                                              _bakuganPileStates[playerIndex]
-                                                  .length,
-                                              (index) => index,
-                                            )
-                                            .where(
-                                              (index) =>
-                                                  _bakuganPileStates[playerIndex][index] ==
-                                                  MatchBakuganPileState.used,
-                                            )
-                                            .toList(),
-                                };
-
-                                _pauseArenaPlaylist();
-                                _scoreboardOwnsPauseButton.value = false;
-                                Navigator.push(
-                                  context,
-                                  _fadeRoute(
-                                    BattleArenaScreen(
-                                      leftPlayer: leftPlayer!,
-                                      rightPlayer: rightPlayer!,
-                                      matchPlayers: widget.players,
-                                      leftPlayerIndex: leftPlayerIndex,
-                                      rightPlayerIndex: rightPlayerIndex,
-                                      leftBakuganDeckIndex: leftBakuganIdx!,
-                                      rightBakuganDeckIndex: rightBakuganIdx!,
-                                      leftBakugan: leftBakugan!,
-                                      rightBakugan: rightBakugan!,
-                                      leftUnusedBakuganIndices:
-                                          leftUnusedBakuganIndices,
-                                      rightUnusedBakuganIndices:
-                                          rightUnusedBakuganIndices,
-                                      leftUsedBakuganIndices:
-                                          leftUsedBakuganIndices,
-                                      rightUsedBakuganIndices:
-                                          rightUsedBakuganIndices,
-                                      usedBakuganIndicesByPlayer:
-                                          usedBakuganIndicesByPlayer,
-                                      usedGateCardsInAllPiles: scores.fold(
-                                        0,
-                                        (sum, score) => sum + score,
-                                      ),
-                                      leftUsedGateCards: scores[leftScoreIndex],
-                                      rightUsedGateCards:
-                                          scores[rightScoreIndex],
-                                      presentedMatchAbilities:
-                                          _presentedMatchAbilities,
-                                      activeGlobalGateCards:
-                                          _activeGlobalGateEffects,
-                                    ),
-                                  ),
-                                ).then((result) async {
-                                  if (!mounted) return;
-                                  _scoreboardOwnsPauseButton.value = true;
-                                  final resultMap = result is Map
-                                      ? Map<String, dynamic>.from(result)
-                                      : const <String, dynamic>{};
-                                  final int? winnerIndex =
-                                      resultMap['winnerIndex'] as int?;
-                                  final bool isTieResult =
-                                      resultMap['isTieResult'] == true;
-                                  final int? usedGatePenaltySideIndex =
-                                      resultMap['usedGatePenaltySideIndex']
-                                          as int?;
-                                  final int? removedBakuganSideIndex =
-                                      resultMap['removedBakuganSideIndex']
-                                          as int?;
-                                  final GateCard? revealedGateCard =
-                                      resultMap['revealedGateCard'] is GateCard
-                                      ? resultMap['revealedGateCard']
-                                            as GateCard
-                                      : null;
-                                  final int leftReturnedBakuganIndex =
-                                      resultMap['leftBakuganIndex'] is int
-                                      ? resultMap['leftBakuganIndex'] as int
-                                      : leftBakuganIdx!;
-                                  final int rightReturnedBakuganIndex =
-                                      resultMap['rightBakuganIndex'] is int
-                                      ? resultMap['rightBakuganIndex'] as int
-                                      : rightBakuganIdx!;
-                                  final previousLeftPlayer = leftPlayer;
-                                  final previousRightPlayer = rightPlayer;
-                                  final leftAbilitiesUsed =
-                                      resultMap['leftAbilitiesUsed'] is List
-                                      ? (resultMap['leftAbilitiesUsed'] as List)
-                                            .map((entry) => entry.toString())
-                                            .where(
-                                              (entry) =>
-                                                  entry.trim().isNotEmpty,
-                                            )
-                                            .toList()
-                                      : const <String>[];
-                                  final rightAbilitiesUsed =
-                                      resultMap['rightAbilitiesUsed'] is List
-                                      ? (resultMap['rightAbilitiesUsed']
-                                                as List)
-                                            .map((entry) => entry.toString())
-                                            .where(
-                                              (entry) =>
-                                                  entry.trim().isNotEmpty,
-                                            )
-                                            .toList()
-                                      : const <String>[];
-                                  final externalAbilitiesUsed =
-                                      resultMap['externalAbilitiesUsed'] is List
-                                      ? (resultMap['externalAbilitiesUsed']
-                                                as List)
-                                            .map((entry) {
-                                              if (entry
-                                                  is MatchHistoryCardEntry) {
-                                                return entry;
-                                              }
-                                              if (entry is Map) {
-                                                return MatchHistoryCardEntry.fromJson(
-                                                  Map<String, dynamic>.from(
-                                                    entry,
-                                                  ),
-                                                );
-                                              }
-                                              return MatchHistoryCardEntry(
-                                                name: entry.toString(),
-                                                imagePath:
-                                                    'assets/images/cards/anverse.png',
-                                              );
-                                            })
-                                            .where(
-                                              (entry) =>
-                                                  entry.name.trim().isNotEmpty,
-                                            )
-                                            .toList()
-                                      : const <MatchHistoryCardEntry>[];
-                                  final leftFinalGPower =
-                                      (resultMap['leftFinalGPower'] as num?)
-                                          ?.toInt() ??
-                                      (leftBakugan?.gPower ?? 0);
-                                  final rightFinalGPower =
-                                      (resultMap['rightFinalGPower'] as num?)
-                                          ?.toInt() ??
-                                      (rightBakugan?.gPower ?? 0);
-                                  final PlayerData? winningPlayer =
-                                      winnerIndex == null
-                                      ? null
-                                      : winnerIndex == 0
-                                      ? previousLeftPlayer
-                                      : previousRightPlayer;
-                                  final leftBakuganSpecies =
-                                      leftBakugan?.speciesName ?? '';
-                                  final leftBakuganAttribute =
-                                      leftBakugan?.attribute ?? '';
-                                  final rightBakuganSpecies =
-                                      rightBakugan?.speciesName ?? '';
-                                  final rightBakuganAttribute =
-                                      rightBakugan?.attribute ?? '';
-                                  final hasRemovedBakugan =
-                                      removedBakuganSideIndex != null;
-                                  if (winnerIndex != null || isTieResult) {
-                                    _battleHistory.add(
-                                      MatchBattleRecord(
-                                        battleNumber: _battleHistory.length + 1,
-                                        leftPlayerName:
-                                            previousLeftPlayer?.name ?? '',
-                                        rightPlayerName:
-                                            previousRightPlayer?.name ?? '',
-                                        leftSide: MatchHistoryBattleSideEntry(
-                                          bakugan: MatchHistoryBakuganEntry(
-                                            speciesName: leftBakuganSpecies,
-                                            attribute: leftBakuganAttribute,
-                                            gPower: leftBakugan?.gPower ?? 0,
-                                            modelPath:
-                                                leftBakugan?.modelPath ?? '',
-                                            texturePath:
-                                                leftBakugan?.texturePath,
-                                            imagePath:
-                                                leftBakuganSpecies.isEmpty ||
-                                                    leftBakuganAttribute.isEmpty
-                                                ? ''
-                                                : _historyBakuganImagePath(
-                                                    speciesName:
-                                                        leftBakuganSpecies,
-                                                    attribute:
-                                                        leftBakuganAttribute,
-                                                  ),
-                                          ),
-                                          finalGPower: leftFinalGPower,
-                                          isWinner: winnerIndex == 0,
-                                          abilitiesUsed: leftAbilitiesUsed
-                                              .map(
-                                                _historyCardEntryForAbilityName,
-                                              )
-                                              .toList(),
-                                        ),
-                                        rightSide: MatchHistoryBattleSideEntry(
-                                          bakugan: MatchHistoryBakuganEntry(
-                                            speciesName: rightBakuganSpecies,
-                                            attribute: rightBakuganAttribute,
-                                            gPower: rightBakugan?.gPower ?? 0,
-                                            modelPath:
-                                                rightBakugan?.modelPath ?? '',
-                                            texturePath:
-                                                rightBakugan?.texturePath,
-                                            imagePath:
-                                                rightBakuganSpecies.isEmpty ||
-                                                    rightBakuganAttribute
-                                                        .isEmpty
-                                                ? ''
-                                                : _historyBakuganImagePath(
-                                                    speciesName:
-                                                        rightBakuganSpecies,
-                                                    attribute:
-                                                        rightBakuganAttribute,
-                                                  ),
-                                          ),
-                                          finalGPower: rightFinalGPower,
-                                          isWinner: winnerIndex == 1,
-                                          abilitiesUsed: rightAbilitiesUsed
-                                              .map(
-                                                _historyCardEntryForAbilityName,
-                                              )
-                                              .toList(),
-                                        ),
-                                        winnerName: winningPlayer?.name,
-                                        revealedGateCard:
-                                            revealedGateCard == null
-                                            ? null
-                                            : MatchHistoryCardEntry(
-                                                name: revealedGateCard.name,
-                                                imagePath:
-                                                    revealedGateCard.imagePath,
-                                              ),
-                                        externalAbilitiesUsed:
-                                            externalAbilitiesUsed,
-                                      ),
-                                    );
-                                  }
-                                  for (final ability in leftAbilitiesUsed) {
-                                    _abilitiesUsedByPlayer
-                                        .putIfAbsent(
-                                          previousLeftPlayer?.name ?? '',
-                                          () => <String>{},
-                                        )
-                                        .add(ability);
-                                  }
-                                  for (final ability in rightAbilitiesUsed) {
-                                    _abilitiesUsedByPlayer
-                                        .putIfAbsent(
-                                          previousRightPlayer?.name ?? '',
-                                          () => <String>{},
-                                        )
-                                        .add(ability);
-                                  }
-                                  if (!hasRemovedBakugan) {
-                                    unawaited(_resumeArenaPlaylist());
-                                  }
-                                  _markBattlingBakuganUsedAndClearSelection(
-                                    leftBakuganIndex: leftReturnedBakuganIndex,
-                                    rightBakuganIndex:
-                                        rightReturnedBakuganIndex,
-                                    removedBakuganSideIndex:
-                                        removedBakuganSideIndex,
+                            )
+                          else ...[
+                            if (selectionMode) ...[
+                              FramedActionButton(
+                                text: 'BACK',
+                                onPressed: () {
+                                  setState(() {
+                                    selectionMode = false;
+                                    leftBakugan = null;
+                                    rightBakugan = null;
+                                    leftPlayer = null;
+                                    rightPlayer = null;
+                                    leftBakuganIdx = null;
+                                    rightBakuganIdx = null;
+                                  });
+                                },
+                                useCancelSound: true,
+                                width: 180,
+                                height: 85,
+                                gradient: _solidFrame(const Color(0xFFB8C2CC)),
+                                accentColor: const Color(0xFFE8EDF2),
+                              ),
+                              const SizedBox(width: 14),
+                            ],
+                            FramedActionButton(
+                              text: !selectionMode
+                                  ? 'BATTLE'
+                                  : (leftBakugan != null && rightBakugan != null
+                                        ? 'FIGHT!'
+                                        : 'CHOOSE...'),
+                              onPressed: () {
+                                if (!selectionMode) {
+                                  setState(() {
+                                    selectionMode = true;
+                                    leftBakugan = null;
+                                    rightBakugan = null;
+                                    leftPlayer = null;
+                                    rightPlayer = null;
+                                  });
+                                } else if (leftBakugan != null &&
+                                    rightBakugan != null) {
+                                  final leftPlayerIndex = widget.players
+                                      .indexOf(leftPlayer!);
+                                  final rightPlayerIndex = widget.players
+                                      .indexOf(rightPlayer!);
+                                  final leftScoreIndex = _scoreIndexForPlayer(
+                                    leftPlayer!,
                                   );
-                                  final awardedScoreIndex =
-                                      winningPlayer == null
-                                      ? null
-                                      : _scoreIndexForPlayer(winningPlayer);
-                                  final penalizedPlayer =
-                                      usedGatePenaltySideIndex == null
-                                      ? null
-                                      : usedGatePenaltySideIndex == 0
-                                      ? previousLeftPlayer
-                                      : previousRightPlayer;
-                                  final penalizedScoreIndex =
-                                      penalizedPlayer == null
-                                      ? null
-                                      : _scoreIndexForPlayer(penalizedPlayer);
-                                  bool didWinMatch = false;
-                                  if (awardedScoreIndex != null ||
-                                      penalizedScoreIndex != null) {
-                                    setState(() {
-                                      if (awardedScoreIndex != null &&
-                                          awardedScoreIndex >= 0 &&
-                                          awardedScoreIndex < scores.length &&
-                                          scores[awardedScoreIndex] < 3) {
-                                        scores[awardedScoreIndex]++;
-                                      }
-                                      if (penalizedScoreIndex != null &&
-                                          penalizedScoreIndex >= 0 &&
-                                          penalizedScoreIndex < scores.length &&
-                                          scores[penalizedScoreIndex] > 0) {
-                                        scores[penalizedScoreIndex]--;
-                                      }
+                                  final rightScoreIndex = _scoreIndexForPlayer(
+                                    rightPlayer!,
+                                  );
+                                  final leftUnusedBakuganIndices =
+                                      List.generate(
+                                            _bakuganPileStates[leftPlayerIndex]
+                                                .length,
+                                            (index) => index,
+                                          )
+                                          .where(
+                                            (index) =>
+                                                _bakuganPileStates[leftPlayerIndex][index] ==
+                                                    MatchBakuganPileState
+                                                        .unused &&
+                                                index != leftBakuganIdx,
+                                          )
+                                          .toList();
+                                  final rightUnusedBakuganIndices =
+                                      List.generate(
+                                            _bakuganPileStates[rightPlayerIndex]
+                                                .length,
+                                            (index) => index,
+                                          )
+                                          .where(
+                                            (index) =>
+                                                _bakuganPileStates[rightPlayerIndex][index] ==
+                                                    MatchBakuganPileState
+                                                        .unused &&
+                                                index != rightBakuganIdx,
+                                          )
+                                          .toList();
+                                  final leftUsedBakuganIndices =
+                                      List.generate(
+                                            _bakuganPileStates[leftPlayerIndex]
+                                                .length,
+                                            (index) => index,
+                                          )
+                                          .where(
+                                            (index) =>
+                                                _bakuganPileStates[leftPlayerIndex][index] ==
+                                                    MatchBakuganPileState
+                                                        .used &&
+                                                index != leftBakuganIdx,
+                                          )
+                                          .toList();
+                                  final rightUsedBakuganIndices =
+                                      List.generate(
+                                            _bakuganPileStates[rightPlayerIndex]
+                                                .length,
+                                            (index) => index,
+                                          )
+                                          .where(
+                                            (index) =>
+                                                _bakuganPileStates[rightPlayerIndex][index] ==
+                                                    MatchBakuganPileState
+                                                        .used &&
+                                                index != rightBakuganIdx,
+                                          )
+                                          .toList();
+                                  final usedBakuganIndicesByPlayer = {
+                                    for (
+                                      int playerIndex = 0;
+                                      playerIndex < _bakuganPileStates.length;
+                                      playerIndex++
+                                    )
+                                      playerIndex:
+                                          List.generate(
+                                                _bakuganPileStates[playerIndex]
+                                                    .length,
+                                                (index) => index,
+                                              )
+                                              .where(
+                                                (index) =>
+                                                    _bakuganPileStates[playerIndex][index] ==
+                                                    MatchBakuganPileState.used,
+                                              )
+                                              .toList(),
+                                  };
 
-                                      final resolvedWinnerIndex = scores
-                                          .indexWhere((score) => score >= 3);
-                                      if (resolvedWinnerIndex >= 0) {
-                                        didWinMatch = true;
-                                        _matchWinnerIndex = resolvedWinnerIndex;
-                                        selectionMode = false;
-                                        leftBakugan = null;
-                                        rightBakugan = null;
-                                        leftPlayer = null;
-                                        rightPlayer = null;
-                                        leftBakuganIdx = null;
-                                        rightBakuganIdx = null;
-                                      } else {
-                                        _matchWinnerIndex = null;
-                                      }
-
-                                      if (winningPlayer != null &&
-                                          (revealedGateCard
-                                                  ?.hasUsedPileGlobalAttributeBonus ??
-                                              false)) {
-                                        _activeGlobalGateEffects.add(
-                                          revealedGateCard!,
-                                        );
-                                      }
-                                    });
-                                    if (awardedScoreIndex != null) {
-                                      unawaited(_playPointCaptureSound());
-                                    }
-                                    if (didWinMatch) {
-                                      await _recordLeaderboardMatch(
-                                        _matchWinnerIndex!,
-                                      );
-                                      await _recordMatchHistory(
-                                        _matchWinnerIndex!,
-                                      );
-                                      unawaited(_playMatchWinSound());
-                                    }
-                                  }
-                                  if (removedBakuganSideIndex != null) {
-                                    final removedPlayer =
-                                        removedBakuganSideIndex == 0
+                                  _pauseArenaPlaylist();
+                                  _scoreboardOwnsPauseButton.value = false;
+                                  Navigator.push(
+                                    context,
+                                    _fadeRoute(
+                                      BattleArenaScreen(
+                                        leftPlayer: leftPlayer!,
+                                        rightPlayer: rightPlayer!,
+                                        matchPlayers: widget.players,
+                                        leftPlayerIndex: leftPlayerIndex,
+                                        rightPlayerIndex: rightPlayerIndex,
+                                        leftBakuganDeckIndex: leftBakuganIdx!,
+                                        rightBakuganDeckIndex: rightBakuganIdx!,
+                                        leftBakugan: leftBakugan!,
+                                        rightBakugan: rightBakugan!,
+                                        leftUnusedBakuganIndices:
+                                            leftUnusedBakuganIndices,
+                                        rightUnusedBakuganIndices:
+                                            rightUnusedBakuganIndices,
+                                        leftUsedBakuganIndices:
+                                            leftUsedBakuganIndices,
+                                        rightUsedBakuganIndices:
+                                            rightUsedBakuganIndices,
+                                        usedBakuganIndicesByPlayer:
+                                            usedBakuganIndicesByPlayer,
+                                        usedGateCardsInAllPiles: scores.fold(
+                                          0,
+                                          (sum, score) => sum + score,
+                                        ),
+                                        leftUsedGateCards:
+                                            scores[leftScoreIndex],
+                                        rightUsedGateCards:
+                                            scores[rightScoreIndex],
+                                        presentedMatchAbilities:
+                                            _presentedMatchAbilities,
+                                        activeGlobalGateCards:
+                                            _activeGlobalGateEffects,
+                                      ),
+                                    ),
+                                  ).then((result) async {
+                                    if (!mounted) return;
+                                    _scoreboardOwnsPauseButton.value = true;
+                                    final resultMap = result is Map
+                                        ? Map<String, dynamic>.from(result)
+                                        : const <String, dynamic>{};
+                                    final int? winnerIndex =
+                                        resultMap['winnerIndex'] as int?;
+                                    final bool isTieResult =
+                                        resultMap['isTieResult'] == true;
+                                    final int? usedGatePenaltySideIndex =
+                                        resultMap['usedGatePenaltySideIndex']
+                                            as int?;
+                                    final int? removedBakuganSideIndex =
+                                        resultMap['removedBakuganSideIndex']
+                                            as int?;
+                                    final GateCard? revealedGateCard =
+                                        resultMap['revealedGateCard']
+                                            is GateCard
+                                        ? resultMap['revealedGateCard']
+                                              as GateCard
+                                        : null;
+                                    final int leftReturnedBakuganIndex =
+                                        resultMap['leftBakuganIndex'] is int
+                                        ? resultMap['leftBakuganIndex'] as int
+                                        : leftBakuganIdx!;
+                                    final int rightReturnedBakuganIndex =
+                                        resultMap['rightBakuganIndex'] is int
+                                        ? resultMap['rightBakuganIndex'] as int
+                                        : rightBakuganIdx!;
+                                    final previousLeftPlayer = leftPlayer;
+                                    final previousRightPlayer = rightPlayer;
+                                    final leftAbilitiesUsed =
+                                        resultMap['leftAbilitiesUsed'] is List
+                                        ? (resultMap['leftAbilitiesUsed']
+                                                  as List)
+                                              .map((entry) => entry.toString())
+                                              .where(
+                                                (entry) =>
+                                                    entry.trim().isNotEmpty,
+                                              )
+                                              .toList()
+                                        : const <String>[];
+                                    final rightAbilitiesUsed =
+                                        resultMap['rightAbilitiesUsed'] is List
+                                        ? (resultMap['rightAbilitiesUsed']
+                                                  as List)
+                                              .map((entry) => entry.toString())
+                                              .where(
+                                                (entry) =>
+                                                    entry.trim().isNotEmpty,
+                                              )
+                                              .toList()
+                                        : const <String>[];
+                                    final externalAbilitiesUsed =
+                                        resultMap['externalAbilitiesUsed']
+                                            is List
+                                        ? (resultMap['externalAbilitiesUsed']
+                                                  as List)
+                                              .map((entry) {
+                                                if (entry
+                                                    is MatchHistoryCardEntry) {
+                                                  return entry;
+                                                }
+                                                if (entry is Map) {
+                                                  return MatchHistoryCardEntry.fromJson(
+                                                    Map<String, dynamic>.from(
+                                                      entry,
+                                                    ),
+                                                  );
+                                                }
+                                                return MatchHistoryCardEntry(
+                                                  name: entry.toString(),
+                                                  imagePath:
+                                                      'assets/images/cards/anverse.png',
+                                                );
+                                              })
+                                              .where(
+                                                (entry) => entry.name
+                                                    .trim()
+                                                    .isNotEmpty,
+                                              )
+                                              .toList()
+                                        : const <MatchHistoryCardEntry>[];
+                                    final leftFinalGPower =
+                                        (resultMap['leftFinalGPower'] as num?)
+                                            ?.toInt() ??
+                                        (leftBakugan?.gPower ?? 0);
+                                    final rightFinalGPower =
+                                        (resultMap['rightFinalGPower'] as num?)
+                                            ?.toInt() ??
+                                        (rightBakugan?.gPower ?? 0);
+                                    final PlayerData? winningPlayer =
+                                        winnerIndex == null
+                                        ? null
+                                        : winnerIndex == 0
                                         ? previousLeftPlayer
                                         : previousRightPlayer;
-                                    final removedBakuganIndex =
-                                        removedBakuganSideIndex == 0
-                                        ? leftReturnedBakuganIndex
-                                        : rightReturnedBakuganIndex;
-                                    if (removedPlayer != null) {
-                                      final removedPlayerIndex = widget.players
-                                          .indexOf(removedPlayer);
-                                      if (removedPlayerIndex >= 0) {
-                                        unawaited(
-                                          _showBakuganRemovedOverlay(
-                                            playerIndex: removedPlayerIndex,
-                                            bakuganIndex: removedBakuganIndex,
+                                    final leftBakuganSpecies =
+                                        leftBakugan?.speciesName ?? '';
+                                    final leftBakuganAttribute =
+                                        leftBakugan?.attribute ?? '';
+                                    final rightBakuganSpecies =
+                                        rightBakugan?.speciesName ?? '';
+                                    final rightBakuganAttribute =
+                                        rightBakugan?.attribute ?? '';
+                                    final hasRemovedBakugan =
+                                        removedBakuganSideIndex != null;
+                                    if (winnerIndex != null || isTieResult) {
+                                      _battleHistory.add(
+                                        MatchBattleRecord(
+                                          battleNumber:
+                                              _battleHistory.length + 1,
+                                          leftPlayerName:
+                                              previousLeftPlayer?.name ?? '',
+                                          rightPlayerName:
+                                              previousRightPlayer?.name ?? '',
+                                          leftSide: MatchHistoryBattleSideEntry(
+                                            bakugan: MatchHistoryBakuganEntry(
+                                              speciesName: leftBakuganSpecies,
+                                              attribute: leftBakuganAttribute,
+                                              gPower: leftBakugan?.gPower ?? 0,
+                                              modelPath:
+                                                  leftBakugan?.modelPath ?? '',
+                                              texturePath:
+                                                  leftBakugan?.texturePath,
+                                              imagePath:
+                                                  leftBakuganSpecies.isEmpty ||
+                                                      leftBakuganAttribute
+                                                          .isEmpty
+                                                  ? ''
+                                                  : _historyBakuganImagePath(
+                                                      speciesName:
+                                                          leftBakuganSpecies,
+                                                      attribute:
+                                                          leftBakuganAttribute,
+                                                    ),
+                                            ),
+                                            finalGPower: leftFinalGPower,
+                                            isWinner: winnerIndex == 0,
+                                            abilitiesUsed: leftAbilitiesUsed
+                                                .map(
+                                                  _historyCardEntryForAbilityName,
+                                                )
+                                                .toList(),
                                           ),
+                                          rightSide: MatchHistoryBattleSideEntry(
+                                            bakugan: MatchHistoryBakuganEntry(
+                                              speciesName: rightBakuganSpecies,
+                                              attribute: rightBakuganAttribute,
+                                              gPower: rightBakugan?.gPower ?? 0,
+                                              modelPath:
+                                                  rightBakugan?.modelPath ?? '',
+                                              texturePath:
+                                                  rightBakugan?.texturePath,
+                                              imagePath:
+                                                  rightBakuganSpecies.isEmpty ||
+                                                      rightBakuganAttribute
+                                                          .isEmpty
+                                                  ? ''
+                                                  : _historyBakuganImagePath(
+                                                      speciesName:
+                                                          rightBakuganSpecies,
+                                                      attribute:
+                                                          rightBakuganAttribute,
+                                                    ),
+                                            ),
+                                            finalGPower: rightFinalGPower,
+                                            isWinner: winnerIndex == 1,
+                                            abilitiesUsed: rightAbilitiesUsed
+                                                .map(
+                                                  _historyCardEntryForAbilityName,
+                                                )
+                                                .toList(),
+                                          ),
+                                          winnerName: winningPlayer?.name,
+                                          revealedGateCard:
+                                              revealedGateCard == null
+                                              ? null
+                                              : MatchHistoryCardEntry(
+                                                  name: revealedGateCard.name,
+                                                  imagePath: revealedGateCard
+                                                      .imagePath,
+                                                ),
+                                          externalAbilitiesUsed:
+                                              externalAbilitiesUsed,
+                                        ),
+                                      );
+                                    }
+                                    for (final ability in leftAbilitiesUsed) {
+                                      _abilitiesUsedByPlayer
+                                          .putIfAbsent(
+                                            previousLeftPlayer?.name ?? '',
+                                            () => <String>{},
+                                          )
+                                          .add(ability);
+                                    }
+                                    for (final ability in rightAbilitiesUsed) {
+                                      _abilitiesUsedByPlayer
+                                          .putIfAbsent(
+                                            previousRightPlayer?.name ?? '',
+                                            () => <String>{},
+                                          )
+                                          .add(ability);
+                                    }
+                                    if (!hasRemovedBakugan) {
+                                      unawaited(_resumeArenaPlaylist());
+                                    }
+                                    _markBattlingBakuganUsedAndClearSelection(
+                                      leftBakuganIndex:
+                                          leftReturnedBakuganIndex,
+                                      rightBakuganIndex:
+                                          rightReturnedBakuganIndex,
+                                      removedBakuganSideIndex:
+                                          removedBakuganSideIndex,
+                                    );
+                                    final awardedScoreIndex =
+                                        winningPlayer == null
+                                        ? null
+                                        : _scoreIndexForPlayer(winningPlayer);
+                                    final penalizedPlayer =
+                                        usedGatePenaltySideIndex == null
+                                        ? null
+                                        : usedGatePenaltySideIndex == 0
+                                        ? previousLeftPlayer
+                                        : previousRightPlayer;
+                                    final penalizedScoreIndex =
+                                        penalizedPlayer == null
+                                        ? null
+                                        : _scoreIndexForPlayer(penalizedPlayer);
+                                    bool didWinMatch = false;
+                                    if (awardedScoreIndex != null ||
+                                        penalizedScoreIndex != null) {
+                                      setState(() {
+                                        if (awardedScoreIndex != null &&
+                                            awardedScoreIndex >= 0 &&
+                                            awardedScoreIndex < scores.length &&
+                                            scores[awardedScoreIndex] < 3) {
+                                          scores[awardedScoreIndex]++;
+                                        }
+                                        if (penalizedScoreIndex != null &&
+                                            penalizedScoreIndex >= 0 &&
+                                            penalizedScoreIndex <
+                                                scores.length &&
+                                            scores[penalizedScoreIndex] > 0) {
+                                          scores[penalizedScoreIndex]--;
+                                        }
+
+                                        final resolvedWinnerIndex = scores
+                                            .indexWhere((score) => score >= 3);
+                                        if (resolvedWinnerIndex >= 0 &&
+                                            _declaresMatchWinnerAutomatically) {
+                                          didWinMatch = true;
+                                          _setMatchWinnerState(
+                                            resolvedWinnerIndex,
+                                          );
+                                        } else {
+                                          _matchWinnerIndex = null;
+                                        }
+
+                                        if (AutomationController
+                                                    .instance
+                                                    .level !=
+                                                AutomationLevel.manual &&
+                                            winningPlayer != null &&
+                                            (revealedGateCard
+                                                    ?.hasUsedPileGlobalAttributeBonus ??
+                                                false) &&
+                                            !_activeGlobalGateEffects.any(
+                                              (active) =>
+                                                  active.key ==
+                                                  revealedGateCard!.key,
+                                            )) {
+                                          _activeGlobalGateEffects.add(
+                                            revealedGateCard!,
+                                          );
+                                        }
+                                      });
+                                      if (awardedScoreIndex != null) {
+                                        unawaited(_playPointCaptureSound());
+                                      }
+                                      if (didWinMatch) {
+                                        await _recordMatchResult(
+                                          _matchWinnerIndex!,
+                                          awaitSound: false,
                                         );
                                       }
                                     }
-                                  }
-                                  if (usedGatePenaltySideIndex != null) {
-                                    if (penalizedPlayer != null) {
-                                      unawaited(_showUsedGateRemovalReminder());
+                                    if (removedBakuganSideIndex != null) {
+                                      final removedPlayer =
+                                          removedBakuganSideIndex == 0
+                                          ? previousLeftPlayer
+                                          : previousRightPlayer;
+                                      final removedBakuganIndex =
+                                          removedBakuganSideIndex == 0
+                                          ? leftReturnedBakuganIndex
+                                          : rightReturnedBakuganIndex;
+                                      if (removedPlayer != null) {
+                                        final removedPlayerIndex = widget
+                                            .players
+                                            .indexOf(removedPlayer);
+                                        if (removedPlayerIndex >= 0) {
+                                          unawaited(
+                                            _showBakuganRemovedOverlay(
+                                              playerIndex: removedPlayerIndex,
+                                              bakuganIndex: removedBakuganIndex,
+                                            ),
+                                          );
+                                        }
+                                      }
                                     }
-                                  }
-                                });
-                              }
-                            },
-                            gradient:
-                                (selectionMode &&
-                                    (leftBakugan == null ||
-                                        rightBakugan == null))
-                                ? _gateDescriptionBorderGradients['silver']!
-                                : _inventoryCyanGradient,
-                            accentColor:
-                                (selectionMode &&
-                                    (leftBakugan == null ||
-                                        rightBakugan == null))
-                                ? Colors.blueGrey
-                                : Colors.cyanAccent,
-                            width: 300,
-                            height: 85,
-                          ),
-                          if (!selectionMode) ...[
-                            const SizedBox(width: 14),
-                            FramedActionButton(
-                              icon: Icons.pause_rounded,
-                              onPressed: _openAppSettingsDialog,
-                              width: 85,
+                                    if (usedGatePenaltySideIndex != null) {
+                                      if (penalizedPlayer != null) {
+                                        unawaited(
+                                          _showUsedGateRemovalReminder(),
+                                        );
+                                      }
+                                    }
+                                  });
+                                }
+                              },
+                              gradient:
+                                  (selectionMode &&
+                                      (leftBakugan == null ||
+                                          rightBakugan == null))
+                                  ? _solidFrame(const Color(0xFF78909C))
+                                  : _solidFrame(const Color(0xFF3FD0DC)),
+                              accentColor:
+                                  (selectionMode &&
+                                      (leftBakugan == null ||
+                                          rightBakugan == null))
+                                  ? Colors.blueGrey
+                                  : Colors.cyanAccent,
+                              width: 300,
                               height: 85,
                             ),
+                            if (!selectionMode) ...[
+                              const SizedBox(width: 14),
+                              FramedActionButton(
+                                icon: Icons.pause_rounded,
+                                gradient: _solidFrame(const Color(0xFF3FD0DC)),
+                                onPressed: _openAppSettingsDialog,
+                                width: 85,
+                                height: 85,
+                              ),
+                              // Manual edit of piles and points (not in auto).
+                              if (AutomationController
+                                  .instance
+                                  .level
+                                  .showsManualTools) ...[
+                                const SizedBox(width: 14),
+                                FramedActionButton(
+                                  icon: Icons.edit_rounded,
+                                  gradient: _solidFrame(
+                                    const Color(0xFF3FD0DC),
+                                  ),
+                                  onPressed: () => _setEditMode(true),
+                                  width: 85,
+                                  height: 85,
+                                ),
+                              ],
+                            ],
                           ],
                         ],
                       ),
@@ -2925,7 +3364,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       glowAlpha: 0.6,
       thickness: 6.0,
       isSelecting: selectionMode,
-      isExpanded: selectionMode,
+      isExpanded: selectionMode || _editMode,
       selectedBakuganIndex: isMirrored
           ? (rightPlayer == player ? rightBakuganIdx : null)
           : (leftPlayer == player ? leftBakuganIdx : null),
@@ -2938,9 +3377,11 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       portraitOverlayAbove: false,
       trailingSlotBuilder: _stayTileBuilder(index),
       bakuganPileStates: _bakuganPileStates[index],
+      isEditing: _editMode,
+      onBakuganOut: (bIdx) => _setBakuganOut(index, bIdx, true),
+      onBakuganBack: (bIdx) => _setBakuganOut(index, bIdx, false),
       onBakuganTap: (bIdx) =>
           _handleBakuganTap(player, index, bIdx, isMirrored),
-      onBakuganLongPress: (bIdx) => _handleBakuganLongPress(index, bIdx),
     );
   }
 
@@ -2965,7 +3406,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           glowAlpha: 0.6,
           thickness: 6.0,
           isSelecting: selectionMode,
-          isExpanded: selectionMode,
+          isExpanded: selectionMode || _editMode,
           selectedBakuganIndex: isMirrored
               ? (rightPlayer == player ? rightBakuganIdx : null)
               : (leftPlayer == player ? leftBakuganIdx : null),
@@ -2986,66 +3427,141 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
               alignment == Alignment.bottomLeft ||
               alignment == Alignment.bottomRight,
           bakuganPileStates: _bakuganPileStates[index],
+          isEditing: _editMode,
+          onBakuganOut: (bIdx) => _setBakuganOut(index, bIdx, true),
+          onBakuganBack: (bIdx) => _setBakuganOut(index, bIdx, false),
           onBakuganTap: (bIdx) =>
               _handleBakuganTap(player, index, bIdx, isMirrored),
-          onBakuganLongPress: (bIdx) => _handleBakuganLongPress(index, bIdx),
         ),
       ),
     );
   }
 
-  Widget _buildTicks(int playerOrTeamIndex) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(3, (i) {
-        bool isFilled = i < scores[playerOrTeamIndex];
-
-        return GestureDetector(
-          onTap: () => _addPoint(playerOrTeamIndex),
-          behavior: HitTestBehavior.opaque,
-          child: Transform(
-            transform: Matrix4.skewX(-0.25),
-            child: AnimatedContainer(
-              duration: const Duration(milliseconds: 300),
-              width: 35,
-              // Increased
-              height: 55,
-              // Increased
-              margin: const EdgeInsets.symmetric(horizontal: 4),
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: isFilled
-                      ? [
-                          Colors.cyanAccent,
-                          Colors.purpleAccent.withValues(alpha: 0.8),
-                        ]
-                      : [
-                          Colors.blueGrey.withValues(alpha: 0.4),
-                          Colors.black87,
-                        ],
-                ),
-                border: Border.all(
-                  color: isFilled ? Colors.cyanAccent : Colors.white10,
-                  width: 3,
-                ),
-                borderRadius: BorderRadius.circular(2),
-                boxShadow: isFilled
-                    ? [
-                        BoxShadow(
-                          color: Colors.cyanAccent.withValues(alpha: 0.6),
-                          blurRadius: 12,
-                          spreadRadius: 1,
-                        ),
-                      ]
-                    : [],
+  // Same skewed rectangle as the point bars, with a "+" or "-" inside.
+  Widget _buildTickEditButton(int scoreIndex, int delta) {
+    final color = delta > 0 ? Colors.greenAccent : Colors.redAccent;
+    return GestureDetector(
+      onTap: () => _adjustScoreByHand(scoreIndex, delta),
+      behavior: HitTestBehavior.opaque,
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.skewX(-0.25),
+        // Filled like a scored point bar, in the colour of the action.
+        child: Container(
+          width: 35,
+          height: 55,
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [
+                color.withValues(alpha: 0.9),
+                color.withValues(alpha: 0.4),
+              ],
+            ),
+            border: Border.all(color: color, width: 3),
+            borderRadius: BorderRadius.circular(2),
+            boxShadow: [
+              BoxShadow(
+                color: color.withValues(alpha: 0.6),
+                blurRadius: 12,
+                spreadRadius: 1,
               ),
+            ],
+          ),
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.skewX(0.25),
+            child: Icon(
+              delta > 0 ? Icons.add : Icons.remove,
+              color: Colors.white,
+              size: delta > 0 ? 22 : 18,
             ),
           ),
-        );
-      }),
+        ),
+      ),
     );
+  }
+
+  // Manual mode: gold tile, shaped like a point bar, that declares the winner.
+  // It goes on the outer side of the score so the bars do not move.
+  Widget _buildWinTick(int scoreIndex, {required bool mirrored}) {
+    return _WinTick(
+      mirrored: mirrored,
+      onPressed: () => _declareMatchWinner(scoreIndex),
+    );
+  }
+
+  Widget _buildTicks(int playerOrTeamIndex) {
+    // With 3 points and no winner yet. In every mode; in auto the win is
+    // declared by itself so it is normally not seen there.
+    final showWin =
+        scores[playerOrTeamIndex] >= 3 &&
+        _matchWinnerIndex == null &&
+        !_editMode;
+    final mirrored = playerOrTeamIndex.isOdd;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showWin && mirrored)
+          _buildWinTick(playerOrTeamIndex, mirrored: true),
+        ..._buildTickBars(playerOrTeamIndex),
+        if (showWin && !mirrored)
+          _buildWinTick(playerOrTeamIndex, mirrored: false),
+        if (_editMode) ...[
+          const SizedBox(width: 10),
+          _buildTickEditButton(playerOrTeamIndex, -1),
+          _buildTickEditButton(playerOrTeamIndex, 1),
+        ],
+      ],
+    );
+  }
+
+  List<Widget> _buildTickBars(int playerOrTeamIndex) {
+    return List.generate(3, (i) {
+      bool isFilled = i < scores[playerOrTeamIndex];
+
+      // Points are no longer added by tapping them: they come from battle
+      // results, or from the + / - of the edit mode.
+      return Transform(
+        transform: Matrix4.skewX(-0.25),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          width: 35,
+          // Increased
+          height: 55,
+          // Increased
+          margin: const EdgeInsets.symmetric(horizontal: 4),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: isFilled
+                  ? [
+                      Colors.cyanAccent,
+                      Colors.purpleAccent.withValues(alpha: 0.8),
+                    ]
+                  : [Colors.blueGrey.withValues(alpha: 0.4), Colors.black87],
+            ),
+            border: Border.all(
+              color: isFilled ? Colors.cyanAccent : Colors.white10,
+              width: 3,
+            ),
+            borderRadius: BorderRadius.circular(2),
+            boxShadow: isFilled
+                ? [
+                    BoxShadow(
+                      color: Colors.cyanAccent.withValues(alpha: 0.6),
+                      blurRadius: 12,
+                      spreadRadius: 1,
+                    ),
+                  ]
+                : [],
+          ),
+        ),
+      );
+    });
   }
 
   Widget _buildMatchWinnerOverlay() {
@@ -3102,26 +3618,36 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                     : _buildSoloWinnerPanel(winnerIndex),
               ),
               const SizedBox(height: 28),
-              Container(
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.65),
-                  borderRadius: BorderRadius.circular(22),
-                  border: Border.all(color: Colors.white24, width: 2),
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    Navigator.of(context).pushAndRemoveUntil(
-                      _fadeRoute(const MainMenuScreen()),
-                      (route) => false,
-                    );
-                  },
-                  iconSize: 44,
-                  padding: const EdgeInsets.all(18),
-                  icon: const Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.white,
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  // In every mode (also auto, just in case).
+                  FramedActionButton(
+                    text: 'KEEP BRAWLING',
+                    icon: Icons.undo_rounded,
+                    gradient: _solidFrame(const Color(0xFF3FD0DC)),
+                    onPressed: _undoMatchWin,
+                    width: 420,
+                    height: 80,
+                    textFontSize: 24,
+                    iconSize: 28,
                   ),
-                ),
+                  const SizedBox(width: 18),
+                  FramedActionButton(
+                    icon: Icons.arrow_forward_ios_rounded,
+                    gradient: _solidFrame(const Color(0xFFFFC107)),
+                    accentColor: Colors.amberAccent,
+                    onPressed: () {
+                      Navigator.of(context).pushAndRemoveUntil(
+                        _fadeRoute(const MainMenuScreen()),
+                        (route) => false,
+                      );
+                    },
+                    width: 110,
+                    height: 80,
+                    iconSize: 40,
+                  ),
+                ],
               ),
             ],
           ),
@@ -3457,6 +3983,95 @@ class _MatchAbilityMiniCardState extends State<_MatchAbilityMiniCard> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(9),
                 child: Image.asset(widget.imagePath, width: 90),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _WinTick extends StatefulWidget {
+  final bool mirrored;
+  final VoidCallback onPressed;
+
+  const _WinTick({required this.mirrored, required this.onPressed});
+
+  @override
+  State<_WinTick> createState() => _WinTickState();
+}
+
+class _WinTickState extends State<_WinTick> {
+  bool _hovered = false;
+  bool _pressed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    const gold = Color(0xFFFFC107);
+    final scale = _pressed ? 1.14 : (_hovered ? 1.08 : 1.0);
+
+    return MouseRegion(
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onTapDown: (_) => setState(() => _pressed = true),
+        onTapUp: (_) => setState(() => _pressed = false),
+        onTapCancel: () => setState(() => _pressed = false),
+        onTap: widget.onPressed,
+        child: AnimatedScale(
+          scale: scale,
+          duration: const Duration(milliseconds: 140),
+          curve: Curves.easeOutBack,
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.skewX(-0.25),
+            child: Container(
+              width: 72,
+              height: 55,
+              // Extra gap on the side that faces the bars (the skew eats the
+              // normal one).
+              margin: EdgeInsets.only(
+                left: widget.mirrored ? 4 : 16,
+                right: widget.mirrored ? 16 : 4,
+              ),
+              decoration: BoxDecoration(
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [Color(0xFFFFE082), Color(0xFFFF8F00)],
+                ),
+                border: Border.all(color: gold, width: 3),
+                borderRadius: BorderRadius.circular(2),
+                boxShadow: [
+                  BoxShadow(
+                    color: gold.withValues(alpha: _hovered ? 0.95 : 0.75),
+                    blurRadius: _hovered ? 26 : 18,
+                    spreadRadius: _hovered ? 3 : 2,
+                  ),
+                ],
+              ),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.skewX(0.25),
+                child: const Center(
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      'WIN?',
+                      maxLines: 1,
+                      softWrap: false,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1,
+                        shadows: [Shadow(color: Colors.white54, blurRadius: 8)],
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ),
           ),
