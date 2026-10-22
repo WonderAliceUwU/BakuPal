@@ -243,9 +243,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       subtitle: 'Manage the Bakugan available in selection',
                       color: Colors.cyanAccent,
                       gradient: _inventoryCyanGradient,
-                      emblem: Image.asset(
-                        'assets/images/logo.png',
-                        fit: BoxFit.contain,
+                      emblem: Transform.scale(
+                        // The ball has a lot of empty margin: draw it bigger.
+                        scale: 1.35,
+                        child: Image.asset(
+                          'assets/models/Balls_cartoon/Season 1/DragoP.png',
+                          fit: BoxFit.contain,
+                        ),
                       ),
                       onTap: _openBakuganCarousel,
                     ),
@@ -255,10 +259,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                       subtitle: 'Browse every card in the app',
                       color: Colors.amberAccent,
                       gradient: _gateDescriptionBorderGradients['gold']!,
-                      emblem: const Icon(
-                        Icons.style_rounded,
-                        color: Colors.amberAccent,
-                        size: 76,
+                      emblem: Image.asset(
+                        'assets/frames/Final Silver Frame.png',
+                        fit: BoxFit.contain,
                       ),
                       onTap: _openCardsScreen,
                     ),
@@ -272,9 +275,13 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         subtitle: 'Manage the Bakugan available in selection',
                         color: Colors.cyanAccent,
                         gradient: _inventoryCyanGradient,
-                        emblem: Image.asset(
-                          'assets/images/logo.png',
-                          fit: BoxFit.contain,
+                        emblem: Transform.scale(
+                          // The ball has a lot of empty margin: draw it bigger.
+                          scale: 1.35,
+                          child: Image.asset(
+                            'assets/models/Balls_cartoon/Season 1/DragoP.png',
+                            fit: BoxFit.contain,
+                          ),
                         ),
                         onTap: _openBakuganCarousel,
                       ),
@@ -286,10 +293,9 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         subtitle: 'Browse every card in the app',
                         color: Colors.amberAccent,
                         gradient: _gateDescriptionBorderGradients['gold']!,
-                        emblem: const Icon(
-                          Icons.style_rounded,
-                          color: Colors.amberAccent,
-                          size: 90,
+                        emblem: Image.asset(
+                          'assets/frames/Final Silver Frame.png',
+                          fit: BoxFit.contain,
                         ),
                         onTap: _openCardsScreen,
                       ),
@@ -1383,55 +1389,77 @@ class _BakuganInventoryCarouselScreenState
 
   Future<void> _clearAllGPower() async {
     if (_activeVariants.isEmpty) return;
-    final confirmed = await showDialog<bool>(
+    final confirmed = await showGeneralDialog<bool>(
       context: context,
-      barrierColor: Colors.black87,
-      builder: (context) {
-        return Dialog(
-          backgroundColor: Colors.transparent,
+      barrierDismissible: true,
+      barrierLabel: 'Clear all G-Power',
+      barrierColor: Colors.black.withValues(alpha: 0.55),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        final modal = BakuganModal(
+          title: 'CLEAR ALL G POWER',
+          icon: Icons.delete_sweep_rounded,
+          accentColor: Colors.redAccent,
+          solidBorder: true,
+          width: 640,
+          contentPadding: const EdgeInsets.fromLTRB(48, 0, 48, 8),
+          edgePadding: const EdgeInsets.fromLTRB(32, 0, 40, 0),
           insetPadding: const EdgeInsets.symmetric(
-            horizontal: 180,
-            vertical: 140,
+            horizontal: 24,
+            vertical: 24,
           ),
-          child: _SelectionOverlayShell(
-            title: 'CLEAR ALL G POWER',
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Text(
-                  'This removes every saved G-Power from your collection.',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontFamily: 'button_font',
-                    fontSize: 15,
-                    color: Colors.white70,
-                    height: 1.4,
-                  ),
-                ),
-                const SizedBox(height: 22),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    BakuganButton(
-                      text: 'CANCEL',
-                      onPressed: () => Navigator.of(context).pop(false),
-                      width: 180,
-                      height: 62,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 14),
-                    BakuganButton(
-                      text: 'CLEAR ALL',
-                      onPressed: () => Navigator.of(context).pop(true),
-                      width: 200,
-                      height: 62,
-                      color: Colors.redAccent,
-                    ),
-                  ],
-                ),
-              ],
+          child: const Text(
+            'This removes every saved G-Power from your collection. '
+            'Your Bakugan stay in the list, but will count as not owned '
+            'until you set their G-Power again.',
+            style: TextStyle(
+              color: Colors.white70,
+              fontSize: 18,
+              fontWeight: FontWeight.w700,
+              height: 1.4,
             ),
           ),
+          actions: [
+            BakuganModalActionButton(
+              text: 'CANCEL',
+              color: Colors.white70,
+              useCancelSound: true,
+              showGrid: false,
+              useGradientBorder: false,
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+            ),
+            BakuganModalActionButton(
+              text: 'CLEAR ALL',
+              color: Colors.redAccent,
+              showGrid: false,
+              useGradientBorder: false,
+              onPressed: () => Navigator.of(dialogContext).pop(true),
+            ),
+          ],
+        );
+        return Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(color: Colors.black.withValues(alpha: 0.35)),
+                ),
+              ),
+              Center(child: modal),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        );
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(scale: curved, child: child),
         );
       },
     );
@@ -1598,19 +1626,141 @@ class _BakuganInventoryCarouselScreenState
   }
 
   Future<void> _editGPower(BakuganVariant variant) async {
-    final editedText = await _showSkewedInputPrompt(
-      context: context,
-      title:
-          '${variant.speciesName.toUpperCase()}  /  ${variant.attribute.toUpperCase()}',
-      confirmLabel: 'SAVE',
-      initialValue: '${variant.gPower}',
-      subtitle: 'Set the saved G-Power value for this Bakugan variant.',
-      hintText: 'Enter G-Power',
-      suffixText: 'G',
-      keyboardType: TextInputType.number,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      autofocus: true,
+    // A Bakugan without G-Power opens with an empty field (showing the "0" hint)
+    // instead of a selected 0.
+    final controller = TextEditingController(
+      text: variant.gPower == 0 ? '' : '${variant.gPower}',
     );
+    controller.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: controller.text.length,
+    );
+
+    final editedText = await showGeneralDialog<String>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Edit G-Power',
+      barrierColor: Colors.black.withValues(alpha: 0.55),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        void save() => Navigator.of(dialogContext).pop(controller.text);
+
+        final modal = BakuganModal(
+          title: variant.speciesName.toUpperCase(),
+          // The attribute logo first, then the name.
+          leading: Transform.translate(
+            offset: const Offset(0, 8),
+            child: Image.asset(
+              'assets/images/attributes/${variant.attribute}_game.png',
+              width: 48,
+              height: 48,
+            ),
+          ),
+          width: 640,
+          contentPadding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+          edgePadding: const EdgeInsets.fromLTRB(28, 0, 28, 0),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 24,
+          ),
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.skewX(-0.12),
+            child: Container(
+              height: 70,
+              padding: const EdgeInsets.symmetric(horizontal: 22),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.4),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white24, width: 1.5),
+              ),
+              child: Transform(
+                alignment: Alignment.center,
+                transform: Matrix4.skewX(0.12),
+                // The value and the "G" share a baseline so they line up.
+                child: Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.baseline,
+                    textBaseline: TextBaseline.alphabetic,
+                    children: [
+                      Expanded(
+                        child: TextField(
+                          controller: controller,
+                          autofocus: true,
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly,
+                          ],
+                          onSubmitted: (_) => save(),
+                          cursorColor: Colors.cyanAccent,
+                          textAlignVertical: TextAlignVertical.center,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.w900,
+                          ),
+                          decoration: InputDecoration(
+                            isCollapsed: true,
+                            border: InputBorder.none,
+                            hintText: '0',
+                            hintStyle: TextStyle(
+                              color: Colors.white.withValues(alpha: 0.3),
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      const Text(
+                        'G',
+                        style: TextStyle(
+                          color: Colors.white70,
+                          fontSize: 28,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ),
+          actions: [
+            BakuganModalActionButton(
+              text: 'SAVE',
+              showGrid: false,
+              useGradientBorder: false,
+              onPressed: save,
+            ),
+          ],
+        );
+
+        return Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(color: Colors.black.withValues(alpha: 0.35)),
+                ),
+              ),
+              Center(child: modal),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        );
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(scale: curved, child: child),
+        );
+      },
+    );
+    controller.dispose();
 
     final key = bakuganVariantKey(variant);
     final previousValue = _gPowerOverrides[key] ?? 0;
@@ -1913,9 +2063,10 @@ class _BakuganInventoryCarouselScreenState
                                           stageHeight: stageHeight,
                                         ),
                                       ),
+                                      // Flush with the right end of the frame below.
                                       Positioned(
                                         top: 0,
-                                        right: 28,
+                                        right: 0,
                                         child: _buildFilterTabs(),
                                       ),
                                     ],
@@ -1964,7 +2115,9 @@ class _BakuganInventoryCarouselScreenState
 
   Widget _buildCarouselHeader() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
+      // Same top and height as the app's settings button (70 x 64, 22 from
+      // the top) so both line up.
+      padding: const EdgeInsets.fromLTRB(24, 22, 24, 8),
       child: Row(
         children: [
           IconButton(
@@ -1991,6 +2144,22 @@ class _BakuganInventoryCarouselScreenState
               ),
             ),
           ),
+          // Separate from the filter tabs, beside the app's settings button
+          // (which sits in the top-right corner).
+          FramedActionButton(
+            text: 'RESET ALL',
+            icon: Icons.delete_sweep_rounded,
+            gradient: _solidFrame(Colors.redAccent),
+            accentColor: Colors.redAccent,
+            onPressed: _activeVariants.isEmpty
+                ? () {}
+                : () => unawaited(_clearAllGPower()),
+            width: 240,
+            height: 64,
+            textFontSize: 20,
+            iconSize: 26,
+          ),
+          const SizedBox(width: 82),
         ],
       ),
     );
@@ -2038,17 +2207,18 @@ class _BakuganInventoryCarouselScreenState
         accentColor: _visibleBakugans.isEmpty
             ? Colors.cyanAccent
             : _currentVariant.color,
-        active: _collectionMode,
+        // Same border in both modes: the label already says OWNED / ALL.
         height: _filterTabHeight,
         onTap: () => _setCollectionMode(!_collectionMode),
       ),
       _InventoryFilterTab(
-        label: 'CLEAR ALL G POWER',
-        icon: Icons.clear_all_rounded,
-        accentColor: Colors.redAccent,
-        enabled: _activeVariants.isNotEmpty,
+        label: 'EDIT',
+        icon: Icons.edit_rounded,
+        accentColor: Colors.amberAccent,
+        enabled: _visibleBakugans.isNotEmpty,
         height: _filterTabHeight,
-        onTap: _clearAllGPower,
+        // Edits the G-Power of the attribute that is selected.
+        onTap: () => unawaited(_editGPower(_currentVariant)),
       ),
     ];
     return Row(
@@ -2162,7 +2332,6 @@ class _BakuganInventoryCarouselScreenState
               unawaited(_playUiConfirmSound());
               setState(() => _selectedVariantIndex = index);
             },
-            onLongPress: () => _editGPower(variant),
             child: Transform(
               alignment: Alignment.center,
               transform: Matrix4.skewX(-0.15),

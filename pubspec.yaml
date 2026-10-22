@@ -114,6 +114,8 @@ flutter:
     - assets/images/bakugan/tentaclear/
     - assets/images/bakugan/warius/
     - assets/images/bakugan/wired/
+    # Pyrus Dragonoid ball, emblem of the Bakugan inventory
+    - assets/models/Balls_cartoon/Season 1/DragoP.png
     # Modelos OBJ y texturas normales por temporada
     - assets/models/Season_1_Battle_Brawlers/Alpha_Hydranoid/
     - assets/models/Season_1_Battle_Brawlers/Apollonir/
