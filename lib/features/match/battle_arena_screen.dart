@@ -165,7 +165,7 @@ class _BattleGlobalGateMiniCardState extends State<_BattleGlobalGateMiniCard> {
           child: Container(
             width: 90,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(5),
               boxShadow: [
                 BoxShadow(
                   color: Colors.white.withValues(
@@ -178,7 +178,7 @@ class _BattleGlobalGateMiniCardState extends State<_BattleGlobalGateMiniCard> {
               ],
             ),
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
               child: Image.asset(widget.imagePath, width: 90),
             ),
           ),
@@ -339,6 +339,10 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   bool _isResolvingCard = false;
   int _leftCurrentGPower = 0;
   int _rightCurrentGPower = 0;
+  // G-Power added or removed by hand by the game master; kept on top of every
+  // recalculation so effects resolving later do not wipe it.
+  int _leftManualGPower = 0;
+  int _rightManualGPower = 0;
   int _leftTargetGPower = 0;
   int _rightTargetGPower = 0;
   int _leftBattlePrintedGPower = 0;
@@ -365,6 +369,8 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   @override
   void initState() {
     super.initState();
+    AutomationController.instance.addListener(_onAutomationChanged);
+    _installArenaPauseController();
     _leftBattleBakugan = widget.leftBakugan;
     _rightBattleBakugan = widget.rightBakugan;
     _leftBattleBakuganIndex = widget.leftBakuganDeckIndex;
@@ -484,6 +490,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
             themeColor: themeColor,
           ),
           _buildBattleBakuganInfoFooter(
+            isLeft: isLeft,
             attribute: variant.attribute,
             gPower: gPower,
             themeColor: themeColor,
@@ -564,7 +571,51 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     );
   }
 
+  // "+" beside the G-Power box that opens the manual adjustment window; a
+  // skewed square like the other frames.
+  static const double _manualGPowerRoom = 30;
+
+  Widget _buildManualGPowerButton({
+    required bool isLeft,
+    required Color themeColor,
+  }) {
+    return GestureDetector(
+      behavior: HitTestBehavior.opaque,
+      onTap: () => _openManualGPowerDialog(isLeft),
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.skewX(-0.15),
+        child: Container(
+          // Same height and frame as the G-Power box next to it.
+          width: 56,
+          height: 76,
+          decoration: BoxDecoration(
+            color: Colors.black.withValues(alpha: 0.82),
+            borderRadius: BorderRadius.circular(8),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.6),
+              width: 2.5,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: themeColor.withValues(alpha: 0.4),
+                blurRadius: 12,
+                spreadRadius: 1,
+              ),
+            ],
+          ),
+          child: Transform(
+            alignment: Alignment.center,
+            transform: Matrix4.skewX(0.15),
+            child: const Icon(Icons.add, color: Colors.white, size: 34),
+          ),
+        ),
+      ),
+    );
+  }
+
   Widget _buildBattleBakuganInfoFooter({
+    required bool isLeft,
     required String attribute,
     required int gPower,
     required Color themeColor,
@@ -965,6 +1016,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     required bool isLeft,
     required AbilityCard card,
   }) async {
+    if (!_appliesEffectsAutomatically) return;
     final request = _attributeSelectionRequestForCard(
       isLeft: isLeft,
       card: card,
@@ -1418,9 +1470,15 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     );
   }
 
+  // In manual mode the game master resolves everything by hand: no G-Power
+  // bonus and no card effect (swaps, restrictions, replacements, attribute
+  // changes, returns...) is applied by the app. Assisted and auto apply them.
+  bool get _appliesEffectsAutomatically =>
+      AutomationController.instance.level != AutomationLevel.manual;
+
   GateCardBonusBreakdown _gateBreakdownFor(bool isLeft) {
     final card = _revealedCard;
-    if (card == null) {
+    if (card == null || !_appliesEffectsAutomatically) {
       return GateCardBonusBreakdown(baseBonus: 0);
     }
 
@@ -1652,6 +1710,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }) {
     int leftDelta = 0;
     int rightDelta = 0;
+    if (!_appliesEffectsAutomatically) return (leftDelta: 0, rightDelta: 0);
 
     final sourceVariant = sourceIsLeft
         ? _leftBakuganVariant
@@ -1743,6 +1802,9 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
 
   ({bool leftSuppressed, bool rightSuppressed})
   _gateSuppressionTargetsForAbilityCard(bool sourceIsLeft, AbilityCard card) {
+    if (!_appliesEffectsAutomatically) {
+      return (leftSuppressed: false, rightSuppressed: false);
+    }
     final suppressLeft = _suppressedGateBonusFromAbilityCard(
       sourceIsLeft: sourceIsLeft,
       targetIsLeft: true,
@@ -1792,6 +1854,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }
 
   int _globalGateBonusFor(bool isLeft, BakuganVariant variant) {
+    if (!_appliesEffectsAutomatically) return 0;
     return widget.activeGlobalGateCards.fold<int>(
       0,
       (sum, card) =>
@@ -1850,6 +1913,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     AbilityCard card,
     BakuganVariant variant,
   ) {
+    if (!_appliesEffectsAutomatically) return 0;
     final baseBonus = card.calculateBattleBonus(
       variant,
       ownPrintedGPower: isLeft
@@ -1939,6 +2003,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }
 
   bool _hasPrintedGPowerZeroOverride() {
+    if (!_appliesEffectsAutomatically) return false;
     return _allActiveBattleAbilitySlots.any(
       (slot) => slot.card.setsAllPrintedGPowerToZero,
     );
@@ -1958,23 +2023,27 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     final leftPrinted = _initialPrintedGPowerFor(true, _leftBakuganVariant);
     final rightPrinted = _initialPrintedGPowerFor(false, _rightBakuganVariant);
 
+    // Manual adjustments stay on top of the printed G-Power.
+    final leftExpected = leftPrinted + _leftManualGPower;
+    final rightExpected = rightPrinted + _rightManualGPower;
+
     if (leftPrinted == _leftBattlePrintedGPower &&
         rightPrinted == _rightBattlePrintedGPower &&
-        leftPrinted == _leftCurrentGPower &&
-        rightPrinted == _rightCurrentGPower) {
+        leftExpected == _leftCurrentGPower &&
+        rightExpected == _rightCurrentGPower) {
       return;
     }
 
     setState(() {
       _leftBattlePrintedGPower = leftPrinted;
       _rightBattlePrintedGPower = rightPrinted;
-      _leftTargetGPower = leftPrinted;
-      _rightTargetGPower = rightPrinted;
+      _leftTargetGPower = leftExpected;
+      _rightTargetGPower = rightExpected;
     });
 
     await _animatePowerChange(
-      leftTarget: leftPrinted,
-      rightTarget: rightPrinted,
+      leftTarget: leftExpected,
+      rightTarget: rightExpected,
     );
   }
 
@@ -1982,11 +2051,13 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     final leftTarget =
         _leftBattlePrintedGPower +
         _gateBreakdownFor(true).totalBonus +
-        _appliedAbilityBonusFor(true, _leftBakuganVariant);
+        _appliedAbilityBonusFor(true, _leftBakuganVariant) +
+        _leftManualGPower;
     final rightTarget =
         _rightBattlePrintedGPower +
         _gateBreakdownFor(false).totalBonus +
-        _appliedAbilityBonusFor(false, _rightBakuganVariant);
+        _appliedAbilityBonusFor(false, _rightBakuganVariant) +
+        _rightManualGPower;
 
     if (leftTarget == _leftCurrentGPower &&
         rightTarget == _rightCurrentGPower) {
@@ -2039,13 +2110,15 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     final leftTarget = includeGateBonuses
         ? _leftBattlePrintedGPower +
               _gateBreakdownFor(true).totalBonus +
-              _appliedAbilityBonusFor(true, _leftBakuganVariant)
-        : _leftBattlePrintedGPower;
+              _appliedAbilityBonusFor(true, _leftBakuganVariant) +
+              _leftManualGPower
+        : _leftBattlePrintedGPower + _leftManualGPower;
     final rightTarget = includeGateBonuses
         ? _rightBattlePrintedGPower +
               _gateBreakdownFor(false).totalBonus +
-              _appliedAbilityBonusFor(false, _rightBakuganVariant)
-        : _rightBattlePrintedGPower;
+              _appliedAbilityBonusFor(false, _rightBakuganVariant) +
+              _rightManualGPower
+        : _rightBattlePrintedGPower + _rightManualGPower;
 
     if (leftTarget == _leftCurrentGPower &&
         rightTarget == _rightCurrentGPower) {
@@ -2059,11 +2132,13 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     final leftTarget =
         _leftBattlePrintedGPower +
         _gateBreakdownFor(true).totalBonus +
-        _appliedAbilityBonusFor(true, _leftBakuganVariant);
+        _appliedAbilityBonusFor(true, _leftBakuganVariant) +
+        _leftManualGPower;
     final rightTarget =
         _rightBattlePrintedGPower +
         _gateBreakdownFor(false).totalBonus +
-        _appliedAbilityBonusFor(false, _rightBakuganVariant);
+        _appliedAbilityBonusFor(false, _rightBakuganVariant) +
+        _rightManualGPower;
 
     if (leftTarget == _leftCurrentGPower &&
         rightTarget == _rightCurrentGPower) {
@@ -2164,6 +2239,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       if (isLeft) {
         _leftBattleBakuganIndex = chosenIndex;
         _leftBattleBakugan = widget.leftPlayer.deck[chosenIndex];
+        _leftManualGPower = 0;
         _leftPrintedGPowerOverride = null;
         _leftBattlePrintedGPower = _initialPrintedGPowerFor(
           true,
@@ -2177,6 +2253,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       } else {
         _rightBattleBakuganIndex = chosenIndex;
         _rightBattleBakugan = widget.rightPlayer.deck[chosenIndex];
+        _rightManualGPower = 0;
         _rightPrintedGPowerOverride = null;
         _rightBattlePrintedGPower = _initialPrintedGPowerFor(
           false,
@@ -2276,6 +2353,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     required bool isLeft,
     required AbilityCard card,
   }) async {
+    if (!_appliesEffectsAutomatically) return;
     if (_revealedCard != null) return;
 
     for (final effect in card.effects) {
@@ -2307,6 +2385,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     required bool isLeft,
     required AbilityCard card,
   }) async {
+    if (!_appliesEffectsAutomatically) return;
     if (_revealedCard != null) return;
 
     for (final effect in card.effects) {
@@ -2372,6 +2451,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       setState(() {
         _leftBattleBakuganIndex = chosenIndex;
         _leftBattleBakugan = widget.leftPlayer.deck[chosenIndex];
+        _leftManualGPower = 0;
         _leftPrintedGPowerOverride = null;
         _leftBattlePrintedGPower = _initialPrintedGPowerFor(
           true,
@@ -2391,6 +2471,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       setState(() {
         _rightBattleBakuganIndex = chosenIndex;
         _rightBattleBakugan = widget.rightPlayer.deck[chosenIndex];
+        _rightManualGPower = 0;
         _rightPrintedGPowerOverride = null;
         _rightBattlePrintedGPower = _initialPrintedGPowerFor(
           false,
@@ -2438,6 +2519,506 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     }
 
     await _recalculateBattleTotals(includeGateBonuses: false);
+  }
+
+  // While the arena is on top, the pause menu must pause the battle music, not
+  // the scoreboard's playlist (which is already silent). The other actions
+  // (restart, exit) still go to the scoreboard.
+  MatchPauseController? _scoreboardPauseController;
+  MatchPauseController? _arenaPauseController;
+  bool _battleMusicWasPlaying = false;
+
+  void _installArenaPauseController() {
+    final scoreboardController = _matchPauseController.value;
+    _scoreboardPauseController = scoreboardController;
+    _arenaPauseController = MatchPauseController(
+      onOpen: () async {
+        try {
+          _battleMusicWasPlaying =
+              _battleMusicPlayer.state == PlayerState.playing;
+          await _battleMusicPlayer.pause();
+        } catch (_) {}
+      },
+      onAction: (action) async {
+        if (action == 'resume') {
+          try {
+            if (_battleMusicWasPlaying) await _battleMusicPlayer.resume();
+          } catch (_) {}
+          return;
+        }
+        await scoreboardController?.onAction(action);
+      },
+    );
+    _matchPauseController.value = _arenaPauseController;
+  }
+
+  void _onAutomationChanged() {
+    if (mounted) setState(() {});
+  }
+
+  Future<void> _adjustManualGPower(bool isLeft, int delta) async {
+    if (_winnerSideIndex != null || _isTieResult || _isResolvingCard) return;
+    setState(() {
+      if (isLeft) {
+        _leftManualGPower += delta;
+      } else {
+        _rightManualGPower += delta;
+      }
+    });
+    await _animatePowerChange(
+      leftTarget: _leftCurrentGPower + (isLeft ? delta : 0),
+      rightTarget: _rightCurrentGPower + (isLeft ? 0 : delta),
+      leftBonus: isLeft ? delta : null,
+      rightBonus: isLeft ? null : delta,
+    );
+  }
+
+  static const List<String> _manualAttributeOrder = [
+    'pyrus',
+    'aquos',
+    'subterra',
+    'haos',
+    'darkus',
+    'ventus',
+  ];
+
+  // Changes the battling attribute by hand (what a "change attribute" card
+  // would do); in assisted mode the resolved bonuses follow the new attribute.
+  Future<void> _setBattleAttributeManually(
+    bool isLeft,
+    String attribute,
+  ) async {
+    setState(() {
+      if (isLeft) {
+        _leftBattleBakugan = _variantWithBattleAttribute(
+          _leftBattleBakugan,
+          attribute,
+        );
+      } else {
+        _rightBattleBakugan = _variantWithBattleAttribute(
+          _rightBattleBakugan,
+          attribute,
+        );
+      }
+    });
+    if (_revealedCard != null && _appliesEffectsAutomatically) {
+      await _recalculateResolvedBattleBaseline();
+    }
+  }
+
+  Future<void> _openManualGPowerDialog(bool isLeft) async {
+    if (_winnerSideIndex != null || _isTieResult) return;
+    final amountController = TextEditingController();
+    var isAdding = true;
+
+    await showGeneralDialog<void>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'G-Power',
+      barrierColor: Colors.black.withValues(alpha: 0.55),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        return StatefulBuilder(
+          builder: (context, setDialogState) {
+            final manual = isLeft ? _leftManualGPower : _rightManualGPower;
+            final variant = isLeft ? _leftBakuganVariant : _rightBakuganVariant;
+
+            Future<void> apply() async {
+              final amount = int.tryParse(amountController.text.trim());
+              if (amount == null || amount == 0) return;
+              Navigator.of(dialogContext).pop();
+              await _adjustManualGPower(isLeft, isAdding ? amount : -amount);
+            }
+
+            Widget signOption(bool adding) {
+              final selected = isAdding == adding;
+              final color = adding ? Colors.greenAccent : Colors.redAccent;
+              return SizedBox(
+                width: 64,
+                child: GestureDetector(
+                  onTap: () {
+                    unawaited(_playUiConfirmSound());
+                    setDialogState(() => isAdding = adding);
+                  },
+                  child: Transform(
+                    alignment: Alignment.center,
+                    transform: Matrix4.skewX(-0.12),
+                    child: AnimatedContainer(
+                      duration: const Duration(milliseconds: 180),
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: selected
+                            ? color.withValues(alpha: 0.18)
+                            : Colors.black.withValues(alpha: 0.4),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(
+                          color: selected ? color : Colors.white24,
+                          width: selected ? 2 : 1,
+                        ),
+                        boxShadow: selected
+                            ? [
+                                BoxShadow(
+                                  color: color.withValues(alpha: 0.25),
+                                  blurRadius: 12,
+                                  spreadRadius: 1,
+                                ),
+                              ]
+                            : const [],
+                      ),
+                      child: Transform(
+                        alignment: Alignment.center,
+                        transform: Matrix4.skewX(0.12),
+                        child: Icon(
+                          adding ? Icons.add : Icons.remove,
+                          color: selected ? Colors.white : Colors.white54,
+                          size: 32,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            Widget attributeOption(String attribute, String current) {
+              final selected = attribute == current;
+              final color = _colorForAttribute(attribute);
+              return GestureDetector(
+                onTap: () async {
+                  if (selected) return;
+                  unawaited(_playUiConfirmSound());
+                  await _setBattleAttributeManually(isLeft, attribute);
+                  if (context.mounted) setDialogState(() {});
+                },
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.skewX(-0.12),
+                  child: AnimatedContainer(
+                    duration: const Duration(milliseconds: 180),
+                    width: 64,
+                    height: 64,
+                    decoration: BoxDecoration(
+                      color: selected
+                          ? color.withValues(alpha: 0.2)
+                          : Colors.black.withValues(alpha: 0.4),
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(
+                        color: selected ? color : Colors.white24,
+                        width: selected ? 2 : 1,
+                      ),
+                    ),
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.skewX(0.12),
+                      child: Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Opacity(
+                          opacity: selected ? 1 : 0.55,
+                          child: Image.asset(
+                            'assets/images/attributes/${attribute}_game.png',
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            final modal = BakuganModal(
+              title: variant.speciesName.toUpperCase(),
+              // The title row aligns icon glyphs by their baseline; an image
+              // sits a bit higher, so nudge it down to the text's centre.
+              leading: Transform.translate(
+                offset: const Offset(0, 8),
+                child: Image.asset(
+                  'assets/images/attributes/${variant.attribute}_game.png',
+                  width: 48,
+                  height: 48,
+                ),
+              ),
+              width: 640,
+              contentPadding: const EdgeInsets.fromLTRB(40, 0, 40, 0),
+              // The title row adds 12 on top of the left edge padding, so 28 lines the
+              // logo up with the left edge of the controls below.
+              edgePadding: const EdgeInsets.fromLTRB(28, 0, 28, 0),
+              insetPadding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 24,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(
+                    children: [
+                      signOption(true),
+                      const SizedBox(width: 10),
+                      signOption(false),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.skewX(-0.12),
+                          child: Container(
+                            height: 70,
+                            padding: const EdgeInsets.symmetric(horizontal: 22),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.4),
+                              borderRadius: BorderRadius.circular(16),
+                              border: Border.all(
+                                color: Colors.white24,
+                                width: 1.5,
+                              ),
+                            ),
+                            child: Transform(
+                              alignment: Alignment.center,
+                              transform: Matrix4.skewX(0.12),
+                              child: Row(
+                                children: [
+                                  Expanded(
+                                    child: TextField(
+                                      controller: amountController,
+                                      autofocus: true,
+                                      keyboardType: TextInputType.number,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                      ],
+                                      onSubmitted: (_) => apply(),
+                                      cursorColor: Colors.cyanAccent,
+                                      textAlignVertical:
+                                          TextAlignVertical.center,
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w900,
+                                      ),
+                                      decoration: InputDecoration(
+                                        isCollapsed: true,
+                                        border: InputBorder.none,
+                                        hintText: '0',
+                                        hintStyle: TextStyle(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.3,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 10),
+                                  const Text(
+                                    'G',
+                                    style: TextStyle(
+                                      color: Colors.white70,
+                                      fontSize: 28,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 18),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      for (final attribute in _manualAttributeOrder)
+                        attributeOption(attribute, variant.attribute),
+                    ],
+                  ),
+                ],
+              ),
+              actions: [
+                if (manual != 0)
+                  BakuganModalActionButton(
+                    text: 'RESET',
+                    color: Colors.redAccent,
+                    showGrid: false,
+                    useGradientBorder: false,
+                    onPressed: () async {
+                      Navigator.of(dialogContext).pop();
+                      await _adjustManualGPower(isLeft, -manual);
+                    },
+                  ),
+                BakuganModalActionButton(
+                  text: 'APPLY',
+                  showGrid: false,
+                  useGradientBorder: false,
+                  onPressed: apply,
+                ),
+              ],
+            );
+
+            return Material(
+              type: MaterialType.transparency,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.35),
+                      ),
+                    ),
+                  ),
+                  Center(child: modal),
+                ],
+              ),
+            );
+          },
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        );
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(scale: curved, child: child),
+        );
+      },
+    );
+    amountController.dispose();
+  }
+
+  // Lets the game master decide the battle result (manual mode, when the Gate
+  // card is tapped) or change it afterwards, on the post-battle screen.
+  Future<void> _openManualResultDialog({bool changing = false}) async {
+    if (_isResolvingCard) return;
+    if (!changing && (_winnerSideIndex != null || _isTieResult)) return;
+    final choice = await showGeneralDialog<int>(
+      context: context,
+      barrierDismissible: true,
+      barrierLabel: 'Result',
+      barrierColor: Colors.black.withValues(alpha: 0.55),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
+        // The same preview card as the Bakugan carousel (with the name below);
+        // picking it makes that side win.
+        Widget bakuganTile(BakuganVariant variant, int value) {
+          return GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () {
+              unawaited(_playUiConfirmSound());
+              Navigator.of(dialogContext).pop(value);
+            },
+            child: SizedBox(
+              width: 170,
+              height: 210,
+              child: BakuganPreview(
+                key: ValueKey(
+                  'result_${variant.modelPath}_${variant.attribute}',
+                ),
+                variant: variant,
+                speciesName: variant.speciesName,
+                autoRotate: false,
+                disableInteraction: true,
+                showGPower: false,
+              ),
+            ),
+          );
+        }
+
+        Widget tieTile() {
+          const color = Colors.amberAccent;
+          return GestureDetector(
+            onTap: () {
+              unawaited(_playUiConfirmSound());
+              Navigator.of(dialogContext).pop(2);
+            },
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.skewX(-0.15),
+              child: Container(
+                width: 130,
+                height: 190,
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.14),
+                  borderRadius: BorderRadius.circular(10),
+                  border: Border.all(color: color, width: 3),
+                  boxShadow: [
+                    BoxShadow(
+                      color: color.withValues(alpha: 0.3),
+                      blurRadius: 14,
+                      spreadRadius: 1,
+                    ),
+                  ],
+                ),
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.skewX(0.15),
+                  child: const Text(
+                    'TIE',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 34,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: 2,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }
+
+        final modal = BakuganModal(
+          title: changing ? 'CHANGE RESULT' : 'SET RESULT',
+          icon: Icons.gavel_rounded,
+          width: 640,
+          contentPadding: const EdgeInsets.fromLTRB(44, 0, 44, 8),
+          edgePadding: const EdgeInsets.fromLTRB(32, 0, 32, 0),
+          insetPadding: const EdgeInsets.symmetric(
+            horizontal: 24,
+            vertical: 24,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              bakuganTile(_leftBakuganVariant, 0),
+              tieTile(),
+              bakuganTile(_rightBakuganVariant, 1),
+            ],
+          ),
+        );
+
+        return Material(
+          type: MaterialType.transparency,
+          child: Stack(
+            children: [
+              Positioned.fill(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                  child: Container(color: Colors.black.withValues(alpha: 0.35)),
+                ),
+              ),
+              Center(child: modal),
+            ],
+          ),
+        );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        final curved = CurvedAnimation(
+          parent: animation,
+          curve: Curves.easeOutBack,
+        );
+        return FadeTransition(
+          opacity: animation,
+          child: ScaleTransition(scale: curved, child: child),
+        );
+      },
+    );
+    if (choice == null || !mounted) return;
+    if (choice == 2) {
+      unawaited(_showTieResult());
+    } else {
+      _showWinnerScreen(choice);
+    }
   }
 
   Future<void> _animatePowerChange({
@@ -3321,7 +3902,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       _showRevealFlash = false;
     });
 
-    if (card.requiresOwnerSelection) {
+    if (_appliesEffectsAutomatically && card.requiresOwnerSelection) {
       final ownerIndex = await _promptGateOwnerSelection(card);
       if (!mounted || ownerIndex == null) return;
       setState(() {
@@ -3329,7 +3910,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       });
     }
 
-    if (card.swapsPrintedGPower) {
+    if (_appliesEffectsAutomatically && card.swapsPrintedGPower) {
       final swappedLeftGPower = _rightBattlePrintedGPower;
       final swappedRightGPower = _leftBattlePrintedGPower;
 
@@ -3346,16 +3927,23 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       });
     }
 
-    final restrictions = card.abilityRestrictions(
-      leftPrintedGPower: _leftBattlePrintedGPower,
-      rightPrintedGPower: _rightBattlePrintedGPower,
-      leftUsedGateCards: widget.leftUsedGateCards,
-      rightUsedGateCards: widget.rightUsedGateCards,
-      leftVariant: _leftBakuganVariant,
-      rightVariant: _rightBakuganVariant,
-      leftTeamBakugans: widget.leftPlayer.deck,
-      rightTeamBakugans: widget.rightPlayer.deck,
-    );
+    final restrictions = !_appliesEffectsAutomatically
+        ? (
+            left: false,
+            right: false,
+            leftClasses: const <String>{},
+            rightClasses: const <String>{},
+          )
+        : card.abilityRestrictions(
+            leftPrintedGPower: _leftBattlePrintedGPower,
+            rightPrintedGPower: _rightBattlePrintedGPower,
+            leftUsedGateCards: widget.leftUsedGateCards,
+            rightUsedGateCards: widget.rightUsedGateCards,
+            leftVariant: _leftBakuganVariant,
+            rightVariant: _rightBakuganVariant,
+            leftTeamBakugans: widget.leftPlayer.deck,
+            rightTeamBakugans: widget.rightPlayer.deck,
+          );
     if (restrictions.left ||
         restrictions.right ||
         restrictions.leftClasses.isNotEmpty ||
@@ -3375,11 +3963,12 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
       });
     }
 
-    if (card.effects.any(
-      (effect) =>
-          effect is Map &&
-          effect['type'] == 'replace_battling_bakugan_with_unused',
-    )) {
+    if (_appliesEffectsAutomatically &&
+        card.effects.any(
+          (effect) =>
+              effect is Map &&
+              effect['type'] == 'replace_battling_bakugan_with_unused',
+        )) {
       await _handleGateReplacementEffect();
       if (!mounted) return;
     }
@@ -3537,11 +4126,35 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     if (_winnerSideIndex == null) {
       return;
     }
+    // Manual mode: the game master decides (and can change the result).
+    if (AutomationController.instance.level == AutomationLevel.manual) {
+      return;
+    }
 
     for (final effect in card.effects) {
       if (effect is! Map ||
           effect['type'] != 'prevent_gate_capture_after_close_loss') {
         continue;
+      }
+
+      final loserIsLeft = _winnerSideIndex != 0;
+      final blockedReason = closeLossEffectBlockedReason(
+        condition: effect['condition'],
+        playerIsLoser: isLeft == loserIsLeft,
+        loserAttribute:
+            (isLeft ? _leftBakuganVariant : _rightBakuganVariant).attribute,
+        margin: (_leftCurrentGPower - _rightCurrentGPower).abs(),
+      );
+      if (blockedReason != null) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(
+            SnackBar(
+              content: Text('${card.name} has no effect: $blockedReason'),
+            ),
+          );
+        return;
       }
 
       setState(() {
@@ -3769,6 +4382,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }
 
   int? _usedGatePenaltySideIndex() {
+    if (!_appliesEffectsAutomatically) return null;
     if (_hasAppliedUsedGateReturnEffect(true) &&
         widget.rightUsedGateCards > widget.leftUsedGateCards) {
       return 1;
@@ -3781,6 +4395,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }
 
   bool _hasAppliedRemoveLosingBakuganEffect() {
+    if (!_appliesEffectsAutomatically) return false;
     for (final index in _leftAppliedAbilitySlots) {
       if (index < 0 || index >= _leftAbilitySlots.length) continue;
       final slot = _leftAbilitySlots[index];
@@ -3806,7 +4421,8 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
   }
 
   void _finalizeBattleAbilitySlots() {
-    if (_revealedCard?.returnsAllUsedAbilityCards ?? false) {
+    if (_appliesEffectsAutomatically &&
+        (_revealedCard?.returnsAllUsedAbilityCards ?? false)) {
       _returnBattlingPlayersAbilityCardsToUnused();
       return;
     }
@@ -4008,7 +4624,44 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     });
   }
 
+  // OK, plus a button to change the result before leaving the battle (visible
+  // in manual and assisted).
+  Widget _buildPostBattleActions() {
+    final showChange = AutomationController.instance.level.showsManualTools;
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showChange) ...[
+          FramedActionButton(
+            text: 'CHANGE RESULT',
+            icon: Icons.swap_horiz_rounded,
+            gradient: _solidFrame(const Color(0xFF3FD0DC)),
+            onPressed: () => _openManualResultDialog(changing: true),
+            width: 420,
+            height: 78,
+            textFontSize: 26,
+            iconSize: 30,
+          ),
+          const SizedBox(width: 18),
+        ],
+        FramedActionButton(
+          text: 'OK',
+          gradient: _solidFrame(const Color(0xFF3FD0DC)),
+          onPressed: _returnToMatch,
+          width: 200,
+          height: 78,
+          textFontSize: 30,
+        ),
+      ],
+    );
+  }
+
   void _endFight() {
+    // Manual mode: the game master decides instead of the app.
+    if (AutomationController.instance.level == AutomationLevel.manual) {
+      unawaited(_openManualResultDialog());
+      return;
+    }
     final forcedWinnerSide = _revealedCard?.namedBakuganAutoWinSide(
       leftVariant: _leftBakuganVariant,
       rightVariant: _rightBakuganVariant,
@@ -4058,6 +4711,10 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
 
   @override
   void dispose() {
+    AutomationController.instance.removeListener(_onAutomationChanged);
+    if (identical(_matchPauseController.value, _arenaPauseController)) {
+      _matchPauseController.value = _scoreboardPauseController;
+    }
     _stopPowerTickLoop();
     _battleMusicCompleteSub?.cancel();
     _cardNameController.dispose();
@@ -4337,14 +4994,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
             left: 0,
             right: 0,
             bottom: 56,
-            child: Center(
-              child: BakuganButton(
-                text: 'OK',
-                onPressed: _returnToMatch,
-                width: 180,
-                height: 78,
-              ),
-            ),
+            child: Center(child: _buildPostBattleActions()),
           ),
         ],
       );
@@ -4400,14 +5050,7 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
           left: 0,
           right: 0,
           bottom: 56,
-          child: Center(
-            child: BakuganButton(
-              text: 'OK',
-              onPressed: _returnToMatch,
-              width: 180,
-              height: 78,
-            ),
-          ),
+          child: Center(child: _buildPostBattleActions()),
         ),
       ],
     );
@@ -4578,6 +5221,8 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     });
   }
 
+  static const double _globalGateBonusWidth = 78;
+
   Widget _buildCenteredGlobalGateCards() {
     return IgnorePointer(
       ignoring: false,
@@ -4591,20 +5236,41 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 240),
               curve: Curves.easeOutCubic,
-              width: isFocused ? 0 : 102,
+              width: isFocused ? 0 : 102 + _globalGateBonusWidth,
+              // OverflowBox sizes itself to the biggest constraints, so it
+              // needs a bounded height (this row sits in an unbounded one).
+              height: 125,
               child: IgnorePointer(
                 ignoring: isFocused,
                 child: AnimatedOpacity(
                   duration: const Duration(milliseconds: 180),
                   opacity: isFocused ? 0 : 1,
-                  child: Align(
-                    alignment: Alignment.center,
-                    child: _BattleGlobalGateMiniCard(
-                      key: ValueKey(
-                        'global_gate_${card.key}_${card.imagePath}',
-                      ),
-                      imagePath: card.imagePath,
-                      onTap: () => _showGlobalGatePresentationFor(card),
+                  // Not clipped, so the card's hover zoom is not cut off.
+                  child: OverflowBox(
+                    minWidth: 0,
+                    maxWidth: 102 + _globalGateBonusWidth,
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        GlobalGateBonusBadge(
+                          card: card,
+                          width: _globalGateBonusWidth,
+                        ),
+                        SizedBox(
+                          width: 102,
+                          child: Align(
+                            alignment: Alignment.center,
+                            child: _BattleGlobalGateMiniCard(
+                              key: ValueKey(
+                                'global_gate_${card.key}_${card.imagePath}',
+                              ),
+                              imagePath: card.imagePath,
+                              onTap: () => _showGlobalGatePresentationFor(card),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
@@ -4734,7 +5400,9 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
           if (showBattlePreviewAndPower) ...[
             const Spacer(),
             SizedBox(
-              width: _abilityPresentationWidth,
+              // A bit wider than the card so the manual G-Power button fits
+              // beside it (inside the bounds, so it is tappable).
+              width: _abilityPresentationWidth + _manualGPowerRoom * 2,
               height: _abilityPresentationHeight,
               child: _buildBattlePreviewArea(
                 isLeft: isLeft,
@@ -4960,6 +5628,36 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
                   ),
           ),
         ),
+        if (AutomationController.instance.level.showsManualTools &&
+            _winnerSideIndex == null &&
+            !_isTieResult)
+          Positioned(
+            left: _manualGPowerRoom + 469,
+            bottom: 0,
+            // Fades out together with the Bakugan card (ability presentation,
+            // choosers...), so it does not stay on top of those panels.
+            child: IgnorePointer(
+              ignoring:
+                  showAbilityPresentation ||
+                  showReplacementChooser ||
+                  showUsedBakuganChooser ||
+                  showAttributeChooser,
+              child: AnimatedOpacity(
+                opacity:
+                    showAbilityPresentation ||
+                        showReplacementChooser ||
+                        showUsedBakuganChooser ||
+                        showAttributeChooser
+                    ? 0
+                    : 1,
+                duration: const Duration(milliseconds: 220),
+                child: _buildManualGPowerButton(
+                  isLeft: isLeft,
+                  themeColor: _colorForAttribute(variant.attribute),
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
