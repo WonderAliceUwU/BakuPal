@@ -33,10 +33,13 @@ class _BakuganObjViewer extends StatefulWidget {
   final double modelScale;
   final bool enableTouch;
   final bool autoRotate;
+  // The models look left by default; this turns them to look right.
+  final bool faceRight;
   final VoidCallback? onTap;
 
   const _BakuganObjViewer({
     super.key,
+    this.faceRight = false,
     required this.modelPath,
     required this.texturePath,
     required this.cameraDistance,
@@ -56,7 +59,9 @@ class _BakuganObjViewerState extends State<_BakuganObjViewer> {
   obj_object.Object? _modelRoot;
   Offset? _lastPanPosition;
   double _rotationX = _objInitialRotationX;
-  double _rotationY = _objInitialRotationY;
+  late double _rotationY = widget.faceRight
+      ? -_objInitialRotationY
+      : _objInitialRotationY;
   double _rotationZ = _objInitialRotationZ;
   int _loadToken = 0;
   bool _isLoaded = false;
@@ -309,6 +314,8 @@ class BakuganPreview extends StatefulWidget {
   final double? visualScaleOverride;
   final Alignment? visualAlignmentOverride;
   final EdgeInsets? visualPaddingOverride;
+  // Extra offset for the 3D model shown when there is no illustration.
+  final Offset? modelOffsetOverride;
   final Widget? frameBackground;
   final bool showGridBackground;
   final double? gridOpacityOverride;
@@ -338,6 +345,7 @@ class BakuganPreview extends StatefulWidget {
     this.visualScaleOverride,
     this.visualAlignmentOverride,
     this.visualPaddingOverride,
+    this.modelOffsetOverride,
     this.frameBackground,
     this.showGridBackground = true,
     this.gridOpacityOverride,
@@ -621,7 +629,35 @@ class _BakuganPreviewState extends State<BakuganPreview>
   }
 
   // --- MODEL & OVERLAY HELPERS ---
+  static Future<Set<String>>? _assetPathsFuture;
+
+  static Future<Set<String>> _loadAssetPaths() {
+    return _assetPathsFuture ??= AssetManifest.loadFromAssetBundle(
+      rootBundle,
+    ).then((manifest) => manifest.listAssets().toSet());
+  }
+
   Widget _buildPreviewVisual() {
+    final illustrationAssetPath = widget.illustrationAssetPath;
+    if (illustrationAssetPath == null) return _buildPreviewVisualChecked();
+
+    // When the illustration does not exist, show the 3D model directly. Falling
+    // back from inside the illustration widget would put the model under the
+    // illustration's own un-skew (applied twice, so it looked sheared), scale
+    // and alignment.
+    return FutureBuilder<Set<String>>(
+      future: _loadAssetPaths(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const SizedBox.shrink();
+        if (!snapshot.data!.contains(illustrationAssetPath)) {
+          return _buildModel();
+        }
+        return _buildPreviewVisualChecked();
+      },
+    );
+  }
+
+  Widget _buildPreviewVisualChecked() {
     final illustrationAssetPath = widget.illustrationAssetPath;
     if (illustrationAssetPath != null) {
       final padding = widget.visualPaddingOverride ?? _illustrationPadding;
@@ -697,21 +733,28 @@ class _BakuganPreviewState extends State<BakuganPreview>
         ignoring: isDeck || widget.disableInteraction || !widget.isLarge,
         child: _unskewPreviewContent(
           Transform.translate(
-            offset: widget.isLarge
-                ? Offset(
-                    0,
-                    _showClosedObj
-                        ? _objClosedPreviewOffsetY
-                        : _objLargePreviewOffsetY,
-                  )
-                : Offset(
-                    0,
-                    isDeck ? _objDeckPreviewOffsetY : _objSmallPreviewOffsetY,
-                  ),
+            offset:
+                (widget.isLarge
+                    ? Offset(
+                        0,
+                        _showClosedObj
+                            ? _objClosedPreviewOffsetY
+                            : _objLargePreviewOffsetY,
+                      )
+                    : Offset(
+                        0,
+                        isDeck
+                            ? _objDeckPreviewOffsetY
+                            : _objSmallPreviewOffsetY,
+                      )) +
+                (widget.modelOffsetOverride ?? Offset.zero),
             child: _BakuganObjViewer(
               key: ValueKey(
-                'obj_${widget.variant.texturePath}_${widget.isLarge}',
+                'obj_${widget.variant.texturePath}_${widget.isLarge}_${widget.mirrorImage}',
               ),
+              // On the left side of the arena (mirrorImage) the model is turned
+              // to look at the opponent; it is rotated, not mirrored.
+              faceRight: widget.mirrorImage,
               modelPath: _objPreviewModelPath,
               texturePath: widget.variant.texturePath,
               cameraDistance: _showClosedObj
@@ -1363,6 +1406,9 @@ class BakuganModal extends StatelessWidget {
   // [contentPadding]; use a smaller one to keep them near the corners.
   final EdgeInsets? edgePadding;
   final bool showCloseButton;
+  // Paints the whole border (and the close button) in [accentColor] instead of
+  // fading to teal.
+  final bool solidBorder;
 
   const BakuganModal({
     super.key,
@@ -1382,6 +1428,7 @@ class BakuganModal extends StatelessWidget {
     this.contentPadding = const EdgeInsets.fromLTRB(40, 0, 40, 36),
     this.edgePadding,
     this.showCloseButton = true,
+    this.solidBorder = false,
   });
 
   @override
@@ -1400,11 +1447,13 @@ class BakuganModal extends StatelessWidget {
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
-              colors: [
-                accentColor.withValues(alpha: 0.95),
-                const Color(0xFF1E8D92),
-                const Color(0xFF0B4C53),
-              ],
+              colors: solidBorder
+                  ? [accentColor, accentColor, accentColor]
+                  : [
+                      accentColor.withValues(alpha: 0.95),
+                      const Color(0xFF1E8D92),
+                      const Color(0xFF0B4C53),
+                    ],
             ),
             boxShadow: [
               BoxShadow(
@@ -1638,11 +1687,15 @@ class BakuganModal extends StatelessWidget {
                     transformHitTests: true,
                     child: _BakuganModalIconButton(
                       icon: Icons.close_rounded,
-                      color: Colors.cyanAccent,
-                      backgroundGradient: const LinearGradient(
-                        colors: [Colors.cyanAccent, Colors.cyanAccent],
+                      color: solidBorder ? accentColor : Colors.cyanAccent,
+                      backgroundGradient: LinearGradient(
+                        colors: solidBorder
+                            ? [accentColor, accentColor]
+                            : const [Colors.cyanAccent, Colors.cyanAccent],
                       ),
-                      borderColor: Colors.cyanAccent,
+                      borderColor: solidBorder
+                          ? accentColor
+                          : Colors.cyanAccent,
                       iconColor: Colors.black,
                       borderRadius: const BorderRadius.only(
                         topLeft: Radius.zero,
