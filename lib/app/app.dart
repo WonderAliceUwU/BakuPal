@@ -215,32 +215,33 @@ class _AppVolumeSurface extends StatelessWidget {
         OverlayEntry(builder: (context) => child ?? const SizedBox.shrink()),
         OverlayEntry(
           builder: (context) {
-            return ValueListenableBuilder<bool>(
-              valueListenable: _isAppSettingsOpen,
-              builder: (context, isOpen, _) {
-                if (isOpen) return const SizedBox.shrink();
-                return ValueListenableBuilder<bool>(
-                  valueListenable: _scoreboardOwnsPauseButton,
-                  builder: (context, ownsPause, _) {
-                    if (ownsPause) return const SizedBox.shrink();
-                    return ValueListenableBuilder<MatchPauseController?>(
-                      valueListenable: _matchPauseController,
-                      builder: (context, pauseController, _) {
-                        if (pauseController != null) {
-                          return const Positioned(
-                            bottom: 24,
-                            right: 24,
-                            child: _AppSettingsButton(isPause: true),
-                          );
-                        }
-                        return const Positioned(
-                          top: 22,
-                          right: 24,
-                          child: _AppSettingsButton(),
-                        );
-                      },
-                    );
-                  },
+            return ListenableBuilder(
+              listenable: Listenable.merge([
+                _isAppSettingsOpen,
+                _scoreboardOwnsPauseButton,
+                _matchPauseController,
+                _currentHelpTopic,
+              ]),
+              builder: (context, _) {
+                if (_isAppSettingsOpen.value) return const SizedBox.shrink();
+                // The scoreboard has its own pause button, so this one is
+                // hidden there; the topic check keeps it hidden even if the
+                // ownership flag went stale between screens.
+                if (_scoreboardOwnsPauseButton.value ||
+                    _currentHelpTopic.value == 'scoreboard') {
+                  return const SizedBox.shrink();
+                }
+                if (_matchPauseController.value != null) {
+                  return const Positioned(
+                    bottom: 24,
+                    right: 24,
+                    child: _AppSettingsButton(isPause: true),
+                  );
+                }
+                return const Positioned(
+                  top: 22,
+                  right: 24,
+                  child: _AppSettingsButton(),
                 );
               },
             );
@@ -447,16 +448,18 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
       title: l10n.settingsTitle,
       icon: Icons.settings_rounded,
       width: 900,
-      // The modal is skewed, so content needs extra side padding or its
-      // corners get clipped by the slanted edges.
-      // The pause options make the modal taller, which slants its edges
-      // further, so only then does the content need the extra side room.
+      // The frame is slanted but the content is upright, so the frame's edges
+      // sit up to ~0.06 x height away from the content at the top-left and the
+      // bottom-right corners. The padding has to cover that, and the taller
+      // pause variant needs more of it.
       contentPadding: matchPauseController != null
-          ? const EdgeInsets.fromLTRB(110, 0, 110, 36)
-          : const EdgeInsets.fromLTRB(64, 0, 64, 36),
+          ? const EdgeInsets.fromLTRB(112, 0, 112, 36)
+          : const EdgeInsets.fromLTRB(84, 0, 84, 36),
+      // Right edge padding also positions the OK button: kept small so it sits
+      // close to the corner, but enough that the slanted edge does not cut it.
       edgePadding: matchPauseController != null
-          ? const EdgeInsets.symmetric(horizontal: 64)
-          : const EdgeInsets.symmetric(horizontal: 40),
+          ? const EdgeInsets.fromLTRB(84, 0, 82, 0)
+          : const EdgeInsets.fromLTRB(64, 0, 62, 0),
       insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
       child: SingleChildScrollView(
         child: Column(
@@ -470,6 +473,51 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
             ),
             const SizedBox(height: 12),
             const _AppVolumeControls(),
+            const SizedBox(height: 24),
+            _buildSectionLabel(
+              icon: Icons.tune_rounded,
+              label: l10n.automation,
+              color: Colors.greenAccent,
+            ),
+            const SizedBox(height: 12),
+            ListenableBuilder(
+              listenable: AutomationController.instance,
+              builder: (context, _) {
+                final current = AutomationController.instance.level;
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        for (final level in AutomationLevel.values) ...[
+                          if (level != AutomationLevel.values.first)
+                            const SizedBox(width: 14),
+                          _buildAutomationOption(
+                            label: level.label(_selectedUiLang),
+                            isSelected: level == current,
+                            onTap: () {
+                              _playUiConfirmSound();
+                              unawaited(
+                                AutomationController.instance.setLevel(level),
+                              );
+                            },
+                          ),
+                        ],
+                      ],
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      current.description(_selectedUiLang),
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                );
+              },
+            ),
             if (matchPauseController != null) ...[
               const SizedBox(height: 24),
               _buildSectionLabel(
@@ -657,6 +705,51 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAutomationOption({
+    required String label,
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    const accentColor = Colors.greenAccent;
+    return Expanded(
+      child: _PressScale(
+        onPressed: onTap,
+        child: Transform(
+          alignment: Alignment.center,
+          transform: Matrix4.skewX(-0.12),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 180),
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            decoration: BoxDecoration(
+              color: isSelected
+                  ? accentColor.withValues(alpha: 0.18)
+                  : Colors.black.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: isSelected ? accentColor : Colors.white24,
+                width: isSelected ? 2 : 1,
+              ),
+            ),
+            child: Transform(
+              alignment: Alignment.center,
+              transform: Matrix4.skewX(0.12),
+              child: Center(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    color: isSelected ? Colors.white : Colors.white70,
+                    fontSize: 16,
+                    fontWeight: isSelected ? FontWeight.w900 : FontWeight.w700,
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
