@@ -511,7 +511,10 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
                                 _selectedPlayers[i]?.name ?? l10n.selecting,
                             char: _selectedPlayers[i]?.character,
                             isActive: i == currentPlayerIndex,
-                            isBlue: i % 2 == 0,
+                            gradient: _playerGradient(
+                              i,
+                              isTeamBattle: widget.isTeamBattle,
+                            ),
                             isSavedProfile:
                                 _selectedPlayers[i] != null &&
                                 _savedProfileByName(

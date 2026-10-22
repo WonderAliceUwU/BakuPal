@@ -1125,12 +1125,20 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
   }
 
+  // STAY shows up as one more tile after the player's three Bakugan slots.
+  Widget Function(double slotSize)? _stayTileBuilder(int playerIndex) {
+    if (selectionMode || !_canUseBakuganStay(playerIndex)) return null;
+    return (slotSize) => BakuganStayTile(
+      size: slotSize,
+      onPressed: () => _triggerBakuganStay(playerIndex),
+    );
+  }
+
   Widget? _buildProfileAbilityOverlay(int playerIndex, {required bool above}) {
     if (selectionMode) {
       return null;
     }
     final alignRight = playerIndex.isOdd;
-    final showStayButton = _canUseBakuganStay(playerIndex);
 
     return Align(
       alignment: alignRight ? Alignment.centerRight : Alignment.centerLeft,
@@ -1140,18 +1148,6 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           _buildProfileAbilityRail(playerIndex, alignRight: alignRight),
-          if (showStayButton) ...[
-            const SizedBox(width: 14),
-            SizedBox(
-              width: 150,
-              height: 74,
-              child: BakuganButton(
-                text: 'STAY',
-                onPressed: () => _triggerBakuganStay(playerIndex),
-                color: const Color(0xFFF2DDAF),
-              ),
-            ),
-          ],
         ],
       ),
     );
@@ -2925,6 +2921,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       isMirrored: isMirrored,
       themeColor: themeColor,
       isSelected: isRed,
+      gradient: _playerGradient(index, isTeamBattle: true),
       glowAlpha: 0.6,
       thickness: 6.0,
       isSelecting: selectionMode,
@@ -2939,6 +2936,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       onPortraitTap: null,
       portraitOverlay: _buildProfileAbilityOverlay(index, above: false),
       portraitOverlayAbove: false,
+      trailingSlotBuilder: _stayTileBuilder(index),
       bakuganPileStates: _bakuganPileStates[index],
       onBakuganTap: (bIdx) =>
           _handleBakuganTap(player, index, bIdx, isMirrored),
@@ -2951,7 +2949,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     final bool isMirrored =
         alignment == Alignment.topRight || alignment == Alignment.bottomRight;
     bool isRed = index % 2 != 0;
-    final themeColor = isRed ? Colors.redAccent : Colors.blueAccent;
+    final themeColor = _playerThemeColor(index, isTeamBattle: false);
 
     return Align(
       alignment: alignment,
@@ -2963,6 +2961,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
           themeColor: themeColor,
           extra: !widget.isTeamBattle ? _buildTicks(index) : null,
           isSelected: isRed,
+          gradient: _playerGradient(index, isTeamBattle: false),
           glowAlpha: 0.6,
           thickness: 6.0,
           isSelecting: selectionMode,
@@ -2982,6 +2981,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
                 alignment == Alignment.bottomLeft ||
                 alignment == Alignment.bottomRight,
           ),
+          trailingSlotBuilder: _stayTileBuilder(index),
           portraitOverlayAbove:
               alignment == Alignment.bottomLeft ||
               alignment == Alignment.bottomRight,
@@ -3133,7 +3133,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   Widget _buildSoloWinnerPanel(int playerIndex) {
     final player = widget.players[playerIndex];
     final isRed = playerIndex.isOdd;
-    final themeColor = isRed ? Colors.redAccent : Colors.blueAccent;
+    final themeColor = _playerThemeColor(playerIndex, isTeamBattle: false);
 
     return PlayerArenaInfo(
       player: player,
@@ -3141,6 +3141,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       themeColor: themeColor,
       extra: !widget.isTeamBattle ? _buildTicks(playerIndex) : null,
       isSelected: isRed,
+      gradient: _playerGradient(playerIndex, isTeamBattle: false),
       glowAlpha: 0.7,
       thickness: 6.0,
       isSelecting: false,
@@ -3193,6 +3194,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       isMirrored: isMirrored,
       themeColor: themeColor,
       isSelected: isRed,
+      gradient: _playerGradient(playerIndex, isTeamBattle: true),
       glowAlpha: 0.7,
       thickness: 6.0,
       isSelecting: false,

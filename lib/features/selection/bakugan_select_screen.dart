@@ -616,9 +616,10 @@ class _BakuganSelectScreenState extends State<BakuganSelectScreen> {
           final playerIndex = entry.key;
           final player = entry.value;
           final isCurrent = playerIndex == currentPlayerIndex;
-          final accent = playerIndex.isEven
-              ? Colors.blueAccent
-              : Colors.redAccent;
+          final accent = _playerThemeColor(
+            playerIndex,
+            isTeamBattle: widget.isTeamBattle,
+          );
           return GestureDetector(
             onTap: () => setState(() => currentPlayerIndex = playerIndex),
             child: Container(
@@ -1017,9 +1018,10 @@ class _BakuganSelectScreenState extends State<BakuganSelectScreen> {
                   child: Column(
                     children: widget.players.asMap().entries.map((entry) {
                       bool isCurrent = entry.key == currentPlayerIndex;
-                      final themeColor = entry.key % 2 == 0
-                          ? Colors.blueAccent
-                          : Colors.redAccent;
+                      final themeColor = _playerThemeColor(
+                        entry.key,
+                        isTeamBattle: widget.isTeamBattle,
+                      );
 
                       return GestureDetector(
                         onTap: () =>

@@ -893,11 +893,28 @@ class _ProfileActionCard extends StatelessWidget {
   }
 }
 
+// Gradients per player slot: team battles alternate blue/orange by team, while
+// free-for-all matches give each of up to four players their own colour.
+const List<List<Color>> _playerGradients = [
+  [Colors.blueAccent, Colors.cyan, Color(0xFF0D47A1)],
+  [Colors.redAccent, Colors.orange, Colors.yellowAccent],
+  [Colors.greenAccent, Colors.lightGreenAccent, Color(0xFF1B5E20)],
+  [Colors.purpleAccent, Colors.pinkAccent, Color(0xFF311B92)],
+];
+
+List<Color> _playerGradient(int index, {required bool isTeamBattle}) {
+  final slot = isTeamBattle ? index % 2 : index % _playerGradients.length;
+  return _playerGradients[slot];
+}
+
+Color _playerThemeColor(int index, {required bool isTeamBattle}) =>
+    _playerGradient(index, isTeamBattle: isTeamBattle).first;
+
 class PlayerSlot extends StatelessWidget {
   final String displayName;
   final String? char;
   final bool isActive;
-  final bool isBlue;
+  final List<Color> gradient;
   final bool isSavedProfile;
 
   const PlayerSlot({
@@ -905,25 +922,14 @@ class PlayerSlot extends StatelessWidget {
     required this.displayName,
     this.char,
     required this.isActive,
-    required this.isBlue,
+    required this.gradient,
     required this.isSavedProfile,
   });
 
   @override
   Widget build(BuildContext context) {
     // Bakugan Palettes
-    final List<Color> blueGradient = [
-      Colors.blueAccent,
-      Colors.cyan,
-      Colors.blue.shade900,
-    ];
-    final List<Color> redGradient = [
-      Colors.redAccent,
-      Colors.orange,
-      Colors.yellowAccent,
-    ];
-
-    final currentGradient = isBlue ? blueGradient : redGradient;
+    final currentGradient = gradient;
     final themeColor = currentGradient[0];
 
     return Transform(
@@ -1130,6 +1136,8 @@ class CharacterMiniature extends StatelessWidget {
   final String? label;
   final double? glowAlpha;
   final double? thickness; // NEW: Overrides default border padding
+  // Frame colours; when null they follow [isSelected] (orange) / idle (blue).
+  final List<Color>? gradient;
 
   const CharacterMiniature({
     super.key,
@@ -1139,6 +1147,7 @@ class CharacterMiniature extends StatelessWidget {
     this.label,
     this.glowAlpha,
     this.thickness,
+    this.gradient,
   });
 
   @override
@@ -1154,7 +1163,8 @@ class CharacterMiniature extends StatelessWidget {
       Colors.blue.shade900,
     ];
 
-    final currentGradient = isSelected ? activeGradient : idleGradient;
+    final currentGradient =
+        gradient ?? (isSelected ? activeGradient : idleGradient);
     // Use custom label if provided, otherwise default to character name
     final String displayName = label ?? char;
 
@@ -2186,6 +2196,102 @@ class FramedActionButton extends StatelessWidget {
   }
 }
 
+// Action tile drawn like a Bakugan slot (same skew, size and glowing frame) so
+// the STAY button looks like one more tile in the player's row.
+class BakuganStayTile extends StatefulWidget {
+  final VoidCallback onPressed;
+  final double size;
+
+  const BakuganStayTile({super.key, required this.onPressed, this.size = 90});
+
+  @override
+  State<BakuganStayTile> createState() => _BakuganStayTileState();
+}
+
+class _BakuganStayTileState extends State<BakuganStayTile> {
+  static const List<Color> _frameGradient = [
+    Color(0xFFFFE08A),
+    Color(0xFFF2B53D),
+    Color(0xFF8A5A0B),
+  ];
+
+  bool _isHovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: Transform(
+        alignment: Alignment.center,
+        transform: Matrix4.skewX(-0.15),
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
+          onTap: () {
+            unawaited(_playUiConfirmSound());
+            widget.onPressed();
+          },
+          child: AnimatedScale(
+            duration: const Duration(milliseconds: 160),
+            scale: _isHovered ? 1.06 : 1.0,
+            child: Container(
+              width: widget.size,
+              height: widget.size,
+              padding: const EdgeInsets.all(4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                gradient: const LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: _frameGradient,
+                ),
+                boxShadow: [
+                  BoxShadow(
+                    color: _frameGradient.first.withValues(alpha: 0.58),
+                    blurRadius: 15,
+                    spreadRadius: 2,
+                  ),
+                ],
+              ),
+              child: Container(
+                alignment: Alignment.center,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.skewX(0.15),
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 6),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Text(
+                        'STAY',
+                        maxLines: 1,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontFamily: 'button_font',
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1,
+                          shadows: [
+                            Shadow(blurRadius: 12, color: Colors.white),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class BakuganButton extends StatefulWidget {
   final IconData? icon;
   final bool iconOnly;
@@ -2348,6 +2454,12 @@ class PlayerArenaInfo extends StatelessWidget {
   final VoidCallback? onPortraitTap;
   final Widget? portraitOverlay;
   final bool portraitOverlayAbove;
+  // Per-player frame colours for the portrait; when null it follows
+  // [isSelected]. The Bakugan slots keep their own state colours.
+  final List<Color>? gradient;
+  // Extra tile shown after the three Bakugan slots, e.g. the STAY button. It is
+  // built with the slot size so it lines up with them.
+  final Widget Function(double slotSize)? trailingSlotBuilder;
 
   const PlayerArenaInfo({
     super.key,
@@ -2368,6 +2480,8 @@ class PlayerArenaInfo extends StatelessWidget {
     this.onPortraitTap,
     this.portraitOverlay,
     this.portraitOverlayAbove = false,
+    this.gradient,
+    this.trailingSlotBuilder,
   });
 
   @override
@@ -2420,6 +2534,7 @@ class PlayerArenaInfo extends StatelessWidget {
             child: CharacterMiniature(
               char: player.character,
               isSelected: isSelected,
+              gradient: gradient,
               showName: true,
               label: player.name.toUpperCase(),
               glowAlpha: glowAlpha,
@@ -2453,126 +2568,133 @@ class PlayerArenaInfo extends StatelessWidget {
             ),
           Row(
             mainAxisSize: MainAxisSize.min,
-            children: List.generate(3, (i) {
-              final hasBakugan = i < player.deck.length;
-              final variant = hasBakugan ? player.deck[i] : null;
-              final isPicked = effectiveSelectedBakuganIndices.contains(i);
-              final pileState =
-                  bakuganPileStates != null && i < bakuganPileStates!.length
-                  ? bakuganPileStates![i]
-                  : MatchBakuganPileState.unused;
-              final isStanding = pileState == MatchBakuganPileState.standing;
-              final isUsed = pileState == MatchBakuganPileState.used;
-              final isRemoved = pileState == MatchBakuganPileState.removed;
-              final borderGradient = isPicked
-                  ? activeGradient
-                  : isStanding
-                  ? standingGradient
-                  : isRemoved
-                  ? const [
-                      Color(0xFF2A0E0E),
-                      Color(0xFF111111),
-                      Color(0xFF050505),
-                    ]
-                  : isUsed
-                  ? usedGradient
-                  : idleGradient;
+            children: [
+              ...List.generate(3, (i) {
+                final hasBakugan = i < player.deck.length;
+                final variant = hasBakugan ? player.deck[i] : null;
+                final isPicked = effectiveSelectedBakuganIndices.contains(i);
+                final pileState =
+                    bakuganPileStates != null && i < bakuganPileStates!.length
+                    ? bakuganPileStates![i]
+                    : MatchBakuganPileState.unused;
+                final isStanding = pileState == MatchBakuganPileState.standing;
+                final isUsed = pileState == MatchBakuganPileState.used;
+                final isRemoved = pileState == MatchBakuganPileState.removed;
+                final borderGradient = isPicked
+                    ? activeGradient
+                    : isStanding
+                    ? standingGradient
+                    : isRemoved
+                    ? const [
+                        Color(0xFF2A0E0E),
+                        Color(0xFF111111),
+                        Color(0xFF050505),
+                      ]
+                    : isUsed
+                    ? usedGradient
+                    : idleGradient;
 
-              return Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.skewX(-0.15),
-                child: GestureDetector(
-                  onTap: hasBakugan && !isRemoved
-                      ? () => onBakuganTap?.call(i)
-                      : null,
-                  onLongPress: hasBakugan && !isRemoved
-                      ? () => onBakuganLongPress?.call(i)
-                      : null,
-                  behavior: HitTestBehavior.opaque,
-                  child: AnimatedOpacity(
-                    duration: const Duration(milliseconds: 180),
-                    opacity: isUsed ? 0.48 : 1.0,
-                    child: AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-                      curve: Curves.easeInOut,
-                      width: slotSize,
-                      height: slotSize,
-                      margin: EdgeInsets.only(
-                        right: isMirrored ? 0 : slotGap,
-                        left: isMirrored ? slotGap : 0,
-                      ),
-                      padding: EdgeInsets.all(isPicked || isStanding ? 4 : 2),
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                          colors: borderGradient,
+                return Transform(
+                  alignment: Alignment.center,
+                  transform: Matrix4.skewX(-0.15),
+                  child: GestureDetector(
+                    onTap: hasBakugan && !isRemoved
+                        ? () => onBakuganTap?.call(i)
+                        : null,
+                    onLongPress: hasBakugan && !isRemoved
+                        ? () => onBakuganLongPress?.call(i)
+                        : null,
+                    behavior: HitTestBehavior.opaque,
+                    child: AnimatedOpacity(
+                      duration: const Duration(milliseconds: 180),
+                      opacity: isUsed ? 0.48 : 1.0,
+                      child: AnimatedContainer(
+                        duration: const Duration(milliseconds: 300),
+                        curve: Curves.easeInOut,
+                        width: slotSize,
+                        height: slotSize,
+                        margin: EdgeInsets.only(
+                          right: isMirrored ? 0 : slotGap,
+                          left: isMirrored ? slotGap : 0,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: borderGradient.first.withValues(
-                              alpha: isPicked || isStanding ? 0.58 : 0.34,
-                            ),
-                            blurRadius: isPicked || isStanding
-                                ? 15
-                                : (isUsed ? 4 : 8),
-                            spreadRadius: isPicked || isStanding
-                                ? 2
-                                : (isUsed ? 0 : 1),
-                          ),
-                        ],
-                      ),
-                      child: Container(
-                        clipBehavior: Clip.antiAlias,
+                        padding: EdgeInsets.all(isPicked || isStanding ? 4 : 2),
                         decoration: BoxDecoration(
-                          color: Colors.black,
-                          borderRadius: BorderRadius.circular(6),
-                        ),
-                        child: Stack(
-                          clipBehavior: Clip.hardEdge,
-                          children: [
-                            if (hasBakugan && !isRemoved)
-                              Positioned.fill(
-                                child: BakuganDeckPreview(
-                                  variant: variant!,
-                                  borderRadius: 6,
-                                ),
+                          borderRadius: BorderRadius.circular(8),
+                          gradient: LinearGradient(
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                            colors: borderGradient,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: borderGradient.first.withValues(
+                                alpha: isPicked || isStanding ? 0.58 : 0.34,
                               ),
-                            if (isRemoved)
-                              Positioned.fill(
-                                child: Transform(
-                                  alignment: Alignment.center,
-                                  transform: Matrix4.skewX(0.15),
-                                  child: Center(
-                                    child: Text(
-                                      'OUT',
-                                      style: TextStyle(
-                                        color: Colors.white.withValues(
-                                          alpha: 0.32,
+                              blurRadius: isPicked || isStanding
+                                  ? 15
+                                  : (isUsed ? 4 : 8),
+                              spreadRadius: isPicked || isStanding
+                                  ? 2
+                                  : (isUsed ? 0 : 1),
+                            ),
+                          ],
+                        ),
+                        child: Container(
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Stack(
+                            clipBehavior: Clip.hardEdge,
+                            children: [
+                              if (hasBakugan && !isRemoved)
+                                Positioned.fill(
+                                  child: BakuganDeckPreview(
+                                    variant: variant!,
+                                    borderRadius: 6,
+                                  ),
+                                ),
+                              if (isRemoved)
+                                Positioned.fill(
+                                  child: Transform(
+                                    alignment: Alignment.center,
+                                    transform: Matrix4.skewX(0.15),
+                                    child: Center(
+                                      child: Text(
+                                        'OUT',
+                                        style: TextStyle(
+                                          color: Colors.white.withValues(
+                                            alpha: 0.32,
+                                          ),
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w900,
+                                          fontStyle: FontStyle.italic,
+                                          letterSpacing: 2,
                                         ),
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w900,
-                                        fontStyle: FontStyle.italic,
-                                        letterSpacing: 2,
                                       ),
                                     ),
                                   ),
                                 ),
+                              Positioned.fill(
+                                child: Container(
+                                  color: Colors.white.withValues(alpha: 0.01),
+                                ),
                               ),
-                            Positioned.fill(
-                              child: Container(
-                                color: Colors.white.withValues(alpha: 0.01),
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
                   ),
+                );
+              }),
+              if (trailingSlotBuilder != null)
+                Padding(
+                  padding: EdgeInsets.only(left: isMirrored ? slotGap : 0),
+                  child: trailingSlotBuilder!(slotSize),
                 ),
-              );
-            }),
+            ],
           ),
           if (extra != null) ...[const SizedBox(height: 20), extra!],
         ],
