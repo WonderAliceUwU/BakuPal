@@ -468,6 +468,8 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
             illustrationShadowOpacity: 0.58,
             illustrationShadowBlur: 16,
             visualScaleOverride: 1.55,
+            // Without an illustration (3D model): a bit lower in the frame.
+            modelOffsetOverride: const Offset(0, 24),
             visualAlignmentOverride: const Alignment(0.0, 1.28),
             visualPaddingOverride: const EdgeInsets.fromLTRB(28, 96, 28, 34),
             frameBackground: Stack(
@@ -2610,6 +2612,9 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
     if (_winnerSideIndex != null || _isTieResult) return;
     final amountController = TextEditingController();
     var isAdding = true;
+    // Attribute picked in the dropdown; applied together with the amount.
+    String? pendingAttribute;
+    var attributeOpen = false;
 
     await showGeneralDialog<void>(
       context: context,
@@ -2625,9 +2630,21 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
 
             Future<void> apply() async {
               final amount = int.tryParse(amountController.text.trim());
-              if (amount == null || amount == 0) return;
+              final hasAmount = amount != null && amount != 0;
+              final newAttribute =
+                  pendingAttribute != null &&
+                      pendingAttribute != variant.attribute
+                  ? pendingAttribute
+                  : null;
+              if (!hasAmount && newAttribute == null) return;
               Navigator.of(dialogContext).pop();
-              await _adjustManualGPower(isLeft, isAdding ? amount : -amount);
+              // Attribute first, so the amount lands on the new attribute.
+              if (newAttribute != null) {
+                await _setBattleAttributeManually(isLeft, newAttribute);
+              }
+              if (hasAmount) {
+                await _adjustManualGPower(isLeft, isAdding ? amount : -amount);
+              }
             }
 
             Widget signOption(bool adding) {
@@ -2684,11 +2701,12 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
               final selected = attribute == current;
               final color = _colorForAttribute(attribute);
               return GestureDetector(
-                onTap: () async {
-                  if (selected) return;
+                onTap: () {
                   unawaited(_playUiConfirmSound());
-                  await _setBattleAttributeManually(isLeft, attribute);
-                  if (context.mounted) setDialogState(() {});
+                  setDialogState(() {
+                    pendingAttribute = attribute;
+                    attributeOpen = false;
+                  });
                 },
                 child: Transform(
                   alignment: Alignment.center,
@@ -2773,47 +2791,55 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
                             child: Transform(
                               alignment: Alignment.center,
                               transform: Matrix4.skewX(0.12),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                    child: TextField(
-                                      controller: amountController,
-                                      autofocus: true,
-                                      keyboardType: TextInputType.number,
-                                      inputFormatters: [
-                                        FilteringTextInputFormatter.digitsOnly,
-                                      ],
-                                      onSubmitted: (_) => apply(),
-                                      cursorColor: Colors.cyanAccent,
-                                      textAlignVertical:
-                                          TextAlignVertical.center,
-                                      style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 28,
-                                        fontWeight: FontWeight.w900,
-                                      ),
-                                      decoration: InputDecoration(
-                                        isCollapsed: true,
-                                        border: InputBorder.none,
-                                        hintText: '0',
-                                        hintStyle: TextStyle(
-                                          color: Colors.white.withValues(
-                                            alpha: 0.3,
+                              // Centred as a block, with the amount and the "G" on
+                              // the same baseline so they line up.
+                              child: Center(
+                                child: Row(
+                                  crossAxisAlignment:
+                                      CrossAxisAlignment.baseline,
+                                  textBaseline: TextBaseline.alphabetic,
+                                  children: [
+                                    Expanded(
+                                      child: TextField(
+                                        controller: amountController,
+                                        autofocus: true,
+                                        keyboardType: TextInputType.number,
+                                        inputFormatters: [
+                                          FilteringTextInputFormatter
+                                              .digitsOnly,
+                                        ],
+                                        onSubmitted: (_) => apply(),
+                                        cursorColor: Colors.cyanAccent,
+                                        textAlignVertical:
+                                            TextAlignVertical.center,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 28,
+                                          fontWeight: FontWeight.w900,
+                                        ),
+                                        decoration: InputDecoration(
+                                          isCollapsed: true,
+                                          border: InputBorder.none,
+                                          hintText: '0',
+                                          hintStyle: TextStyle(
+                                            color: Colors.white.withValues(
+                                              alpha: 0.3,
+                                            ),
                                           ),
                                         ),
                                       ),
                                     ),
-                                  ),
-                                  const SizedBox(width: 10),
-                                  const Text(
-                                    'G',
-                                    style: TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 28,
-                                      fontWeight: FontWeight.w900,
+                                    const SizedBox(width: 10),
+                                    const Text(
+                                      'G',
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 28,
+                                        fontWeight: FontWeight.w900,
+                                      ),
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
                             ),
                           ),
@@ -2822,12 +2848,85 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
                     ],
                   ),
                   const SizedBox(height: 18),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      for (final attribute in _manualAttributeOrder)
-                        attributeOption(attribute, variant.attribute),
-                    ],
+                  // "Attribute": shows the current (or picked) attribute and an
+                  // arrow that opens the list.
+                  GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onTap: () {
+                      unawaited(_playUiConfirmSound());
+                      setDialogState(() => attributeOpen = !attributeOpen);
+                    },
+                    child: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.skewX(-0.12),
+                      child: Container(
+                        height: 64,
+                        padding: const EdgeInsets.symmetric(horizontal: 22),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withValues(alpha: 0.4),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: attributeOpen
+                                ? Colors.cyanAccent
+                                : Colors.white24,
+                            width: attributeOpen ? 2 : 1.5,
+                          ),
+                        ),
+                        child: Transform(
+                          alignment: Alignment.center,
+                          transform: Matrix4.skewX(0.12),
+                          child: Row(
+                            children: [
+                              const Text(
+                                'ATTRIBUTE',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.4,
+                                ),
+                              ),
+                              const Spacer(),
+                              Image.asset(
+                                'assets/images/attributes/${pendingAttribute ?? variant.attribute}_game.png',
+                                width: 38,
+                                height: 38,
+                              ),
+                              const SizedBox(width: 10),
+                              AnimatedRotation(
+                                turns: attributeOpen ? 0.5 : 0,
+                                duration: const Duration(milliseconds: 180),
+                                child: const Icon(
+                                  Icons.keyboard_arrow_down_rounded,
+                                  color: Colors.white,
+                                  size: 32,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  AnimatedSize(
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeOutCubic,
+                    alignment: Alignment.topCenter,
+                    child: attributeOpen
+                        ? Padding(
+                            padding: const EdgeInsets.only(top: 12),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                for (final attribute in _manualAttributeOrder)
+                                  attributeOption(
+                                    attribute,
+                                    pendingAttribute ?? variant.attribute,
+                                  ),
+                              ],
+                            ),
+                          )
+                        : const SizedBox(width: double.infinity),
                   ),
                 ],
               ),
