@@ -503,7 +503,7 @@ class _BakuganSelectScreenState extends State<BakuganSelectScreen> {
     } else {
       Navigator.push(
         context,
-        _zoomRoute(
+        _fadeRoute(
           ScoreboardScreen(
             players: widget.players,
             isTeamBattle: widget.isTeamBattle,

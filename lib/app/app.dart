@@ -108,22 +108,6 @@ Route _fadeRoute(Widget page) {
   );
 }
 
-Route _zoomRoute(Widget page) {
-  return PageRouteBuilder(
-    settings: RouteSettings(name: _helpTopicForPage(page)),
-    pageBuilder: (context, animation, secondaryAnimation) => page,
-    transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      return ScaleTransition(
-        scale: Tween<double>(begin: 0.0, end: 1.0).animate(
-          CurvedAnimation(parent: animation, curve: Curves.easeOutBack),
-        ),
-        child: FadeTransition(opacity: animation, child: child),
-      );
-    },
-    transitionDuration: const Duration(milliseconds: 800),
-  );
-}
-
 class AppVolumeController extends ChangeNotifier {
   AppVolumeController._();
 
@@ -386,15 +370,9 @@ Future<void> _openAppSettingsDialog() async {
           ),
         );
       },
+      // Fades in like the pages, without the bounce.
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curvedAnimation, child: child),
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     if (matchPauseController != null && !matchActionTaken) {

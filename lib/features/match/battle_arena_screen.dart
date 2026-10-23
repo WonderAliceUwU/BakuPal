@@ -2976,15 +2976,9 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
           },
         );
       },
+      // Fades in like the pages, without the bounce.
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curved, child: child),
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     amountController.dispose();
@@ -3107,15 +3101,9 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
           ),
         );
       },
+      // Fades in like the pages, without the bounce.
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curved, child: child),
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     if (choice == null || !mounted) return;

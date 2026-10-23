@@ -178,7 +178,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
 
   Future<void> _openBakuganCarousel() async {
     await Navigator.of(context).push(
-      _zoomRoute(
+      _fadeRoute(
         BakuganInventoryCarouselScreen(
           bakugans: availableBakugans,
           initialGPowerByInventoryKey: _savedGPowerByInventoryKey,
@@ -197,7 +197,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
   }
 
   Future<void> _openCardsScreen() async {
-    await Navigator.of(context).push(_zoomRoute(const InventoryCardsScreen()));
+    await Navigator.of(context).push(_fadeRoute(const InventoryCardsScreen()));
   }
 
   @override
@@ -1452,15 +1452,9 @@ class _BakuganInventoryCarouselScreenState
           ),
         );
       },
+      // Fades in like the pages, without the bounce.
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curved, child: child),
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     if (confirmed != true || !mounted) return;
@@ -1749,15 +1743,9 @@ class _BakuganInventoryCarouselScreenState
           ),
         );
       },
+      // Fades in like the pages, without the bounce.
       transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curved = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curved, child: child),
-        );
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     controller.dispose();
