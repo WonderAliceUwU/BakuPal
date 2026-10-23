@@ -2,7 +2,7 @@ name: bakugan_companion
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.0+2
 
 environment:
   sdk: '>=3.10.8 <4.0.0'

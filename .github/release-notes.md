@@ -16,6 +16,18 @@ the game instead of the maths.
 - **Seasons and Elo**, **match history** and a **savegame** backup.
 - A **HELP** button on every screen.
 
+## New in beta 2
+
+- **Much smaller download**: card images and 3D textures are now WebP, and
+  unused design files are no longer bundled (assets went from about 2.2 GB to
+  under 500 MB).
+- **Cartoon previews**: a setting to show the Bakugan as drawn anime balls
+  instead of 3D models in the small previews (and in battle when there is no
+  monster image).
+- **Settings with tabs**: General, Language, Help and, while paused, Match.
+- Battle monster images are framed one by one and face the opponent on both
+  sides; more polished previews and history, and no more bouncy transitions.
+
 ## Install
 
 - **Windows**: unzip `bakupal-windows-x64.zip` and run the `.exe`.
