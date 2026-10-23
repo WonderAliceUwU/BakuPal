@@ -2490,59 +2490,71 @@ class _MatchHistoryCardState extends State<_MatchHistoryCard> {
         borderRadius: BorderRadius.circular(24),
         border: Border.all(color: Colors.white12, width: 2),
       ),
-      child: Theme(
-        data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
-        child: ExpansionTile(
-          onExpansionChanged: (value) => setState(() => _isExpanded = value),
-          tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 14),
-          childrenPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-          iconColor: Colors.cyanAccent,
-          collapsedIconColor: Colors.cyanAccent,
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                spacing: 10,
-                runSpacing: 10,
-                crossAxisAlignment: WrapCrossAlignment.center,
-                children: [
-                  _HistoryBadge(
-                    label: 'Season ${entry.seasonNumber}',
-                    color: Colors.cyanAccent,
-                  ),
-                  _HistoryBadge(
-                    label: entry.isTeamBattle ? 'TEAM BATTLE' : 'BATTLE ROYALE',
-                    color: Colors.amberAccent,
-                  ),
-                  _HistoryBadge(label: playedAt, color: Colors.white70),
-                ],
-              ),
-              const SizedBox(height: 14),
-              AutoSizeText(
-                winners.isEmpty ? 'NO WINNER' : winners,
-                maxLines: 1,
-                minFontSize: 22,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 34,
-                  fontWeight: FontWeight.w900,
-                  fontStyle: FontStyle.italic,
+      // The tile paints its ink on the nearest Material; without one of its own
+      // it would sit under the decorated box above (a debug assertion).
+      child: Material(
+        type: MaterialType.transparency,
+        child: Theme(
+          data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+          child: ExpansionTile(
+            onExpansionChanged: (value) => setState(() => _isExpanded = value),
+            tilePadding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 14,
+            ),
+            childrenPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+            iconColor: Colors.cyanAccent,
+            collapsedIconColor: Colors.cyanAccent,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Wrap(
+                  spacing: 10,
+                  runSpacing: 10,
+                  crossAxisAlignment: WrapCrossAlignment.center,
+                  children: [
+                    // Only matches that counted for the Elo carry their season.
+                    if (entry.countedForElo)
+                      _HistoryBadge(
+                        label: 'Season ${entry.seasonNumber}',
+                        color: Colors.cyanAccent,
+                      ),
+                    _HistoryBadge(
+                      label: entry.isTeamBattle
+                          ? 'TEAM BATTLE'
+                          : 'BATTLE ROYALE',
+                      color: Colors.amberAccent,
+                    ),
+                    _HistoryBadge(label: playedAt, color: Colors.white70),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 6),
-              Text(
-                '${entry.players.length} players • ${entry.battles.length} battles',
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w700,
+                const SizedBox(height: 14),
+                AutoSizeText(
+                  winners.isEmpty ? 'NO WINNER' : winners,
+                  maxLines: 1,
+                  minFontSize: 22,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 34,
+                    fontWeight: FontWeight.w900,
+                    fontStyle: FontStyle.italic,
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 6),
+                Text(
+                  '${entry.players.length} players • ${entry.battles.length} battles',
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+            children: _isExpanded
+                ? [_MatchHistoryExpandedContent(entry: entry)]
+                : const [],
           ),
-          children: _isExpanded
-              ? [_MatchHistoryExpandedContent(entry: entry)]
-              : const [],
         ),
       ),
     );
@@ -2668,58 +2680,57 @@ class _HistoryPlayerCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 14),
+              // As tall as the portrait: the name and the points hang from the
+              // top, the ability cards sit on the portrait's bottom edge.
               Expanded(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            player.name.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 24,
-                              fontWeight: FontWeight.w900,
-                              fontStyle: FontStyle.italic,
+                child: SizedBox(
+                  height: 112,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: 0,
+                        right: 0,
+                        top: 0,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              player.name.toUpperCase(),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.w900,
+                                fontStyle: FontStyle.italic,
+                              ),
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            player.character.toUpperCase(),
-                            style: const TextStyle(
-                              color: Colors.white70,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: 1.0,
-                            ),
-                          ),
-                          const SizedBox(height: 10),
-                          _HistoryGateCardTicks(count: player.gateCardsWon),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    Center(
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          for (int i = 0; i < 3; i++) ...[
-                            _HistoryAbilityMiniCard(
-                              card: i < sortedSlots.length
-                                  ? sortedSlots[i].card
-                                  : null,
-                              width: 58,
-                              borderRadius: 2,
-                            ),
-                            if (i != 2) const SizedBox(width: 6),
+                            const SizedBox(height: 8),
+                            _HistoryGateCardTicks(count: player.gateCardsWon),
                           ],
-                        ],
+                        ),
                       ),
-                    ),
-                  ],
+                      Positioned(
+                        right: 0,
+                        bottom: 0,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            for (int i = 0; i < 3; i++) ...[
+                              _HistoryAbilityMiniCard(
+                                card: i < sortedSlots.length
+                                    ? sortedSlots[i].card
+                                    : null,
+                                width: 54,
+                                borderRadius: 2,
+                              ),
+                              if (i != 2) const SizedBox(width: 6),
+                            ],
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
