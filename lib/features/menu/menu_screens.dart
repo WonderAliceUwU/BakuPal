@@ -2838,20 +2838,23 @@ class _HistoryBakuganMiniCard extends StatelessWidget {
           Transform(
             alignment: Alignment.center,
             transform: Matrix4.skewX(-0.15),
+            // The grid and light of the deck preview fill the whole box.
             child: Container(
-              padding: const EdgeInsets.all(8),
+              clipBehavior: Clip.antiAlias,
               decoration: BoxDecoration(
-                color: Colors.white.withValues(alpha: 0.03),
+                color: Colors.black,
                 borderRadius: BorderRadius.circular(14),
                 border: Border.all(color: borderColor.withValues(alpha: 0.45)),
               ),
               child: SizedBox(
-                width: 132,
-                height: 102,
+                width: 148,
+                height: 118,
                 child: variant == null
                     ? const SizedBox.expand()
                     : BakuganDeckPreview(
                         variant: variant,
+                        scale: 0.68,
+                        borderRadius: 13,
                         autoRotate: false,
                         disableInteraction: true,
                       ),
@@ -3127,50 +3130,25 @@ class _HistoryBattleBakuganMini extends StatelessWidget {
                 color: borderColor.withValues(alpha: 0.6),
                 glowColor: side.isWinner ? borderColor : null,
               ),
+              // The grid and light of the deck preview fill the whole box.
               child: Container(
-                padding: const EdgeInsets.all(8),
+                clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.9),
+                  color: Colors.black,
                   borderRadius: BorderRadius.circular(14),
                 ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
-                  child: SizedBox(
-                    width: 132,
-                    height: 102,
-                    child: Stack(
-                      children: [
-                        Positioned.fill(
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topLeft,
-                                end: Alignment.bottomRight,
-                                colors: [
-                                  Colors.white.withValues(alpha: 0.03),
-                                  Colors.transparent,
-                                  borderColor.withValues(alpha: 0.03),
-                                ],
-                              ),
-                            ),
-                          ),
+                child: SizedBox(
+                  width: 148,
+                  height: 118,
+                  child: variant == null
+                      ? const SizedBox.expand()
+                      : BakuganDeckPreview(
+                          variant: variant,
+                          scale: 0.68,
+                          borderRadius: 14,
+                          autoRotate: false,
+                          disableInteraction: true,
                         ),
-                        Positioned.fill(
-                          child: CustomPaint(
-                            painter: GridPainter(
-                              color: borderColor.withValues(alpha: 0.1),
-                            ),
-                          ),
-                        ),
-                        if (variant != null)
-                          BakuganDeckPreview(
-                            variant: variant,
-                            autoRotate: false,
-                            disableInteraction: true,
-                          ),
-                      ],
-                    ),
-                  ),
                 ),
               ),
             ),

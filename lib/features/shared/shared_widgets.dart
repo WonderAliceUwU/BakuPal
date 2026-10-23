@@ -559,9 +559,7 @@ class _BakuganPreviewState extends State<BakuganPreview>
                         child: CustomPaint(
                           painter: GridPainter(
                             color: themeColor.withValues(
-                              alpha:
-                                  widget.gridOpacityOverride ??
-                                  (widget.isLarge ? 0.12 : 0.05),
+                              alpha: widget.gridOpacityOverride ?? 0.15,
                             ),
                           ),
                         ),
@@ -575,6 +573,12 @@ class _BakuganPreviewState extends State<BakuganPreview>
                             : _padVisual(_buildPreviewVisual()),
                       ),
                     ),
+
+                    // Same light as the player cards, over the grid ones.
+                    if (widget.showGridBackground)
+                      const Positioned.fill(
+                        child: IgnorePointer(child: CardShine()),
+                      ),
 
                     // SMALL FOOTER (Now inside the clip and background stack)
                     if (!widget.isLarge && widget.speciesName != null)
@@ -1164,20 +1168,7 @@ class PlayerSlot extends StatelessWidget {
                     ),
 
                   // --- METALLIC SHINE (From Miniature) ---
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          begin: Alignment.topLeft,
-                          colors: [
-                            Colors.white.withValues(alpha: 0.15),
-                            Colors.transparent,
-                            Colors.black.withValues(alpha: 0.3),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
+                  const Positioned.fill(child: CardShine()),
                   // --- NAME PLATE ---
                   Align(
                     alignment: Alignment.bottomCenter,
@@ -1268,6 +1259,10 @@ class BakuganDeckPreview extends StatelessWidget {
         fit: StackFit.expand,
         clipBehavior: Clip.hardEdge,
         children: [
+          // The player card background: grid under the Bakugan, light on top.
+          CustomPaint(
+            painter: GridPainter(color: variant.color.withValues(alpha: 0.15)),
+          ),
           Transform.scale(
             alignment: Alignment.center,
             scale: scale,
@@ -1280,6 +1275,7 @@ class BakuganDeckPreview extends StatelessWidget {
               ),
             ),
           ),
+          const IgnorePointer(child: CardShine()),
         ],
       ),
     );
@@ -1438,6 +1434,28 @@ class CharacterMiniature extends StatelessWidget {
               ),
             ),
           ),
+        ),
+      ),
+    );
+  }
+}
+
+/// The diagonal light of the player cards: bright at the top-left, darker at
+/// the other end. Goes over the picture.
+class CardShine extends StatelessWidget {
+  const CardShine({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          colors: [
+            Colors.white.withValues(alpha: 0.15),
+            Colors.transparent,
+            Colors.black.withValues(alpha: 0.3),
+          ],
         ),
       ),
     );
@@ -2913,6 +2931,7 @@ class PlayerArenaInfo extends StatelessWidget {
                                           opacity: isRemoved ? 0.4 : 1,
                                           child: BakuganDeckPreview(
                                             variant: variant!,
+                                            scale: 1.0,
                                             borderRadius: 6,
                                           ),
                                         ),
