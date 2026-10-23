@@ -920,6 +920,10 @@ class MatchHistoryEntry {
   final List<String> winnerNames;
   final List<MatchHistoryPlayerEntry> players;
   final List<MatchBattleRecord> battles;
+  // Whether the match changed the Elo of the season. False when the Elo was
+  // paused or the registered players had not started the season; entries saved
+  // before this field existed count as true.
+  final bool countedForElo;
 
   const MatchHistoryEntry({
     required this.id,
@@ -929,6 +933,7 @@ class MatchHistoryEntry {
     required this.winnerNames,
     required this.players,
     this.battles = const [],
+    this.countedForElo = true,
   });
 
   factory MatchHistoryEntry.fromJson(Map<String, dynamic> json) {
@@ -963,12 +968,14 @@ class MatchHistoryEntry {
                 )
                 .toList()
           : const [],
+      countedForElo: json['countedForElo'] != false,
     );
   }
 
   Map<String, dynamic> toJson() => {
     'id': id,
     'seasonNumber': seasonNumber,
+    'countedForElo': countedForElo,
     'isTeamBattle': isTeamBattle,
     'playedAt': playedAt,
     'winnerNames': winnerNames,

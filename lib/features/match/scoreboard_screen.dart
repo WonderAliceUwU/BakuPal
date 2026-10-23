@@ -1914,7 +1914,13 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
   Future<void> _recordMatchResult(int index, {bool awaitSound = true}) async {
     _storeBeforeResult = await LeaderboardRepository.instance.loadStore();
     await _recordLeaderboardMatch(index);
-    await _recordMatchHistory(index);
+    // The match counted for the Elo if someone's matches went up (it does not
+    // when the Elo is paused or the registered players have not started the
+    // season).
+    final after = await LeaderboardRepository.instance.loadStore();
+    final countedForElo =
+        _totalEloMatches(after) > _totalEloMatches(_storeBeforeResult ?? after);
+    await _recordMatchHistory(index, countedForElo: countedForElo);
     if (awaitSound) {
       await _playMatchWinSound();
     } else {
@@ -2130,7 +2136,15 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
     );
   }
 
-  Future<void> _recordMatchHistory(int winningScoreIndex) async {
+  int _totalEloMatches(LeaderboardStore store) => store
+      .currentLeaderboard
+      .players
+      .fold<int>(0, (sum, player) => sum + player.matches);
+
+  Future<void> _recordMatchHistory(
+    int winningScoreIndex, {
+    bool countedForElo = true,
+  }) async {
     final winnerNames = widget.isTeamBattle
         ? (winningScoreIndex == 0
               ? [widget.players[0].name, widget.players[2].name]
@@ -2196,6 +2210,7 @@ class _ScoreboardScreenState extends State<ScoreboardScreen> {
       winnerNames: winnerNames.map(_sanitizePlayerName).toList(),
       players: historyPlayers,
       battles: List<MatchBattleRecord>.from(_battleHistory),
+      countedForElo: countedForElo,
     );
     await LeaderboardRepository.instance.recordMatchHistory(entry);
   }
