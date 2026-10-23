@@ -743,8 +743,8 @@ class MatchHistoryBakuganEntry {
       speciesName: (json['speciesName'] ?? '').toString(),
       attribute: (json['attribute'] ?? '').toString(),
       gPower: (json['gPower'] as num?)?.toInt() ?? 0,
-      modelPath: json['modelPath']?.toString(),
-      texturePath: json['texturePath']?.toString(),
+      modelPath: _webpAssetPath(json['modelPath']?.toString()),
+      texturePath: _webpAssetPath(json['texturePath']?.toString()),
       imagePath: json['imagePath']?.toString(),
     );
   }
@@ -785,6 +785,21 @@ class MatchHistoryBakuganEntry {
   };
 }
 
+/// The card images and model textures became WebP: history saved before
+/// still points at the old PNG/JPG files.
+String? _webpAssetPath(String? path) {
+  if (path == null) return null;
+  final isConverted =
+      (path.startsWith('assets/images/cards/') &&
+          path != 'assets/images/cards/anverse.png') ||
+      (path.startsWith('assets/models/') && !path.contains('/Cartoon/'));
+  if (!isConverted) return path;
+  return path.replaceFirst(
+    RegExp(r'\.(png|jpg|jpeg)$', caseSensitive: false),
+    '.webp',
+  );
+}
+
 class MatchHistoryCardEntry {
   final String name;
   final String imagePath;
@@ -794,7 +809,7 @@ class MatchHistoryCardEntry {
   factory MatchHistoryCardEntry.fromJson(Map<String, dynamic> json) {
     return MatchHistoryCardEntry(
       name: (json['name'] ?? '').toString(),
-      imagePath: (json['imagePath'] ?? '').toString(),
+      imagePath: _webpAssetPath((json['imagePath'] ?? '').toString())!,
     );
   }
 
