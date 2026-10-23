@@ -2,7 +2,7 @@
   "cards": {
     "fire_pit": {
       "set_number": "1/48",
-      "file": "BA133_GA_SM_fire_pit_F.png",
+      "file": "BA133_GA_SM_fire_pit_F.webp",
       "name": "Fire Pit",
       "type": "gate",
       "card_class": "silver",
@@ -23,7 +23,7 @@
     },
     "muddy_ground": {
       "set_number": "2/48",
-      "file": "BA134_GA_SM_muddyground_F.png",
+      "file": "BA134_GA_SM_muddyground_F.webp",
       "name": "Muddy Ground",
       "type": "gate",
       "card_class": "silver",
@@ -44,7 +44,7 @@
     },
     "light_burst": {
       "set_number": "3/48",
-      "file": "BA135_GA_SM_lightburst_F.png",
+      "file": "BA135_GA_SM_lightburst_F.webp",
       "name": "Light-Burst",
       "type": "gate",
       "card_class": "silver",
@@ -65,7 +65,7 @@
     },
     "tsunami": {
       "set_number": "4/48",
-      "file": "BA136_GA_SM_tsunami_F.png",
+      "file": "BA136_GA_SM_tsunami_F.webp",
       "name": "Tsunami",
       "type": "gate",
       "card_class": "silver",
@@ -86,7 +86,7 @@
     },
     "dusk": {
       "set_number": "5/48",
-      "file": "BA137_GA_SM_dusk_F.png",
+      "file": "BA137_GA_SM_dusk_F.webp",
       "name": "Dusk",
       "type": "gate",
       "card_class": "silver",
@@ -107,7 +107,7 @@
     },
     "high_energy": {
       "set_number": "6/48",
-      "file": "BA138_GA_SM_highenergy_F.png",
+      "file": "BA138_GA_SM_highenergy_F.webp",
       "name": "High Energy",
       "type": "gate",
       "card_class": "silver",
@@ -128,7 +128,7 @@
     },
     "tornado_alley": {
       "set_number": "7/48",
-      "file": "BA139_GA_SM_tornadoalley_F.png",
+      "file": "BA139_GA_SM_tornadoalley_F.webp",
       "name": "Tornado Alley",
       "type": "gate",
       "card_class": "silver",
@@ -149,7 +149,7 @@
     },
     "whirlpool": {
       "set_number": "8/48",
-      "file": "BA140_GA_SM_whirlpool_F.png",
+      "file": "BA140_GA_SM_whirlpool_F.webp",
       "name": "Whirlpool",
       "type": "gate",
       "card_class": "silver",
@@ -170,7 +170,7 @@
     },
     "gargonoid": {
       "set_number": "9/48",
-      "file": "BA141_GA_SM_gargonoid_F.png",
+      "file": "BA141_GA_SM_gargonoid_F.webp",
       "name": "Gargonoid",
       "type": "gate",
       "card_class": "gold",
@@ -202,7 +202,7 @@
     },
     "manion": {
       "set_number": "10/48",
-      "file": "BA142_GA_SM_manion_F.png",
+      "file": "BA142_GA_SM_manion_F.webp",
       "name": "Manion",
       "type": "gate",
       "card_class": "gold",
@@ -234,7 +234,7 @@
     },
     "mantris": {
       "set_number": "11/48",
-      "file": "BA143_GA_SM_mantris_F.png",
+      "file": "BA143_GA_SM_mantris_F.webp",
       "name": "Mantris",
       "type": "gate",
       "card_class": "gold",
@@ -266,7 +266,7 @@
     },
     "terrorclaw": {
       "set_number": "12/48",
-      "file": "BA144_GA_SM_terrorclaw_F.png",
+      "file": "BA144_GA_SM_terrorclaw_F.webp",
       "name": "Terrorclaw",
       "type": "gate",
       "card_class": "gold",
@@ -298,7 +298,7 @@
     },
     "cycloid": {
       "set_number": "13/48",
-      "file": "BA145_GA_SM_cycloid_F.png",
+      "file": "BA145_GA_SM_cycloid_F.webp",
       "name": "Cycloid",
       "type": "gate",
       "card_class": "gold",
@@ -330,7 +330,7 @@
     },
     "hynoid": {
       "set_number": "14/48",
-      "file": "BA146_GA_SM_hynoid_F.png",
+      "file": "BA146_GA_SM_hynoid_F.webp",
       "name": "Hynoid",
       "type": "gate",
       "card_class": "gold",
@@ -362,7 +362,7 @@
     },
     "tuskor": {
       "set_number": "16/48",
-      "file": "BA148_GA_SM_tuskor_F.png",
+      "file": "BA148_GA_SM_tuskor_F.webp",
       "name": "Tuskor",
       "type": "gate",
       "card_class": "gold",
@@ -394,7 +394,7 @@
     },
     "teamwork": {
       "set_number": "15/48",
-      "file": "BA147_GA_SM_teamwork_F.png",
+      "file": "BA147_GA_SM_teamwork_F.webp",
       "name": "Teamwork",
       "type": "gate",
       "card_class": "gold",
@@ -421,7 +421,7 @@
     },
     "catch_up": {
       "set_number": "17/48",
-      "file": "BA149_GA_SM_catchup_Fpng.png",
+      "file": "BA149_GA_SM_catchup_Fpng.webp",
       "name": "Catch-Up",
       "type": "gate",
       "card_class": "copper",
@@ -448,7 +448,7 @@
     },
     "duck_and_win": {
       "set_number": "18/48",
-      "file": "BA150_GA_SM_duckwin_F.png",
+      "file": "BA150_GA_SM_duckwin_F.webp",
       "name": "Duck & Win",
       "type": "gate",
       "card_class": "copper",
@@ -475,7 +475,7 @@
     },
     "g_power_exchange": {
       "set_number": "19/48",
-      "file": "BA151_GA_SM_g_power_exchange_F.png",
+      "file": "BA151_GA_SM_g_power_exchange_F.webp",
       "name": "G-Power Exchange",
       "type": "gate",
       "card_class": "copper",
@@ -501,7 +501,7 @@
     },
     "stand_off": {
       "set_number": "20/48",
-      "file": "BA152_GA_SM_standoff_F.png",
+      "file": "BA152_GA_SM_standoff_F.webp",
       "name": "Stand Off",
       "type": "gate",
       "card_class": "copper",
@@ -527,7 +527,7 @@
     },
     "bakugan_swap": {
       "set_number": "21/48",
-      "file": "BA153_GA_SM_bakuganswap.png",
+      "file": "BA153_GA_SM_bakuganswap.webp",
       "name": "Bakugan Swap",
       "type": "gate",
       "card_class": "copper",
@@ -553,7 +553,7 @@
     },
     "card_force_1_48": {
       "set_number": "22/48",
-      "file": "BA154_GA_SM_cardforce_F.png",
+      "file": "BA154_GA_SM_cardforce_F.webp",
       "name": "Card Force",
       "type": "gate",
       "card_class": "copper",
@@ -581,7 +581,7 @@
     },
     "pounce": {
       "set_number": "23/48",
-      "file": "BA155_GA_SM_pounce_F.png",
+      "file": "BA155_GA_SM_pounce_F.webp",
       "name": "Pounce",
       "type": "gate",
       "card_class": "copper",
@@ -610,7 +610,7 @@
     },
     "stand_your_ground": {
       "set_number": "24/48",
-      "file": "BA156_GA_SM_standground_F.png",
+      "file": "BA156_GA_SM_standground_F.webp",
       "name": "Stand Your Ground",
       "type": "gate",
       "card_class": "copper",
@@ -637,7 +637,7 @@
     },
     "maruchos_throw": {
       "set_number": "25/48",
-      "file": "BA157_AB_SM_maruchothrow_F.png",
+      "file": "BA157_AB_SM_maruchothrow_F.webp",
       "name": "Marucho's Throw",
       "type": "ability",
       "card_class": "red",
@@ -666,7 +666,7 @@
     },
     "julies_throw": {
       "set_number": "26/48",
-      "file": "BA158_AB_SM_juliethrow_F.png",
+      "file": "BA158_AB_SM_juliethrow_F.webp",
       "name": "Julie's Throw",
       "type": "ability",
       "card_class": "red",
@@ -692,7 +692,7 @@
     },
     "runos_throw": {
       "set_number": "27/48",
-      "file": "BA159_AB_SM_runothrow_F.png",
+      "file": "BA159_AB_SM_runothrow_F.webp",
       "name": "Runo's Throw",
       "type": "ability",
       "card_class": "red",
@@ -719,7 +719,7 @@
     },
     "shuns_throw": {
       "set_number": "28/48",
-      "file": "BA160_AB_SM_shunthrow_F.png",
+      "file": "BA160_AB_SM_shunthrow_F.webp",
       "name": "Shun's Throw",
       "type": "ability",
       "card_class": "red",
@@ -746,7 +746,7 @@
     },
     "masquerades_throw": {
       "set_number": "29/48",
-      "file": "BA161_AB_SM_masqthrow_F.png",
+      "file": "BA161_AB_SM_masqthrow_F.webp",
       "name": "Masquerade's Throw",
       "type": "ability",
       "card_class": "red",
@@ -773,7 +773,7 @@
     },
     "dans_throw": {
       "set_number": "30/48",
-      "file": "BA162_AB_SM_danthrow_F.png",
+      "file": "BA162_AB_SM_danthrow_F.webp",
       "name": "Dan's Throw",
       "type": "ability",
       "card_class": "red",
@@ -800,7 +800,7 @@
     },
     "evil_power": {
       "set_number": "31/48",
-      "file": "BA163_AB_SM_evilpower_F.png",
+      "file": "BA163_AB_SM_evilpower_F.webp",
       "name": "Evil Power",
       "type": "ability",
       "card_class": "red",
@@ -831,7 +831,7 @@
     },
     "rikimaros_surprise": {
       "set_number": "32/48",
-      "file": "BA164_AB_SM_rikimarosurprise_F.png",
+      "file": "BA164_AB_SM_rikimarosurprise_F.webp",
       "name": "Rikimaro's Surprise",
       "type": "ability",
       "card_class": "red",
@@ -858,7 +858,7 @@
     },
     "bright_light": {
       "set_number": "33/48",
-      "file": "BA165_AB_SM_brightlight_F.png",
+      "file": "BA165_AB_SM_brightlight_F.webp",
       "name": "Bright Light",
       "type": "ability",
       "card_class": "blue",
@@ -884,7 +884,7 @@
     },
     "g_power_boost": {
       "set_number": "34/48",
-      "file": "BA166_AB_SM_gpowerboost_F.png",
+      "file": "BA166_AB_SM_gpowerboost_F.webp",
       "name": "G-Power Boost",
       "type": "ability",
       "card_class": "blue",
@@ -910,7 +910,7 @@
     },
     "g_power_bump": {
       "set_number": "35/48",
-      "file": "BA167_AB_SM_gpowerbump_F.png",
+      "file": "BA167_AB_SM_gpowerbump_F.webp",
       "name": "G-Power Bump",
       "type": "ability",
       "card_class": "blue",
@@ -936,7 +936,7 @@
     },
     "blaze": {
       "set_number": "36/48",
-      "file": "BA168_AB_SM_blaze_F.png",
+      "file": "BA168_AB_SM_blaze_F.webp",
       "name": "Blaze",
       "type": "ability",
       "card_class": "blue",
@@ -962,7 +962,7 @@
     },
     "home_advantage": {
       "set_number": "37/48",
-      "file": "BA169_AB_SM_homefieldadv_F.png",
+      "file": "BA169_AB_SM_homefieldadv_F.webp",
       "name": "Home Advantage",
       "type": "ability",
       "card_class": "blue",
@@ -991,7 +991,7 @@
     },
     "power_from_darkness": {
       "set_number": "38/48",
-      "file": "BA170-AB-SM-powerdarkness-F.png",
+      "file": "BA170-AB-SM-powerdarkness-F.webp",
       "name": "Power from Darkness",
       "type": "ability",
       "card_class": "blue",
@@ -1020,7 +1020,7 @@
     },
     "predictable_opponent": {
       "set_number": "39/48",
-      "file": "BA171_AB_SM_predictableopp_F.png",
+      "file": "BA171_AB_SM_predictableopp_F.webp",
       "name": "Predictable Opponent",
       "type": "ability",
       "card_class": "blue",
@@ -1049,7 +1049,7 @@
     },
     "summon_wave": {
       "set_number": "40/48",
-      "file": "BA172_AB_SM_summonwave_F.png",
+      "file": "BA172_AB_SM_summonwave_F.webp",
       "name": "Summon Wave",
       "type": "ability",
       "card_class": "blue",
@@ -1078,7 +1078,7 @@
     },
     "pyrus": {
       "set_number": "41/48",
-      "file": "BA173_AB_SM_pyrus_F.png",
+      "file": "BA173_AB_SM_pyrus_F.webp",
       "name": "Pyrus",
       "type": "ability",
       "card_class": "green",
@@ -1108,7 +1108,7 @@
     },
     "siege_switch": {
       "set_number": "42/48",
-      "file": "BA174_AB_SM_siegeswitch_F.png",
+      "file": "BA174_AB_SM_siegeswitch_F.webp",
       "name": "Siege Switch",
       "type": "ability",
       "card_class": "green",
@@ -1136,7 +1136,7 @@
     },
     "help_from_friends": {
       "set_number": "43/48",
-      "file": "BA175_AB_SM_helpfromfriends_F.png",
+      "file": "BA175_AB_SM_helpfromfriends_F.webp",
       "name": "Help From Friends",
       "type": "ability",
       "card_class": "green",
@@ -1163,7 +1163,7 @@
     },
     "aquos": {
       "set_number": "44/48",
-      "file": "BA176_AB_SM_aquos_F.png",
+      "file": "BA176_AB_SM_aquos_F.webp",
       "name": "Aquos",
       "type": "ability",
       "card_class": "green",
@@ -1192,7 +1192,7 @@
     },
     "darkus": {
       "set_number": "45/48",
-      "file": "BA177_AB_SM_darkus_F.png",
+      "file": "BA177_AB_SM_darkus_F.webp",
       "name": "Darkus",
       "type": "ability",
       "card_class": "green",
@@ -1224,7 +1224,7 @@
     },
     "doom_card": {
       "set_number": "46/48",
-      "file": "BA178_AB_SM_doomcard_F.png",
+      "file": "BA178_AB_SM_doomcard_F.webp",
       "name": "Doom Card",
       "type": "ability",
       "card_class": "green",
@@ -1254,7 +1254,7 @@
     },
     "subterra": {
       "set_number": "47/48",
-      "file": "BA179_AB_SM_subterra_F.png",
+      "file": "BA179_AB_SM_subterra_F.webp",
       "name": "Sub Terra",
       "type": "ability",
       "card_class": "green",
@@ -1284,7 +1284,7 @@
     },
     "haos": {
       "set_number": "48/48",
-      "file": "BA180_AB_SM_haos_F.png",
+      "file": "BA180_AB_SM_haos_F.webp",
       "name": "Haos",
       "type": "ability",
       "card_class": "green",
@@ -1313,7 +1313,7 @@
     },
     "gorem": {
       "set_number": "1/15a",
-      "file": "BA181_GA_SM_gorem.png",
+      "file": "BA181_GA_SM_gorem.webp",
       "name": "Gorem",
       "type": "gate",
       "card_class": "gold",
@@ -1345,7 +1345,7 @@
     },
     "card_force_1_15a": {
       "set_number": "2/15a",
-      "file": "BA182_GA_SM_card_force.png",
+      "file": "BA182_GA_SM_card_force.webp",
       "name": "Card Force",
       "type": "gate",
       "card_class": "gold",
@@ -1375,7 +1375,7 @@
     },
     "partners": {
       "set_number": "3/15a",
-      "file": "BA183_GA_SM_partners.png",
+      "file": "BA183_GA_SM_partners.webp",
       "name": "Partners",
       "type": "gate",
       "card_class": "gold",
@@ -1405,7 +1405,7 @@
     },
     "power_up": {
       "set_number": "4/15a",
-      "file": "BA184_GA_SM_power_up.png",
+      "file": "BA184_GA_SM_power_up.webp",
       "name": "Power Up",
       "type": "gate",
       "card_class": "gold",
@@ -1438,7 +1438,7 @@
     },
     "blinding_gate": {
       "set_number": "5/15a",
-      "file": "BA185_GA_binging_gate.png",
+      "file": "BA185_GA_binging_gate.webp",
       "name": "Blinding Gate",
       "type": "gate",
       "card_class": "copper",
@@ -1465,7 +1465,7 @@
     },
     "quick_sand": {
       "set_number": "6/15a",
-      "file": "BA186_GA_SM_quicksand.png",
+      "file": "BA186_GA_SM_quicksand.webp",
       "name": "Quick Sand",
       "type": "gate",
       "card_class": "copper",
@@ -1492,7 +1492,7 @@
     },
     "try_again": {
       "set_number": "7/15a",
-      "file": "BA187_AB_SM_try_again.png",
+      "file": "BA187_AB_SM_try_again.webp",
       "name": "Try Again",
       "type": "ability",
       "card_class": "red",
@@ -1525,7 +1525,7 @@
     },
     "mega_impact": {
       "set_number": "8/15a",
-      "file": "BA188_AB_SM_mega_impact.png",
+      "file": "BA188_AB_SM_mega_impact.webp",
       "name": "Mega Impact",
       "type": "ability",
       "card_class": "blue",
@@ -1554,7 +1554,7 @@
     },
     "circle_of_fire": {
       "set_number": "9/15a",
-      "file": "BA189_AB_circle_of_fire.png",
+      "file": "BA189_AB_circle_of_fire.webp",
       "name": "Circle of Fire",
       "type": "ability",
       "card_class": "red",
@@ -1583,7 +1583,7 @@
     },
     "hot_wind": {
       "set_number": "10/15a",
-      "file": "BA190_AB_SM_hot_wind.png",
+      "file": "BA190_AB_SM_hot_wind.webp",
       "name": "Hot Wind",
       "type": "ability",
       "card_class": "blue",
@@ -1612,7 +1612,7 @@
     },
     "ventus": {
       "set_number": "11/15a",
-      "file": "BA191_AB_SM_VENTUS.png",
+      "file": "BA191_AB_SM_VENTUS.webp",
       "name": "Ventus",
       "type": "ability",
       "card_class": "green",
@@ -1649,7 +1649,7 @@
     },
     "copy_cat": {
       "set_number": "12/15a",
-      "file": "BA192_AB_SM_copy_cat.png",
+      "file": "BA192_AB_SM_copy_cat.webp",
       "name": "Copy Cat",
       "type": "ability",
       "card_class": "green",
@@ -1677,7 +1677,7 @@
     },
     "attractor": {
       "set_number": "13/15a",
-      "file": "BA193_AB_SM_ATTRACTOR.png",
+      "file": "BA193_AB_SM_ATTRACTOR.webp",
       "name": "Attractor",
       "type": "ability",
       "card_class": "green",
@@ -1714,7 +1714,7 @@
     },
     "do_over": {
       "set_number": "14/15a",
-      "file": "BA194_AB_SM_do_over.png",
+      "file": "BA194_AB_SM_do_over.webp",
       "name": "Do Over",
       "type": "ability",
       "card_class": "red",
@@ -1747,7 +1747,7 @@
     },
     "re_roll": {
       "set_number": "15/15a",
-      "file": "Re-Roll_(NA).png",
+      "file": "Re-Roll_(NA).webp",
       "name": "Re-Roll",
       "type": "ability",
       "card_class": "red",
@@ -1776,7 +1776,7 @@
     },
     "earthen_mound": {
       "set_number": "1/48b",
-      "file": "BA196_GA_SM_earthen_mound.png",
+      "file": "BA196_GA_SM_earthen_mound.webp",
       "name": "Earthen Mound",
       "type": "gate",
       "card_class": "silver",
@@ -1797,7 +1797,7 @@
     },
     "elevated_field": {
       "set_number": "2/48b",
-      "file": "BA197_GA_SM_elevated_field.png",
+      "file": "BA197_GA_SM_elevated_field.webp",
       "name": "Elevated Field",
       "type": "gate",
       "card_class": "silver",
@@ -1818,7 +1818,7 @@
     },
     "force_wind": {
       "set_number": "3/48b",
-      "file": "BA198_GA_SM_force_wind.png",
+      "file": "BA198_GA_SM_force_wind.webp",
       "name": "Force Wind",
       "type": "gate",
       "card_class": "silver",
@@ -1839,7 +1839,7 @@
     },
     "low_energy": {
       "set_number": "4/48b",
-      "file": "BA199_GA_SM_low_energy.png",
+      "file": "BA199_GA_SM_low_energy.webp",
       "name": "Low Energy",
       "type": "gate",
       "card_class": "silver",
@@ -1860,7 +1860,7 @@
     },
     "sand_storm": {
       "set_number": "5/48b",
-      "file": "BA200_GA_SM_fire_storm.png",
+      "file": "BA200_GA_SM_fire_storm.webp",
       "name": "Sand Storm",
       "type": "gate",
       "card_class": "silver",
@@ -1881,7 +1881,7 @@
     },
     "haunted_night": {
       "set_number": "6/48b",
-      "file": "BA201_GA_SM_haunted_night.png",
+      "file": "BA201_GA_SM_haunted_night.webp",
       "name": "Haunted Night",
       "type": "gate",
       "card_class": "silver",
@@ -1902,7 +1902,7 @@
     },
     "sunrise": {
       "set_number": "7/48b",
-      "file": "BA202_GA_SM_sunrise.png",
+      "file": "BA202_GA_SM_sunrise.webp",
       "name": "Sunrise",
       "type": "gate",
       "card_class": "silver",
@@ -1923,7 +1923,7 @@
     },
     "volcanic_lake": {
       "set_number": "8/48b",
-      "file": "BA203_GA_SM_volcanic_lake.png",
+      "file": "BA203_GA_SM_volcanic_lake.webp",
       "name": "Volcanic Lake",
       "type": "gate",
       "card_class": "silver",
@@ -1944,7 +1944,7 @@
     },
     "limulus": {
       "set_number": "9/48b",
-      "file": "BA204_GA_SM_limulus.png",
+      "file": "BA204_GA_SM_limulus.webp",
       "name": "Limulus",
       "type": "gate",
       "card_class": "gold",
@@ -1976,7 +1976,7 @@
     },
     "ravenoid": {
       "set_number": "10/48b",
-      "file": "BA205_GA_SM_ravenoid.png",
+      "file": "BA205_GA_SM_ravenoid.webp",
       "name": "Ravenoid",
       "type": "gate",
       "card_class": "gold",
@@ -2008,7 +2008,7 @@
     },
     "warius": {
       "set_number": "11/48b",
-      "file": "BA206_GA_SM_warius.png",
+      "file": "BA206_GA_SM_warius.webp",
       "name": "Warius",
       "type": "gate",
       "card_class": "gold",
@@ -2040,7 +2040,7 @@
     },
     "wormquake": {
       "set_number": "12/48b",
-      "file": "BA207_GA_SM_wormquake.png",
+      "file": "BA207_GA_SM_wormquake.webp",
       "name": "Wormquake",
       "type": "gate",
       "card_class": "gold",
@@ -2072,7 +2072,7 @@
     },
     "forest_fire": {
       "set_number": "13/48b",
-      "file": "BA208_GA_SM_forest_fire.png",
+      "file": "BA208_GA_SM_forest_fire.webp",
       "name": "Forest Fire",
       "type": "gate",
       "persistent": "global",
@@ -2105,7 +2105,7 @@
     },
     "gorem_18_48b": {
       "set_number": "14/48b",
-      "file": "BA209_GA_SM_gorem.png",
+      "file": "BA209_GA_SM_gorem.webp",
       "name": "Gorem",
       "type": "gate",
       "card_class": "gold",
@@ -2133,7 +2133,7 @@
     },
     "lightning_storm": {
       "set_number": "15/48b",
-      "file": "BA210_GA_SM_lightning_storm.png",
+      "file": "BA210_GA_SM_lightning_storm.webp",
       "name": "Lightning Storm",
       "type": "gate",
       "persistent": "global",
@@ -2166,7 +2166,7 @@
     },
     "skyress": {
       "set_number": "16/48b",
-      "file": "BA211_GA_SM_skyress.png",
+      "file": "BA211_GA_SM_skyress.webp",
       "name": "Skyress",
       "type": "gate",
       "card_class": "gold",
@@ -2193,7 +2193,7 @@
     },
     "drag": {
       "set_number": "17/48b",
-      "file": "BA212_GA-SM_drag.png",
+      "file": "BA212_GA-SM_drag.webp",
       "name": "Drag",
       "type": "gate",
       "card_class": "copper",
@@ -2221,7 +2221,7 @@
     },
     "lockdown": {
       "set_number": "18/48b",
-      "file": "BA213_GA_SM_lockdown.png",
+      "file": "BA213_GA_SM_lockdown.webp",
       "name": "Lockdown",
       "type": "gate",
       "card_class": "copper",
@@ -2248,7 +2248,7 @@
     },
     "rainbow": {
       "set_number": "19/48b",
-      "file": "BA214_GA_SM_rainbow.png",
+      "file": "BA214_GA_SM_rainbow.webp",
       "name": "Rainbow",
       "type": "gate",
       "card_class": "copper",
@@ -2275,7 +2275,7 @@
     },
     "tricky_gate": {
       "set_number": "20/48b",
-      "file": "BA215_GA_SM_tricky_gate.png",
+      "file": "BA215_GA_SM_tricky_gate.webp",
       "name": "Tricky Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2302,7 +2302,7 @@
     },
     "earth_wind_and_fire": {
       "set_number": "21/48b",
-      "file": "BA216_GA_SM_earth_wind_fire.png",
+      "file": "BA216_GA_SM_earth_wind_fire.webp",
       "name": "Earth, Wind & Fire",
       "type": "gate",
       "card_class": "copper",
@@ -2334,7 +2334,7 @@
     },
     "g_power_exchange_22_48b": {
       "set_number": "22/48b",
-      "file": "BA217_GA_SM_g-power_exchange_block.png",
+      "file": "BA217_GA_SM_g-power_exchange_block.webp",
       "name": "G-Power Exchange",
       "type": "gate",
       "card_class": "copper",
@@ -2368,7 +2368,7 @@
     },
     "quick_charge": {
       "set_number": "23/48b",
-      "file": "BA218_GA_SM_quick_charge.png",
+      "file": "BA218_GA_SM_quick_charge.webp",
       "name": "Quick Charge",
       "type": "gate",
       "card_class": "copper",
@@ -2394,7 +2394,7 @@
     },
     "river_styx": {
       "set_number": "24/48b",
-      "file": "BA219_GA_SM_river_styx.png",
+      "file": "BA219_GA_SM_river_styx.webp",
       "name": "River Styx",
       "type": "gate",
       "card_class": "copper",
@@ -2426,7 +2426,7 @@
     },
     "magnetic_action": {
       "set_number": "25/48b",
-      "file": "BA220_AB_SM_magnetic_action.png",
+      "file": "BA220_AB_SM_magnetic_action.webp",
       "name": "Magnetic Action",
       "type": "ability",
       "card_class": "red",
@@ -2452,7 +2452,7 @@
     },
     "meeting_place": {
       "set_number": "26/48b",
-      "file": "BA221_AB_SM_meeting_place.png",
+      "file": "BA221_AB_SM_meeting_place.webp",
       "name": "Meeting Place",
       "type": "ability",
       "card_class": "red",
@@ -2479,7 +2479,7 @@
     },
     "perfect_aim": {
       "set_number": "27/48b",
-      "file": "BA222_AB_SM_perfect_aim.png",
+      "file": "BA222_AB_SM_perfect_aim.webp",
       "name": "Perfect Aim",
       "type": "ability",
       "card_class": "red",
@@ -2508,7 +2508,7 @@
     },
     "unexpected_guest": {
       "set_number": "28/48b",
-      "file": "BA223_AB_SM_unexpected_guest.png",
+      "file": "BA223_AB_SM_unexpected_guest.webp",
       "name": "Unexpected Guest",
       "type": "ability",
       "card_class": "red",
@@ -2535,7 +2535,7 @@
     },
     "clean_slate": {
       "set_number": "29/48b",
-      "file": "BA224_AB_SM_clean_slate.png",
+      "file": "BA224_AB_SM_clean_slate.webp",
       "name": "Clean Slate",
       "type": "ability",
       "card_class": "red",
@@ -2568,7 +2568,7 @@
     },
     "a_hand_up": {
       "set_number": "30/48b",
-      "file": "BA225_AB_SM_a_hand_up.png",
+      "file": "BA225_AB_SM_a_hand_up.webp",
       "name": "A Hand Up",
       "type": "ability",
       "card_class": "red",
@@ -2600,7 +2600,7 @@
     },
     "marionette": {
       "set_number": "31/48b",
-      "file": "BA226_AB_SM_marionetteai.png",
+      "file": "BA226_AB_SM_marionetteai.webp",
       "name": "Marionette",
       "type": "ability",
       "card_class": "red",
@@ -2631,7 +2631,7 @@
     },
     "stuck": {
       "set_number": "32/48b",
-      "file": "BA227_AB_SM_stuck.png",
+      "file": "BA227_AB_SM_stuck.webp",
       "name": "Stuck",
       "type": "ability",
       "card_class": "red",
@@ -2663,7 +2663,7 @@
     },
     "flash": {
       "set_number": "33/48b",
-      "file": "BA228_AB_SM_flash.png",
+      "file": "BA228_AB_SM_flash.webp",
       "name": "Flash",
       "type": "ability",
       "card_class": "blue",
@@ -2692,7 +2692,7 @@
     },
     "g_power_bonus": {
       "set_number": "34/48b",
-      "file": "BA229_AAB_SM_gpower_bonus.png",
+      "file": "BA229_AAB_SM_gpower_bonus.webp",
       "name": "G-Power Bonus",
       "type": "ability",
       "card_class": "blue",
@@ -2718,7 +2718,7 @@
     },
     "g_power_up_35_48b": {
       "set_number": "35/48b",
-      "file": "BA230_AB_SM_gpower_up.png",
+      "file": "BA230_AB_SM_gpower_up.webp",
       "name": "G-Power Up",
       "type": "ability",
       "card_class": "blue",
@@ -2744,7 +2744,7 @@
     },
     "dark_growth": {
       "set_number": "36/48b",
-      "file": "BA231_AB_SM_dark_growth.png",
+      "file": "BA231_AB_SM_dark_growth.webp",
       "name": "Dark Growth",
       "type": "ability",
       "card_class": "blue",
@@ -2770,7 +2770,7 @@
     },
     "circle_of_fire_37_48b": {
       "set_number": "37/48b",
-      "file": "BA232_AB_SM_ring_of_fire.png",
+      "file": "BA232_AB_SM_ring_of_fire.webp",
       "name": "Circle of Fire",
       "type": "ability",
       "card_class": "blue",
@@ -2799,7 +2799,7 @@
     },
     "special_boost_38_48b": {
       "set_number": "38/48b",
-      "file": "BA233_AB_SM-special_boost.png",
+      "file": "BA233_AB_SM-special_boost.webp",
       "name": "Special Boost",
       "type": "ability",
       "card_class": "blue",
@@ -2829,7 +2829,7 @@
     },
     "special_crush": {
       "set_number": "39/48b",
-      "file": "BA234_AB_SM_special_crush.png",
+      "file": "BA234_AB_SM_special_crush.webp",
       "name": "Special Crush",
       "type": "ability",
       "card_class": "green",
@@ -2867,7 +2867,7 @@
     },
     "updraft": {
       "set_number": "40/48b",
-      "file": "BA235_AB_SM_updraft.png",
+      "file": "BA235_AB_SM_updraft.webp",
       "name": "Updraft",
       "type": "ability",
       "card_class": "blue",
@@ -2888,7 +2888,7 @@
     },
     "aquos_2": {
       "set_number": "41/48b",
-      "file": "BA236_AB_SM_aquos2.png",
+      "file": "BA236_AB_SM_aquos2.webp",
       "name": "Aquos 2",
       "type": "ability",
       "card_class": "green",
@@ -2917,7 +2917,7 @@
     },
     "haos_2": {
       "set_number": "42/48b",
-      "file": "BA237_AB_SM_haos2.png",
+      "file": "BA237_AB_SM_haos2.webp",
       "name": "Haos 2",
       "type": "ability",
       "card_class": "green",
@@ -2948,7 +2948,7 @@
     },
     "preyas_switch": {
       "set_number": "43/48b",
-      "file": "BA238_AB_SM_preyus_switch.png",
+      "file": "BA238_AB_SM_preyus_switch.webp",
       "name": "Preyas Switch",
       "type": "ability",
       "card_class": "green",
@@ -2980,7 +2980,7 @@
     },
     "tigrerra_44_48b": {
       "set_number": "44/48b",
-      "file": "BA239_AB_SM_tigerra.png",
+      "file": "BA239_AB_SM_tigerra.webp",
       "name": "Tigrerra",
       "type": "ability",
       "card_class": "green",
@@ -3014,7 +3014,7 @@
     },
     "darkus_2": {
       "set_number": "45/48b",
-      "file": "BA240_AB_SM_darkus2.png",
+      "file": "BA240_AB_SM_darkus2.webp",
       "name": "Darkus 2",
       "type": "ability",
       "persistent": "owner",
@@ -3046,7 +3046,7 @@
     },
     "pyrus_2": {
       "set_number": "46/48b",
-      "file": "BA241_AB_SM_pyrus2.png",
+      "file": "BA241_AB_SM_pyrus2.webp",
       "name": "Pyrus 2",
       "type": "ability",
       "persistent": "owner",
@@ -3078,7 +3078,7 @@
     },
     "sub_terra_2": {
       "set_number": "47/48b",
-      "file": "BA242_AB_SM_subterra2.png",
+      "file": "BA242_AB_SM_subterra2.webp",
       "name": "Sub Terra 2",
       "type": "ability",
       "card_class": "green",
@@ -3109,7 +3109,7 @@
     },
     "ventus_2": {
       "set_number": "48/48b",
-      "file": "BA243_AB_SM_ventus2.png",
+      "file": "BA243_AB_SM_ventus2.webp",
       "name": "Ventus 2",
       "type": "ability",
       "card_class": "green",
@@ -3142,7 +3142,7 @@
     },
     "aquos_vortex": {
       "set_number": "1/48c",
-      "file": "BK_PD_Card244.png",
+      "file": "BK_PD_Card244.webp",
       "name": "Aquos Vortex",
       "type": "gate",
       "card_class": "silver",
@@ -3163,7 +3163,7 @@
     },
     "powder_keg": {
       "set_number": "2/48c",
-      "file": "BA245_GA_powderkeg_02.png",
+      "file": "BA245_GA_powderkeg_02.webp",
       "name": "Powder Keg",
       "type": "gate",
       "card_class": "silver",
@@ -3192,7 +3192,7 @@
     },
     "heavy_surf": {
       "set_number": "3/48c",
-      "file": "BA246_GA_heavysurf_03.png",
+      "file": "BA246_GA_heavysurf_03.webp",
       "name": "Heavy Surf",
       "type": "gate",
       "card_class": "silver",
@@ -3221,7 +3221,7 @@
     },
     "the_cliffs": {
       "set_number": "4/48c",
-      "file": "BA247_GA_CLIFFS_04.png",
+      "file": "BA247_GA_CLIFFS_04.webp",
       "name": "The Cliffs",
       "type": "gate",
       "card_class": "silver",
@@ -3242,7 +3242,7 @@
     },
     "vacuum": {
       "set_number": "5/48c",
-      "file": "BA248_GA_vacuum_05.png",
+      "file": "BA248_GA_vacuum_05.webp",
       "name": "Vacuum",
       "type": "gate",
       "card_class": "silver",
@@ -3263,7 +3263,7 @@
     },
     "pit_dweller": {
       "set_number": "6/48c",
-      "file": "BA249_GA_pit_dweller_06.png",
+      "file": "BA249_GA_pit_dweller_06.webp",
       "name": "Pit Dweller",
       "type": "gate",
       "card_class": "silver",
@@ -3284,7 +3284,7 @@
     },
     "nightmare": {
       "set_number": "7/48c",
-      "file": "BA250_GA_nightmare_07.png",
+      "file": "BA250_GA_nightmare_07.webp",
       "name": "Nightmare",
       "type": "gate",
       "card_class": "silver",
@@ -3305,7 +3305,7 @@
     },
     "the_spires": {
       "set_number": "8/48c",
-      "file": "BA251_GA_spires_08.png",
+      "file": "BA251_GA_spires_08.webp",
       "name": "The Spires",
       "type": "gate",
       "card_class": "silver",
@@ -3326,7 +3326,7 @@
     },
     "monarus": {
       "set_number": "9/48c",
-      "file": "BA252_GA_monarus_09.png",
+      "file": "BA252_GA_monarus_09.webp",
       "name": "Monarus",
       "type": "gate",
       "card_class": "gold",
@@ -3358,7 +3358,7 @@
     },
     "harpus": {
       "set_number": "10/48c",
-      "file": "BA253_GA_harpus_10.png",
+      "file": "BA253_GA_harpus_10.webp",
       "name": "Harpus",
       "type": "gate",
       "card_class": "gold",
@@ -3390,7 +3390,7 @@
     },
     "fourtress": {
       "set_number": "11/48c",
-      "file": "BA254_GA_fourtress_11.png",
+      "file": "BA254_GA_fourtress_11.webp",
       "name": "Fourtress",
       "type": "gate",
       "card_class": "gold",
@@ -3422,7 +3422,7 @@
     },
     "sirenoid": {
       "set_number": "12/48c",
-      "file": "BA255_GA_sirenoid_12.png",
+      "file": "BA255_GA_sirenoid_12.webp",
       "name": "Sirenoid",
       "type": "gate",
       "card_class": "gold",
@@ -3454,7 +3454,7 @@
     },
     "rattleoid": {
       "set_number": "13/48c",
-      "file": "BA256_GA_rattleoid_13.png",
+      "file": "BA256_GA_rattleoid_13.webp",
       "name": "Rattleoid",
       "type": "gate",
       "card_class": "gold",
@@ -3487,7 +3487,7 @@
     },
     "lone_wolf": {
       "set_number": "14/48c",
-      "file": "BA257_GA_lonewolf_14.png",
+      "file": "BA257_GA_lonewolf_14.webp",
       "name": "Lone Wolf",
       "type": "gate",
       "card_class": "gold",
@@ -3516,7 +3516,7 @@
     },
     "ethereas": {
       "set_number": "15/48c",
-      "file": "BA258_GA_ethereas_15.png",
+      "file": "BA258_GA_ethereas_15.webp",
       "name": "Ethereas",
       "type": "gate",
       "card_class": "gold",
@@ -3543,7 +3543,7 @@
     },
     "el_condor": {
       "set_number": "16/48c",
-      "file": "BA259_GA_el_condor_16.png",
+      "file": "BA259_GA_el_condor_16.webp",
       "name": "El Condor",
       "type": "gate",
       "card_class": "gold",
@@ -3578,7 +3578,7 @@
     },
     "g_power_swap": {
       "set_number": "17/48c",
-      "file": "BA260_GA_g_power_swap_17.png",
+      "file": "BA260_GA_g_power_swap_17.webp",
       "name": "G-Power Swap",
       "type": "gate",
       "card_class": "copper",
@@ -3604,7 +3604,7 @@
     },
     "lock_and_load": {
       "set_number": "18/48c",
-      "file": "BA261_GA_lock_&_load_18.png",
+      "file": "BA261_GA_lock_&_load_18.webp",
       "name": "Lock & Load",
       "type": "gate",
       "card_class": "copper",
@@ -3631,7 +3631,7 @@
     },
     "lift": {
       "set_number": "19/48c",
-      "file": "BA262_GA_lift_19.png",
+      "file": "BA262_GA_lift_19.webp",
       "name": "Lift",
       "type": "gate",
       "card_class": "copper",
@@ -3657,7 +3657,7 @@
     },
     "bait": {
       "set_number": "20/48c",
-      "file": "BA263_GA_bait_20.png",
+      "file": "BA263_GA_bait_20.webp",
       "name": "Bait",
       "type": "gate",
       "card_class": "copper",
@@ -3683,7 +3683,7 @@
     },
     "drain_power": {
       "set_number": "21/48c",
-      "file": "BA264_GA_drain_power_21.png",
+      "file": "BA264_GA_drain_power_21.webp",
       "name": "Drain Power",
       "type": "gate",
       "card_class": "copper",
@@ -3711,7 +3711,7 @@
     },
     "special_help": {
       "set_number": "22/48c",
-      "file": "BA265_GA_specialhelp_22.png",
+      "file": "BA265_GA_specialhelp_22.webp",
       "name": "Special Help",
       "type": "gate",
       "card_class": "copper",
@@ -3738,7 +3738,7 @@
     },
     "high_voltage": {
       "set_number": "23/48c",
-      "file": "BA266_GA_highvoltage_23.png",
+      "file": "BA266_GA_highvoltage_23.webp",
       "name": "High Voltage",
       "type": "gate",
       "card_class": "copper",
@@ -3765,7 +3765,7 @@
     },
     "sting": {
       "set_number": "24/48c",
-      "file": "BA267_GA_sting_24.png",
+      "file": "BA267_GA_sting_24.webp",
       "name": "Sting",
       "type": "gate",
       "card_class": "copper",
@@ -3792,7 +3792,7 @@
     },
     "runos_launcher": {
       "set_number": "25/48c",
-      "file": "BA268_AB_runoslaunch_25.png",
+      "file": "BA268_AB_runoslaunch_25.webp",
       "name": "Runo's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -3822,7 +3822,7 @@
     },
     "masquerades_launcher": {
       "set_number": "26/48c",
-      "file": "BA269_AB_masqlauncher_26.png",
+      "file": "BA269_AB_masqlauncher_26.webp",
       "name": "Masquerade's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -3854,7 +3854,7 @@
     },
     "maruchos_launcher": {
       "set_number": "27/48c",
-      "file": "BA270_AB_maruchoslauncher_27.png",
+      "file": "BA270_AB_maruchoslauncher_27.webp",
       "name": "Marucho's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -3884,7 +3884,7 @@
     },
     "julies_launcher": {
       "set_number": "28/48c",
-      "file": "BA271_AB_julieslauncher_28.png",
+      "file": "BA271_AB_julieslauncher_28.webp",
       "name": "Julie's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -3913,7 +3913,7 @@
     },
     "stealin": {
       "set_number": "29/48c",
-      "file": "BA272_AB_stealin_29.png",
+      "file": "BA272_AB_stealin_29.webp",
       "name": "Stealin'",
       "type": "ability",
       "card_class": "red",
@@ -3939,7 +3939,7 @@
     },
     "combo_battle": {
       "set_number": "30/48c",
-      "file": "BA273_AB_combobattle_30.png",
+      "file": "BA273_AB_combobattle_30.webp",
       "name": "Combo Battle",
       "type": "ability",
       "card_class": "red",
@@ -3968,7 +3968,7 @@
     },
     "shuns_launcher": {
       "set_number": "31/48c",
-      "file": "BA274_AB_shunslauncher_31.png",
+      "file": "BA274_AB_shunslauncher_31.webp",
       "name": "Shun's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -3997,7 +3997,7 @@
     },
     "dans_launcher": {
       "set_number": "32/48c",
-      "file": "BA275_AB_danslauncher_32.png",
+      "file": "BA275_AB_danslauncher_32.webp",
       "name": "Dan's Launcher",
       "type": "ability",
       "card_class": "red",
@@ -4026,7 +4026,7 @@
     },
     "darkfire_color_shift": {
       "set_number": "33/48c",
-      "file": "BA276_AB_darkfire_33.png",
+      "file": "BA276_AB_darkfire_33.webp",
       "name": "Darkfire Color Shift",
       "type": "ability",
       "card_class": "blue",
@@ -4059,7 +4059,7 @@
     },
     "lightwind_color_shift": {
       "set_number": "34/48c",
-      "file": "BA277_AB_lightwind_34.png",
+      "file": "BA277_AB_lightwind_34.webp",
       "name": "Lightwind Color Shift",
       "type": "ability",
       "card_class": "blue",
@@ -4092,7 +4092,7 @@
     },
     "brushfire": {
       "set_number": "35/48c",
-      "file": "BA278_AB_brushfire_35.png",
+      "file": "BA278_AB_brushfire_35.webp",
       "name": "Brushfire",
       "type": "ability",
       "card_class": "blue",
@@ -4129,7 +4129,7 @@
     },
     "g_power_increase": {
       "set_number": "36/48c",
-      "file": "BA279_AB_gPowerIncrease_36.png",
+      "file": "BA279_AB_gPowerIncrease_36.webp",
       "name": "G-Power Increase",
       "type": "ability",
       "card_class": "blue",
@@ -4155,7 +4155,7 @@
     },
     "triangle_of_power": {
       "set_number": "37/48c",
-      "file": "Triangle_of_Power(NA).png",
+      "file": "Triangle_of_Power(NA).webp",
       "name": "Triangle of Power",
       "type": "ability",
       "card_class": "blue",
@@ -4197,7 +4197,7 @@
     },
     "power_triangle": {
       "set_number": "38/48c",
-      "file": "BA281_AB_powertriangle_38.png",
+      "file": "BA281_AB_powertriangle_38.webp",
       "name": "Power Triangle",
       "type": "ability",
       "card_class": "blue",
@@ -4235,7 +4235,7 @@
     },
     "special_bump": {
       "set_number": "39/48c",
-      "file": "BA282_AB_specialbump_39.png",
+      "file": "BA282_AB_specialbump_39.webp",
       "name": "Special Bump",
       "type": "ability",
       "card_class": "blue",
@@ -4272,7 +4272,7 @@
     },
     "special_boost": {
       "set_number": "40/48c",
-      "file": "BA283_AB_specialboost_40.png",
+      "file": "BA283_AB_specialboost_40.webp",
       "name": "Special Boost",
       "type": "ability",
       "card_class": "blue",
@@ -4301,7 +4301,7 @@
     },
     "touch_with_fire": {
       "set_number": "41/48c",
-      "file": "BA284_AB_touchwithfire_41.png",
+      "file": "BA284_AB_touchwithfire_41.webp",
       "name": "Touch with Fire",
       "type": "ability",
       "card_class": "green",
@@ -4331,7 +4331,7 @@
     },
     "flowing_waters": {
       "set_number": "42/48c",
-      "file": "BA285_AB_flowingwaters_42.png",
+      "file": "BA285_AB_flowingwaters_42.webp",
       "name": "Flowing Waters",
       "type": "ability",
       "card_class": "green",
@@ -4361,7 +4361,7 @@
     },
     "see_the_light": {
       "set_number": "43/48c",
-      "file": "BA286_AB_seethelight_43.png",
+      "file": "BA286_AB_seethelight_43.webp",
       "name": "See the Light",
       "type": "ability",
       "card_class": "green",
@@ -4391,7 +4391,7 @@
     },
     "darkness_to_victory": {
       "set_number": "44/48c",
-      "file": "BA287_AB_darknesstovictory_44.png",
+      "file": "BA287_AB_darknesstovictory_44.webp",
       "name": "Darkness to Victory",
       "type": "ability",
       "persistent": "owner",
@@ -4422,7 +4422,7 @@
     },
     "strong_winds_blow": {
       "set_number": "45/48c",
-      "file": "BA288_AB_strongwingsblow_45.png",
+      "file": "BA288_AB_strongwingsblow_45.webp",
       "name": "Strong Winds Blow",
       "type": "ability",
       "card_class": "green",
@@ -4451,7 +4451,7 @@
     },
     "ground": {
       "set_number": "46/48c",
-      "file": "BA289_AB_ground_46.png",
+      "file": "BA289_AB_ground_46.webp",
       "name": "Ground",
       "type": "ability",
       "card_class": "green",
@@ -4481,7 +4481,7 @@
     },
     "bee_striker": {
       "set_number": "47/48c",
-      "file": "BA290_AB_beestriker_47.png",
+      "file": "BA290_AB_beestriker_47.webp",
       "name": "Bee Striker",
       "type": "ability",
       "card_class": "green",
@@ -4514,7 +4514,7 @@
     },
     "tentaclear": {
       "set_number": "48/48c",
-      "file": "BA291_AB_tentaclear_48.png",
+      "file": "BA291_AB_tentaclear_48.webp",
       "name": "Tentaclear",
       "type": "ability",
       "card_class": "green",
@@ -4541,7 +4541,7 @@
     },
     "spitting_fire": {
       "set_number": "1/48d",
-      "file": "Spitting_Fire(NA).png",
+      "file": "Spitting_Fire(NA).webp",
       "name": "Spitting Fire",
       "type": "gate",
       "card_class": "silver",
@@ -4562,7 +4562,7 @@
     },
     "earthen_wave": {
       "set_number": "2/48d",
-      "file": "BA293_AB_SM_Earthen_Wave.png",
+      "file": "BA293_AB_SM_Earthen_Wave.webp",
       "name": "Earthen Wave",
       "type": "gate",
       "card_class": "silver",
@@ -4583,7 +4583,7 @@
     },
     "sun_spot": {
       "set_number": "3/48d",
-      "file": "BA294_GA_sun_spot_03d.png",
+      "file": "BA294_GA_sun_spot_03d.webp",
       "name": "Sun Spot",
       "type": "gate",
       "card_class": "silver",
@@ -4604,7 +4604,7 @@
     },
     "black_hole": {
       "set_number": "4/48d",
-      "file": "BA295_GA_black_hole_04d.png",
+      "file": "BA295_GA_black_hole_04d.webp",
       "name": "Black Hole",
       "type": "gate",
       "card_class": "silver",
@@ -4625,7 +4625,7 @@
     },
     "wind_farm": {
       "set_number": "5/48d",
-      "file": "BA296_GA_wind_farm_05d.png",
+      "file": "BA296_GA_wind_farm_05d.webp",
       "name": "Wind Farm",
       "type": "gate",
       "card_class": "silver",
@@ -4646,7 +4646,7 @@
     },
     "whirlpool_d": {
       "set_number": "6/48d",
-      "file": "BA297_GA_whirlpool_06d.png",
+      "file": "BA297_GA_whirlpool_06d.webp",
       "name": "Whirlpool",
       "type": "gate",
       "card_class": "silver",
@@ -4667,7 +4667,7 @@
     },
     "fields_of_lava": {
       "set_number": "7/48d",
-      "file": "BA298_GA_fields_of_lava_07d.png",
+      "file": "BA298_GA_fields_of_lava_07d.webp",
       "name": "Fields of Lava",
       "type": "gate",
       "card_class": "silver",
@@ -4688,7 +4688,7 @@
     },
     "blue_sky": {
       "set_number": "8/48d",
-      "file": "BA299_GA_blue_sky_08d.png",
+      "file": "BA299_GA_blue_sky_08d.webp",
       "name": "Blue Sky",
       "type": "gate",
       "card_class": "silver",
@@ -4709,7 +4709,7 @@
     },
     "wavern": {
       "set_number": "9/48d",
-      "file": "BA300_GA_wavern_09d.png",
+      "file": "BA300_GA_wavern_09d.webp",
       "name": "Wavern",
       "type": "gate",
       "card_class": "gold",
@@ -4741,7 +4741,7 @@
     },
     "exedra": {
       "set_number": "10/48d",
-      "file": "BA301_GA_EXEDRA_10d.png",
+      "file": "BA301_GA_EXEDRA_10d.webp",
       "name": "Exedra",
       "type": "gate",
       "card_class": "gold",
@@ -4773,7 +4773,7 @@
     },
     "apollonir": {
       "set_number": "11/48d",
-      "file": "BA302_GA_apollinir_11d.png",
+      "file": "BA302_GA_apollinir_11d.webp",
       "name": "Apollonir",
       "type": "gate",
       "card_class": "gold",
@@ -4805,7 +4805,7 @@
     },
     "clayf": {
       "set_number": "12/48d",
-      "file": "BA303_GA_clayf_12d.png",
+      "file": "BA303_GA_clayf_12d.webp",
       "name": "Clayf",
       "type": "gate",
       "card_class": "gold",
@@ -4837,7 +4837,7 @@
     },
     "oberus": {
       "set_number": "13/48d",
-      "file": "BA304_GA_oberus_13d.png",
+      "file": "BA304_GA_oberus_13d.webp",
       "name": "Oberus",
       "type": "gate",
       "card_class": "gold",
@@ -4870,7 +4870,7 @@
     },
     "crushing_blow": {
       "set_number": "14/48d",
-      "file": "BA305_GA_crushing_blow_14d.png",
+      "file": "BA305_GA_crushing_blow_14d.webp",
       "name": "Crushing Blow",
       "type": "gate",
       "card_class": "gold",
@@ -4907,7 +4907,7 @@
     },
     "swift_blow": {
       "set_number": "15/48d",
-      "file": "BA306_GA_swift_blow_15d.png",
+      "file": "BA306_GA_swift_blow_15d.webp",
       "name": "Swift Blow",
       "type": "gate",
       "card_class": "gold",
@@ -4936,7 +4936,7 @@
     },
     "frosch": {
       "set_number": "16/48d",
-      "file": "BA307_GA_frosch_16d.png",
+      "file": "BA307_GA_frosch_16d.webp",
       "name": "Frosch",
       "type": "gate",
       "card_class": "gold",
@@ -4964,7 +4964,7 @@
     },
     "magma_fields": {
       "set_number": "17/48d",
-      "file": "BA308_GA_magma_fields_17d.png",
+      "file": "BA308_GA_magma_fields_17d.webp",
       "name": "Magma Fields",
       "type": "gate",
       "card_class": "copper",
@@ -4991,7 +4991,7 @@
     },
     "charging_ground": {
       "set_number": "18/48d",
-      "file": "BA309_GA_charging_grounds_18d.png",
+      "file": "BA309_GA_charging_grounds_18d.webp",
       "name": "Charging Ground",
       "type": "gate",
       "card_class": "copper",
@@ -5022,7 +5022,7 @@
     },
     "blurred_heat": {
       "set_number": "19/48d",
-      "file": "BA310_GA_blurred_heat_19d.png",
+      "file": "BA310_GA_blurred_heat_19d.webp",
       "name": "Blurred Heat",
       "type": "gate",
       "card_class": "copper",
@@ -5055,7 +5055,7 @@
     },
     "wind_swept_caverns": {
       "set_number": "20/48d",
-      "file": "BA311_GA_wind_swept_caverns_20d.png",
+      "file": "BA311_GA_wind_swept_caverns_20d.webp",
       "name": "Wind Swept Caverns",
       "type": "gate",
       "card_class": "copper",
@@ -5086,7 +5086,7 @@
     },
     "naga": {
       "set_number": "21/48d",
-      "file": "BA312_GA_naga_21d.png",
+      "file": "BA312_GA_naga_21d.webp",
       "name": "Naga",
       "type": "gate",
       "card_class": "copper",
@@ -5119,7 +5119,7 @@
     },
     "chum": {
       "set_number": "22/48d",
-      "file": "BA313_GA_chum_22d.png",
+      "file": "BA313_GA_chum_22d.webp",
       "name": "Chum",
       "type": "gate",
       "card_class": "copper",
@@ -5145,7 +5145,7 @@
     },
     "mana_surge": {
       "set_number": "23/48d",
-      "file": "BA314_GA_mana_surge_23d.png",
+      "file": "BA314_GA_mana_surge_23d.webp",
       "name": "Mana Surge",
       "type": "gate",
       "card_class": "copper",
@@ -5172,7 +5172,7 @@
     },
     "grand_exchange": {
       "set_number": "24/48d",
-      "file": "BA315_GA_grand_exchange_24d.png",
+      "file": "BA315_GA_grand_exchange_24d.webp",
       "name": "Grand Exchange",
       "type": "gate",
       "card_class": "copper",
@@ -5199,7 +5199,7 @@
     },
     "minefield": {
       "set_number": "25/48d",
-      "file": "BA316_AB_minefield_25d.png",
+      "file": "BA316_AB_minefield_25d.webp",
       "name": "Minefield",
       "type": "ability",
       "card_class": "red",
@@ -5225,7 +5225,7 @@
     },
     "brainwash": {
       "set_number": "26/48d",
-      "file": "BA317_AB_brainwash_26d.png",
+      "file": "BA317_AB_brainwash_26d.webp",
       "name": "Brainwash",
       "type": "ability",
       "card_class": "red",
@@ -5253,7 +5253,7 @@
     },
     "distraction": {
       "set_number": "27/48d",
-      "file": "BA318_AB_distraction_27d.png",
+      "file": "BA318_AB_distraction_27d.webp",
       "name": "Distraction",
       "type": "ability",
       "card_class": "red",
@@ -5280,7 +5280,7 @@
     },
     "go_for_perfect": {
       "set_number": "28/48d",
-      "file": "BA319_AB_go_for_perfect_28d.png",
+      "file": "BA319_AB_go_for_perfect_28d.webp",
       "name": "Go For Perfect",
       "type": "ability",
       "card_class": "red",
@@ -5307,7 +5307,7 @@
     },
     "take_two": {
       "set_number": "29/48d",
-      "file": "BA320_AB_take_two_29d.png",
+      "file": "BA320_AB_take_two_29d.webp",
       "name": "Take Two",
       "type": "ability",
       "card_class": "red",
@@ -5341,7 +5341,7 @@
     },
     "mirage": {
       "set_number": "30/48d",
-      "file": "BA321_AB_mirage_30d.png",
+      "file": "BA321_AB_mirage_30d.webp",
       "name": "Mirage",
       "type": "ability",
       "card_class": "red",
@@ -5368,7 +5368,7 @@
     },
     "restock": {
       "set_number": "31/48d",
-      "file": "BA322_AB_restock_31d.png",
+      "file": "BA322_AB_restock_31d.webp",
       "name": "Restock",
       "type": "ability",
       "card_class": "red",
@@ -5395,7 +5395,7 @@
     },
     "learn_from_experience": {
       "set_number": "32/48d",
-      "file": "BA323_AB_learn_form_experience_32d.png",
+      "file": "BA323_AB_learn_form_experience_32d.webp",
       "name": "Learn From Experience",
       "type": "ability",
       "card_class": "red",
@@ -5431,7 +5431,7 @@
     },
     "the_glow": {
       "set_number": "33/48d",
-      "file": "BA324_AB_the_glow_33d.png",
+      "file": "BA324_AB_the_glow_33d.webp",
       "name": "The Glow",
       "type": "ability",
       "card_class": "blue",
@@ -5460,7 +5460,7 @@
     },
     "the_shadow": {
       "set_number": "34/48d",
-      "file": "BA325_AB_the_shadow_34d.png",
+      "file": "BA325_AB_the_shadow_34d.webp",
       "name": "The Shadow",
       "type": "ability",
       "card_class": "blue",
@@ -5489,7 +5489,7 @@
     },
     "the_gust": {
       "set_number": "35/48d",
-      "file": "BA326_AB_the_gust_35d.png",
+      "file": "BA326_AB_the_gust_35d.webp",
       "name": "The Gust",
       "type": "ability",
       "card_class": "blue",
@@ -5518,7 +5518,7 @@
     },
     "big_brawl": {
       "set_number": "36/48d",
-      "file": "BA327_AB_big_brawl_36d.png",
+      "file": "BA327_AB_big_brawl_36d.webp",
       "name": "Big Brawl",
       "type": "ability",
       "card_class": "blue",
@@ -5544,7 +5544,7 @@
     },
     "pit_fight": {
       "set_number": "37/48d",
-      "file": "BA328_AB_pit_fight_37d.png",
+      "file": "BA328_AB_pit_fight_37d.webp",
       "name": "Pit Fight",
       "type": "ability",
       "card_class": "blue",
@@ -5570,7 +5570,7 @@
     },
     "color_shift": {
       "set_number": "38/48d",
-      "file": "BA329_AB_color_shift_38d.png",
+      "file": "BA329_AB_color_shift_38d.webp",
       "name": "Color Shift",
       "type": "ability",
       "card_class": "blue",
@@ -5601,7 +5601,7 @@
     },
     "late_surge": {
       "set_number": "39/48d",
-      "file": "BA330_AB_late_surge_39d.png",
+      "file": "BA330_AB_late_surge_39d.webp",
       "name": "Late Surge",
       "type": "ability",
       "card_class": "blue",
@@ -5641,7 +5641,7 @@
     },
     "get_it_right_next_time": {
       "set_number": "40/48d",
-      "file": "BA331_AB_get_it_right_next_time_40d.png",
+      "file": "BA331_AB_get_it_right_next_time_40d.webp",
       "name": "Get It Right Next Time",
       "type": "ability",
       "card_class": "blue",
@@ -5677,7 +5677,7 @@
     },
     "earth_shutdown": {
       "set_number": "41/48d",
-      "file": "BA332_AB_earth_shutdown_41d.png",
+      "file": "BA332_AB_earth_shutdown_41d.webp",
       "name": "Earth Shutdown",
       "type": "ability",
       "card_class": "green",
@@ -5710,7 +5710,7 @@
     },
     "fire_shutdown": {
       "set_number": "42/48d",
-      "file": "BA333_AB_fire_shutdown_42d.png",
+      "file": "BA333_AB_fire_shutdown_42d.webp",
       "name": "Fire Shutdown",
       "type": "ability",
       "card_class": "green",
@@ -5743,7 +5743,7 @@
     },
     "water_shutdown": {
       "set_number": "43/48d",
-      "file": "BA334_AB_water_shutdown_43d.png",
+      "file": "BA334_AB_water_shutdown_43d.webp",
       "name": "Water Shutdown",
       "type": "ability",
       "card_class": "green",
@@ -5776,7 +5776,7 @@
     },
     "wind_shutdown": {
       "set_number": "44/48d",
-      "file": "BA335_AB_wind_shutdown_44d.png",
+      "file": "BA335_AB_wind_shutdown_44d.webp",
       "name": "Wind Shutdown",
       "type": "ability",
       "card_class": "green",
@@ -5809,7 +5809,7 @@
     },
     "lars_lion": {
       "set_number": "45/48d",
-      "file": "BA336_AB_lars_lion_45d.png",
+      "file": "BA336_AB_lars_lion_45d.webp",
       "name": "Lars Lion",
       "type": "ability",
       "persistent": "owner",
@@ -5841,7 +5841,7 @@
     },
     "light_shutdown": {
       "set_number": "46/48d",
-      "file": "BA337_AB_light_shutdown_46d.png",
+      "file": "BA337_AB_light_shutdown_46d.webp",
       "name": "Light Shutdown",
       "type": "ability",
       "card_class": "green",
@@ -5874,7 +5874,7 @@
     },
     "color_swap": {
       "set_number": "47/48d",
-      "file": "BA338_AB_color_swap_47d.png",
+      "file": "BA338_AB_color_swap_47d.webp",
       "name": "Color Swap",
       "type": "ability",
       "card_class": "green",
@@ -5904,7 +5904,7 @@
     },
     "the_right_tool_for_the_job": {
       "set_number": "48/48d",
-      "file": "BA339_AB_right_tool_48d.png",
+      "file": "BA339_AB_right_tool_48d.webp",
       "name": "The Right Tool for the Job",
       "type": "ability",
       "card_class": "green",

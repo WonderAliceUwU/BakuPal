@@ -57,7 +57,7 @@ Future<List<CardCatalogEntry>> loadCardCatalog() async {
         (asset) =>
             asset.startsWith('assets/images/cards/') &&
             asset != 'assets/images/cards/anverse.png' &&
-            asset.endsWith('.png'),
+            asset.endsWith('.webp'),
       )
       .toList();
 

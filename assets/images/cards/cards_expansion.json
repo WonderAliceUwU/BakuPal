@@ -2,7 +2,7 @@
   "cards": {
     "gate_of_fire": {
       "set_number": "1/48e",
-      "file": "BA348_GA_01_GBL.png",
+      "file": "BA348_GA_01_GBL.webp",
       "name": "Gate of Fire",
       "type": "gate",
       "card_class": "silver",
@@ -23,7 +23,7 @@
     },
     "gate_of_wind": {
       "set_number": "2/48e",
-      "file": "BA349_GA_02_GBL.png",
+      "file": "BA349_GA_02_GBL.webp",
       "name": "Gate of Wind",
       "type": "gate",
       "card_class": "silver",
@@ -44,7 +44,7 @@
     },
     "gate_of_doom": {
       "set_number": "3/48e",
-      "file": "BA350_GA_03_GBL.png",
+      "file": "BA350_GA_03_GBL.webp",
       "name": "Gate of Doom",
       "type": "gate",
       "card_class": "silver",
@@ -65,7 +65,7 @@
     },
     "triangle_gate": {
       "set_number": "4/48e",
-      "file": "BA351_GA_04_GBL.png",
+      "file": "BA351_GA_04_GBL.webp",
       "name": "Triangle Gate",
       "type": "gate",
       "card_class": "silver",
@@ -86,7 +86,7 @@
     },
     "gate_of_light": {
       "set_number": "5/48e",
-      "file": "BA352_GA_05_GBL.png",
+      "file": "BA352_GA_05_GBL.webp",
       "name": "Gate of Light",
       "type": "gate",
       "card_class": "silver",
@@ -107,7 +107,7 @@
     },
     "gate_of_earth": {
       "set_number": "6/48e",
-      "file": "BA353_GA_06_GBL.png",
+      "file": "BA353_GA_06_GBL.webp",
       "name": "Gate of Earth",
       "type": "gate",
       "card_class": "silver",
@@ -128,7 +128,7 @@
     },
     "river_gate": {
       "set_number": "7/48e",
-      "file": "BA354_GA_07_GBL.png",
+      "file": "BA354_GA_07_GBL.webp",
       "name": "River Gate",
       "type": "gate",
       "card_class": "silver",
@@ -149,7 +149,7 @@
     },
     "three_gate": {
       "set_number": "8/48e",
-      "file": "BA355_GA_08_GBL.png",
+      "file": "BA355_GA_08_GBL.webp",
       "name": "Three Gate",
       "type": "gate",
       "card_class": "silver",
@@ -178,7 +178,7 @@
     },
     "nemus": {
       "set_number": "9/48e",
-      "file": "BA356_GA_09_GBL.png",
+      "file": "BA356_GA_09_GBL.webp",
       "name": "Nemus",
       "type": "gate",
       "card_class": "gold",
@@ -210,7 +210,7 @@
     },
     "dragonoid": {
       "set_number": "10/48e",
-      "file": "BA357_GA_10_GBL.png",
+      "file": "BA357_GA_10_GBL.webp",
       "name": "Dragonoid",
       "type": "gate",
       "card_class": "gold",
@@ -242,7 +242,7 @@
     },
     "percival": {
       "set_number": "11/48e",
-      "file": "BA358_GA_11_GBL.png",
+      "file": "BA358_GA_11_GBL.webp",
       "name": "Percival",
       "type": "gate",
       "card_class": "gold",
@@ -274,7 +274,7 @@
     },
     "ingram": {
       "set_number": "12/48e",
-      "file": "BA359_GA_12_GBL.png",
+      "file": "BA359_GA_12_GBL.webp",
       "name": "Ingram",
       "type": "gate",
       "card_class": "gold",
@@ -306,7 +306,7 @@
     },
     "holding_power": {
       "set_number": "13/48e",
-      "file": "Holding_Power_(NA).png",
+      "file": "Holding_Power_(NA).webp",
       "name": "Holding Power",
       "type": "gate",
       "card_class": "gold",
@@ -333,7 +333,7 @@
     },
     "brontes": {
       "set_number": "14/48e",
-      "file": "BA361_GA_14_GBL.png",
+      "file": "BA361_GA_14_GBL.webp",
       "name": "Brontes",
       "type": "gate",
       "card_class": "gold",
@@ -367,7 +367,7 @@
     },
     "proper_motivation": {
       "set_number": "15/48e",
-      "file": "BA362_GA_15_GBL.png",
+      "file": "BA362_GA_15_GBL.webp",
       "name": "Proper Motivation",
       "type": "gate",
       "card_class": "gold",
@@ -394,7 +394,7 @@
     },
     "glamour_gate": {
       "set_number": "16/48e",
-      "file": "BA363_GA_16_GBL.png",
+      "file": "BA363_GA_16_GBL.webp",
       "name": "Glamour Gate",
       "type": "gate",
       "card_class": "gold",
@@ -421,7 +421,7 @@
     },
     "low_bridge": {
       "set_number": "17/48e",
-      "file": "BA364_GA_17_GBL.png",
+      "file": "BA364_GA_17_GBL.webp",
       "name": "Low Bridge",
       "type": "gate",
       "card_class": "copper",
@@ -456,7 +456,7 @@
     },
     "windy_beach": {
       "set_number": "18/48e",
-      "file": "BA365_GA_18_GBL.png",
+      "file": "BA365_GA_18_GBL.webp",
       "name": "Windy Beach",
       "type": "gate",
       "card_class": "copper",
@@ -483,7 +483,7 @@
     },
     "open_field": {
       "set_number": "19/48e",
-      "file": "BA366_GA_19_GBL.png",
+      "file": "BA366_GA_19_GBL.webp",
       "name": "Open Field",
       "type": "gate",
       "card_class": "copper",
@@ -509,7 +509,7 @@
     },
     "rainbow_20_48e": {
       "set_number": "20/48e",
-      "file": "BA367_GA_20_GBL.png",
+      "file": "BA367_GA_20_GBL.webp",
       "name": "Rainbow",
       "type": "gate",
       "card_class": "copper",
@@ -536,7 +536,7 @@
     },
     "field_of_flames": {
       "set_number": "21/48e",
-      "file": "BA368_GA_21_GBL.png",
+      "file": "BA368_GA_21_GBL.webp",
       "name": "Field of Flames",
       "type": "gate",
       "card_class": "copper",
@@ -566,7 +566,7 @@
     },
     "field_of_dread": {
       "set_number": "22/48e",
-      "file": "BA369_GA_22_GBL.png",
+      "file": "BA369_GA_22_GBL.webp",
       "name": "Field of Dread",
       "type": "gate",
       "card_class": "copper",
@@ -601,7 +601,7 @@
     },
     "resupply": {
       "set_number": "23/48e",
-      "file": "BA370_GA_23_GBL.png",
+      "file": "BA370_GA_23_GBL.webp",
       "name": "Resupply",
       "type": "gate",
       "card_class": "copper",
@@ -629,7 +629,7 @@
     },
     "cursed_mirror": {
       "set_number": "24/48e",
-      "file": "BA371_GA_24_GBL.png",
+      "file": "BA371_GA_24_GBL.webp",
       "name": "Opposite Attributes Gate",
       "type": "gate",
       "persistent": "owner",
@@ -676,7 +676,7 @@
     },
     "rip_tide": {
       "set_number": "25/48e",
-      "file": "BA372_AB_25_GBL.png",
+      "file": "BA372_AB_25_GBL.webp",
       "name": "Rip Tide",
       "type": "ability",
       "persistent": "owner",
@@ -710,7 +710,7 @@
     },
     "hard_rain": {
       "set_number": "26/48e",
-      "file": "BA373_AB_26_GBL.png",
+      "file": "BA373_AB_26_GBL.webp",
       "name": "Hard Rain",
       "type": "ability",
       "persistent": "owner",
@@ -744,7 +744,7 @@
     },
     "lightning": {
       "set_number": "27/48e",
-      "file": "BA374_AB_27_GBL.png",
+      "file": "BA374_AB_27_GBL.webp",
       "name": "Lightning",
       "type": "ability",
       "persistent": "owner",
@@ -784,7 +784,7 @@
     },
     "stormy_night": {
       "set_number": "28/48e",
-      "file": "BA375_AB_28_GBL.png",
+      "file": "BA375_AB_28_GBL.webp",
       "name": "Stormy Night",
       "type": "ability",
       "persistent": "owner",
@@ -826,7 +826,7 @@
     },
     "call_of_the_hex": {
       "set_number": "29/48e",
-      "file": "BA376_AB_29_GBL.png",
+      "file": "BA376_AB_29_GBL.webp",
       "name": "Call of the Hex",
       "type": "ability",
       "card_class": "red",
@@ -857,7 +857,7 @@
     },
     "call_of_the_defenders": {
       "set_number": "30/48e",
-      "file": "BA377_AB_30_GBL.png",
+      "file": "BA377_AB_30_GBL.webp",
       "name": "Call of the Defenders",
       "type": "ability",
       "card_class": "red",
@@ -888,7 +888,7 @@
     },
     "deadly_lync_volan_number_6": {
       "set_number": "31/48e",
-      "file": "BA378_AB_31_GBL.png",
+      "file": "BA378_AB_31_GBL.webp",
       "name": "Deadly Lync Volan Number 6",
       "type": "ability",
       "card_class": "red",
@@ -919,7 +919,7 @@
     },
     "guss_powerblast": {
       "set_number": "32/48e",
-      "file": "BA379_AB_32_GBL.png",
+      "file": "BA379_AB_32_GBL.webp",
       "name": "Gus's Powerblast",
       "type": "ability",
       "card_class": "red",
@@ -950,7 +950,7 @@
     },
     "turn_around": {
       "set_number": "33/48e",
-      "file": "BA380_AB_33_GBL.png",
+      "file": "BA380_AB_33_GBL.webp",
       "name": "Turn Around",
       "type": "ability",
       "card_class": "blue",
@@ -976,7 +976,7 @@
     },
     "bright_eyes": {
       "set_number": "34/48e",
-      "file": "BA381_AB_34_GBL.png",
+      "file": "BA381_AB_34_GBL.webp",
       "name": "Bright Eyes",
       "type": "ability",
       "card_class": "blue",
@@ -1002,7 +1002,7 @@
     },
     "powder_keg_35_48e": {
       "set_number": "35/48e",
-      "file": "BA382_AB_35_GBL.png",
+      "file": "BA382_AB_35_GBL.webp",
       "name": "Powder Keg",
       "type": "ability",
       "card_class": "blue",
@@ -1028,7 +1028,7 @@
     },
     "sparks": {
       "set_number": "36/48e",
-      "file": "BA383_AB_36_GBL.png",
+      "file": "BA383_AB_36_GBL.webp",
       "name": "Sparks",
       "type": "ability",
       "card_class": "blue",
@@ -1054,7 +1054,7 @@
     },
     "heavy_water": {
       "set_number": "37/48e",
-      "file": "BA384_AB_37_GBL.png",
+      "file": "BA384_AB_37_GBL.webp",
       "name": "Heavy Water",
       "type": "ability",
       "card_class": "blue",
@@ -1085,7 +1085,7 @@
     },
     "dark_hole": {
       "set_number": "38/48e",
-      "file": "BA385_AB_38_GBL.png",
+      "file": "BA385_AB_38_GBL.webp",
       "name": "Dark Hole",
       "type": "ability",
       "card_class": "blue",
@@ -1120,7 +1120,7 @@
     },
     "dusty_sparkle": {
       "set_number": "39/48e",
-      "file": "BA386_AB_39_GBL.png",
+      "file": "BA386_AB_39_GBL.webp",
       "name": "Dusty Sparkle",
       "type": "ability",
       "card_class": "blue",
@@ -1155,7 +1155,7 @@
     },
     "burning_sands": {
       "set_number": "40/48e",
-      "file": "BA387_AB_40_GBL.png",
+      "file": "BA387_AB_40_GBL.webp",
       "name": "Burning Sands",
       "type": "ability",
       "card_class": "blue",
@@ -1190,7 +1190,7 @@
     },
     "solar_winds": {
       "set_number": "41/48e",
-      "file": "BA388_AB_41_GBL.png",
+      "file": "BA388_AB_41_GBL.webp",
       "name": "Solar Winds",
       "type": "ability",
       "card_class": "green",
@@ -1222,7 +1222,7 @@
     },
     "bright_earth": {
       "set_number": "42/48e",
-      "file": "BA389_AB_42_GBL.png",
+      "file": "BA389_AB_42_GBL.webp",
       "name": "Bright Earth",
       "type": "ability",
       "card_class": "green",
@@ -1254,7 +1254,7 @@
     },
     "bright_torch": {
       "set_number": "43/48e",
-      "file": "BA390_AB_43_GBL.png",
+      "file": "BA390_AB_43_GBL.webp",
       "name": "Bright Torch",
       "type": "ability",
       "card_class": "green",
@@ -1295,7 +1295,7 @@
     },
     "blinding_reflection": {
       "set_number": "44/48e",
-      "file": "BA391_AB_44_GBL.png",
+      "file": "BA391_AB_44_GBL.webp",
       "name": "Blinding Reflection",
       "type": "ability",
       "card_class": "green",
@@ -1327,7 +1327,7 @@
     },
     "dire_reaper": {
       "set_number": "45/48e",
-      "file": "BA392_AB_45_GBL.png",
+      "file": "BA392_AB_45_GBL.webp",
       "name": "Dire Reaper",
       "type": "ability",
       "card_class": "green",
@@ -1357,7 +1357,7 @@
     },
     "hercules": {
       "set_number": "46/48e",
-      "file": "BA393_AB_46_GBL.png",
+      "file": "BA393_AB_46_GBL.webp",
       "name": "Hercules",
       "type": "ability",
       "persistent": "owner",
@@ -1391,7 +1391,7 @@
     },
     "shiny_devil": {
       "set_number": "47/48e",
-      "file": "BA394_AB_47_GBL.png",
+      "file": "BA394_AB_47_GBL.webp",
       "name": "Shiny Devil",
       "type": "ability",
       "card_class": "green",
@@ -1421,7 +1421,7 @@
     },
     "never_give_up": {
       "set_number": "48/48e",
-      "file": "BA395_AB_48_GBL.png",
+      "file": "BA395_AB_48_GBL.webp",
       "name": "Never Give Up!",
       "type": "ability",
       "card_class": "green",
@@ -1451,7 +1451,7 @@
     },
     "volcanic_island": {
       "set_number": "1/18f",
-      "file": "Volcanic_Island_BA404-GA-SM-GML-01.png",
+      "file": "Volcanic_Island_BA404-GA-SM-GML-01.webp",
       "name": "Volcanic Island",
       "type": "gate",
       "card_class": "silver",
@@ -1472,7 +1472,7 @@
     },
     "torch_gate": {
       "set_number": "2/18f",
-      "file": "TorchGate2f.png",
+      "file": "TorchGate2f.webp",
       "name": "Torch Gate",
       "type": "gate",
       "card_class": "silver",
@@ -1493,7 +1493,7 @@
     },
     "geyser_gate": {
       "set_number": "3/18f",
-      "file": "1920px-Geyser_Gate_BA406-GA-SM-GML-03.png",
+      "file": "1920px-Geyser_Gate_BA406-GA-SM-GML-03.webp",
       "name": "Geyser Gate",
       "type": "gate",
       "card_class": "silver",
@@ -1514,7 +1514,7 @@
     },
     "flares": {
       "set_number": "4/18f",
-      "file": "Flares4f.png",
+      "file": "Flares4f.webp",
       "name": "Flares",
       "type": "gate",
       "card_class": "silver",
@@ -1535,7 +1535,7 @@
     },
     "deep_lake_gate": {
       "set_number": "5/18f",
-      "file": "DeepLake5f.png",
+      "file": "DeepLake5f.webp",
       "name": "Deep Lake Gate",
       "type": "gate",
       "card_class": "silver",
@@ -1556,7 +1556,7 @@
     },
     "burning_sea_gate": {
       "set_number": "6/18f",
-      "file": "Burning-Sea-Gate6f.png",
+      "file": "Burning-Sea-Gate6f.webp",
       "name": "Burning Sea Gate",
       "type": "gate",
       "card_class": "silver",
@@ -1577,7 +1577,7 @@
     },
     "dust_in_the_wind": {
       "set_number": "7/18f",
-      "file": "1920px-Dust_in_the_Wind_BA410-GA-SM-GML-07.png",
+      "file": "1920px-Dust_in_the_Wind_BA410-GA-SM-GML-07.webp",
       "name": "Dust in the Wind",
       "type": "gate",
       "card_class": "gold",
@@ -1598,7 +1598,7 @@
     },
     "solid_rock_gate": {
       "set_number": "8/18f",
-      "file": "Solid-Rock-Gate8f.png",
+      "file": "Solid-Rock-Gate8f.webp",
       "name": "Solid Rock Gate",
       "type": "gate",
       "card_class": "gold",
@@ -1619,7 +1619,7 @@
     },
     "windy_gate": {
       "set_number": "9/18f",
-      "file": "WindyGate9f.png",
+      "file": "WindyGate9f.webp",
       "name": "Windy Gate",
       "type": "gate",
       "card_class": "gold",
@@ -1640,7 +1640,7 @@
     },
     "walled_gate": {
       "set_number": "10/18f",
-      "file": "1920px-Walled_Gate_BA413-GA-SM-GML-10.png",
+      "file": "1920px-Walled_Gate_BA413-GA-SM-GML-10.webp",
       "name": "Walled Gate",
       "type": "gate",
       "card_class": "gold",
@@ -1661,7 +1661,7 @@
     },
     "high_altitude_gate": {
       "set_number": "11/18f",
-      "file": "1920px-High_Altitude_Gate_BA414-GA-SM-GML-11.png",
+      "file": "1920px-High_Altitude_Gate_BA414-GA-SM-GML-11.webp",
       "name": "High Altitude Gate",
       "type": "gate",
       "card_class": "gold",
@@ -1682,7 +1682,7 @@
     },
     "rock_storm_gate": {
       "set_number": "12/18f",
-      "file": "Rock_Storm_12f.png",
+      "file": "Rock_Storm_12f.webp",
       "name": "Rock Storm Gate",
       "type": "gate",
       "card_class": "gold",
@@ -1703,7 +1703,7 @@
     },
     "partial_eclipse": {
       "set_number": "13/18f",
-      "file": "Partial_Eclipse_13f.png",
+      "file": "Partial_Eclipse_13f.webp",
       "name": "Partial Eclipse",
       "type": "gate",
       "card_class": "copper",
@@ -1724,7 +1724,7 @@
     },
     "sunburn_gate": {
       "set_number": "14/18f",
-      "file": "1920px-Sunburn_Gate_BA417-GA-SM-GML-14.png",
+      "file": "1920px-Sunburn_Gate_BA417-GA-SM-GML-14.webp",
       "name": "Sunburn Gate",
       "type": "gate",
       "card_class": "silver",
@@ -1745,7 +1745,7 @@
     },
     "darkness_gate": {
       "set_number": "15/18f",
-      "file": "1920px-Darkness_Gate_BA418-GA-SM-GML-15.png",
+      "file": "1920px-Darkness_Gate_BA418-GA-SM-GML-15.webp",
       "name": "Darkness Gate",
       "type": "gate",
       "card_class": "copper",
@@ -1766,7 +1766,7 @@
     },
     "gate_of_swollen_eyes": {
       "set_number": "16/18f",
-      "file": "Gate-of-Swollen-Eyes16f.png",
+      "file": "Gate-of-Swollen-Eyes16f.webp",
       "name": "Gate of Swollen Eyes",
       "type": "gate",
       "card_class": "copper",
@@ -1787,7 +1787,7 @@
     },
     "blindfold_gate": {
       "set_number": "17/18f",
-      "file": "Blindfold-Gate17f.png",
+      "file": "Blindfold-Gate17f.webp",
       "name": "Blindfold Gate",
       "type": "gate",
       "card_class": "copper",
@@ -1808,7 +1808,7 @@
     },
     "searing_dawn": {
       "set_number": "18/18f",
-      "file": "Searing_Dawn_18f.png",
+      "file": "Searing_Dawn_18f.webp",
       "name": "Searing Dawn",
       "type": "gate",
       "card_class": "copper",
@@ -1829,7 +1829,7 @@
     },
     "red_soil": {
       "set_number": "1/18h",
-      "file": "RedSoil1.png",
+      "file": "RedSoil1.webp",
       "name": "Red Soil",
       "type": "gate",
       "card_class": "silver",
@@ -1850,7 +1850,7 @@
     },
     "dirty_flames": {
       "set_number": "2/18h",
-      "file": "DirtyFlames2h.png",
+      "file": "DirtyFlames2h.webp",
       "name": "Dirty Flames",
       "type": "gate",
       "card_class": "silver",
@@ -1871,7 +1871,7 @@
     },
     "turn_up_the_heat": {
       "set_number": "3/18h",
-      "file": "Turnuptheheat3h.png",
+      "file": "Turnuptheheat3h.webp",
       "name": "Turn Up the Heat",
       "type": "gate",
       "card_class": "silver",
@@ -1900,7 +1900,7 @@
     },
     "buried_vault": {
       "set_number": "4/18h",
-      "file": "BuriedVault4h.png",
+      "file": "BuriedVault4h.webp",
       "name": "Buried Vault",
       "type": "gate",
       "card_class": "silver",
@@ -1929,7 +1929,7 @@
     },
     "lava_flow": {
       "set_number": "5/18h",
-      "file": "LavaFlow5h.png",
+      "file": "LavaFlow5h.webp",
       "name": "Lava Flow",
       "type": "gate",
       "card_class": "silver",
@@ -1958,7 +1958,7 @@
     },
     "hot_rocks": {
       "set_number": "6/18h",
-      "file": "HotRocks6h.png",
+      "file": "HotRocks6h.webp",
       "name": "Hot Rocks",
       "type": "gate",
       "card_class": "silver",
@@ -1994,7 +1994,7 @@
     },
     "stinging_breeze": {
       "set_number": "7/18h",
-      "file": "StingingBreeze7h.png",
+      "file": "StingingBreeze7h.webp",
       "name": "Stinging Breeze",
       "type": "gate",
       "card_class": "gold",
@@ -2015,7 +2015,7 @@
     },
     "scouted_lands": {
       "set_number": "8/18h",
-      "file": "Scouted_Lands_(NA).png",
+      "file": "Scouted_Lands_(NA).webp",
       "name": "Scouted Lands",
       "type": "gate",
       "card_class": "gold",
@@ -2036,7 +2036,7 @@
     },
     "high_gate": {
       "set_number": "9/18h",
-      "file": "HighGate9h.png",
+      "file": "HighGate9h.webp",
       "name": "High Gate",
       "type": "gate",
       "card_class": "gold",
@@ -2057,7 +2057,7 @@
     },
     "prism_gate_2": {
       "set_number": "10/18h",
-      "file": "PrismGate10h.png",
+      "file": "PrismGate10h.webp",
       "name": "Prism Gate",
       "type": "gate",
       "card_class": "gold",
@@ -2078,7 +2078,7 @@
     },
     "bracing_gate": {
       "set_number": "11/18h",
-      "file": "BracingGate11h.png",
+      "file": "BracingGate11h.webp",
       "name": "Bracing Gate",
       "type": "gate",
       "card_class": "gold",
@@ -2099,7 +2099,7 @@
     },
     "sun_chains": {
       "set_number": "12/18h",
-      "file": "SunChains12h.png",
+      "file": "SunChains12h.webp",
       "name": "Sun Chains",
       "type": "gate",
       "card_class": "gold",
@@ -2120,7 +2120,7 @@
     },
     "dark_dream_gate": {
       "set_number": "13/18h",
-      "file": "DarkDreamGate13h.png",
+      "file": "DarkDreamGate13h.webp",
       "name": "Dark Dream Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2141,7 +2141,7 @@
     },
     "pool_of_dreams": {
       "set_number": "14/18h",
-      "file": "Pool-of-Dreams14h.png",
+      "file": "Pool-of-Dreams14h.webp",
       "name": "Pool of Dreams",
       "type": "gate",
       "card_class": "copper",
@@ -2162,7 +2162,7 @@
     },
     "blackness_gate": {
       "set_number": "15/18h",
-      "file": "BlacknessGate15h.png",
+      "file": "BlacknessGate15h.webp",
       "name": "Blackness Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2183,7 +2183,7 @@
     },
     "shimmering_gate": {
       "set_number": "16/18h",
-      "file": "ShimmeringGate16h.png",
+      "file": "ShimmeringGate16h.webp",
       "name": "Shimmering Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2204,7 +2204,7 @@
     },
     "empty_gate": {
       "set_number": "17/18h",
-      "file": "EmptyGate17h.png",
+      "file": "EmptyGate17h.webp",
       "name": "Empty Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2233,7 +2233,7 @@
     },
     "slippery_gate": {
       "set_number": "18/18h",
-      "file": "SlipperyGate18h.png",
+      "file": "SlipperyGate18h.webp",
       "name": "Slippery Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2254,7 +2254,7 @@
     },
     "flame_portal": {
       "set_number": "1/48i",
-      "file": "BA440_GA_GBL_01.png",
+      "file": "BA440_GA_GBL_01.webp",
       "name": "Flame Portal",
       "type": "gate",
       "card_class": "silver",
@@ -2275,7 +2275,7 @@
     },
     "cavern_portal": {
       "set_number": "2/48i",
-      "file": "BA441_GA_GBL_02.png",
+      "file": "BA441_GA_GBL_02.webp",
       "name": "Cavern Portal",
       "type": "gate",
       "card_class": "silver",
@@ -2296,7 +2296,7 @@
     },
     "light_portal": {
       "set_number": "3/48i",
-      "file": "BA442_GA_GBL_03.png",
+      "file": "BA442_GA_GBL_03.webp",
       "name": "Light Portal",
       "type": "gate",
       "card_class": "silver",
@@ -2317,7 +2317,7 @@
     },
     "wind_portal": {
       "set_number": "4/48i",
-      "file": "BA443_GA_GBL_04.png",
+      "file": "BA443_GA_GBL_04.webp",
       "name": "Wind Portal",
       "type": "gate",
       "card_class": "silver",
@@ -2338,7 +2338,7 @@
     },
     "atlantic_arena": {
       "set_number": "5/48i",
-      "file": "BA444_GA_GBL_05.png",
+      "file": "BA444_GA_GBL_05.webp",
       "name": "Atlantic Arena",
       "type": "gate",
       "card_class": "silver",
@@ -2359,7 +2359,7 @@
     },
     "shadow_arena": {
       "set_number": "6/48i",
-      "file": "Shadow_Arena_6-48i.png",
+      "file": "Shadow_Arena_6-48i.webp",
       "name": "Shadow Arena",
       "type": "gate",
       "card_class": "silver",
@@ -2380,7 +2380,7 @@
     },
     "flame_arena": {
       "set_number": "7/48i",
-      "file": "BA446_GA_GBL_07.png",
+      "file": "BA446_GA_GBL_07.webp",
       "name": "Flame Arena",
       "type": "gate",
       "card_class": "silver",
@@ -2401,7 +2401,7 @@
     },
     "sun_arena": {
       "set_number": "8/48i",
-      "file": "BA447_GA_GBL_08.png",
+      "file": "BA447_GA_GBL_08.webp",
       "name": "Sun Arena",
       "type": "gate",
       "card_class": "silver",
@@ -2422,7 +2422,7 @@
     },
     "dual_elfin": {
       "set_number": "9/48i",
-      "file": "BA448_GA_GBL_09.png",
+      "file": "BA448_GA_GBL_09.webp",
       "name": "Dual Elfin",
       "type": "gate",
       "card_class": "gold",
@@ -2454,7 +2454,7 @@
     },
     "vulcan": {
       "set_number": "10/48i",
-      "file": "BA449_GA_GBL_10.png",
+      "file": "BA449_GA_GBL_10.webp",
       "name": "Vulcan",
       "type": "gate",
       "card_class": "gold",
@@ -2486,7 +2486,7 @@
     },
     "hades": {
       "set_number": "11/48i",
-      "file": "BA450_GA_GBL_11.png",
+      "file": "BA450_GA_GBL_11.webp",
       "name": "Hades",
       "type": "gate",
       "card_class": "gold",
@@ -2518,7 +2518,7 @@
     },
     "mega_nemus": {
       "set_number": "12/48i",
-      "file": "BA451_GA_GBL_12.png",
+      "file": "BA451_GA_GBL_12.webp",
       "name": "Mega Nemus",
       "type": "gate",
       "card_class": "gold",
@@ -2550,7 +2550,7 @@
     },
     "cleansing_fire": {
       "set_number": "13/48i",
-      "file": "BA452_GA_GBL_13.png",
+      "file": "BA452_GA_GBL_13.webp",
       "name": "Cleansing Fire",
       "type": "gate",
       "card_class": "gold",
@@ -2579,7 +2579,7 @@
     },
     "mudslide_nexus": {
       "set_number": "14/48i",
-      "file": "BA453_GA_GBL_14.png",
+      "file": "BA453_GA_GBL_14.webp",
       "name": "Mudslide Nexus",
       "type": "gate",
       "card_class": "gold",
@@ -2608,7 +2608,7 @@
     },
     "radiant_nexus": {
       "set_number": "15/48i",
-      "file": "BA454_GA_GBL_15.png",
+      "file": "BA454_GA_GBL_15.webp",
       "name": "Radiant Nexus",
       "type": "gate",
       "card_class": "gold",
@@ -2637,7 +2637,7 @@
     },
     "hellstorm": {
       "set_number": "16/48i",
-      "file": "BA455_GA_GBL_16.png",
+      "file": "BA455_GA_GBL_16.webp",
       "name": "Hellstorm",
       "type": "gate",
       "card_class": "gold",
@@ -2666,7 +2666,7 @@
     },
     "overhang": {
       "set_number": "17/48i",
-      "file": "BA456_GA_GBL_17.png",
+      "file": "BA456_GA_GBL_17.webp",
       "name": "Overhang",
       "type": "gate",
       "card_class": "copper",
@@ -2693,7 +2693,7 @@
     },
     "river_valley": {
       "set_number": "18/48i",
-      "file": "BA457_GA_GBL_18.png",
+      "file": "BA457_GA_GBL_18.webp",
       "name": "River Valley",
       "type": "gate",
       "card_class": "copper",
@@ -2727,7 +2727,7 @@
     },
     "high_ground": {
       "set_number": "19/48i",
-      "file": "BA458_GA_GBL_19.png",
+      "file": "BA458_GA_GBL_19.webp",
       "name": "High Ground",
       "type": "gate",
       "card_class": "copper",
@@ -2757,7 +2757,7 @@
     },
     "dark_tunnel": {
       "set_number": "20/48i",
-      "file": "BA459_GA_GBL_20.png",
+      "file": "BA459_GA_GBL_20.webp",
       "name": "Dark Tunnel",
       "type": "gate",
       "card_class": "copper",
@@ -2787,7 +2787,7 @@
     },
     "mirror_gate": {
       "set_number": "21/48i",
-      "file": "BA460_GA_GBL_21.png",
+      "file": "BA460_GA_GBL_21.webp",
       "name": "Mirror Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2822,7 +2822,7 @@
     },
     "prism_gate": {
       "set_number": "22/48i",
-      "file": "BA461_GA_GBL_22.png",
+      "file": "BA461_GA_GBL_22.webp",
       "name": "Prism Gate",
       "type": "gate",
       "card_class": "copper",
@@ -2848,7 +2848,7 @@
     },
     "trap_door": {
       "set_number": "23/48i",
-      "file": "BA462_GA_GBL_23.png",
+      "file": "BA462_GA_GBL_23.webp",
       "name": "Trap Door",
       "type": "gate",
       "card_class": "copper",
@@ -2874,7 +2874,7 @@
     },
     "darkness_chamber": {
       "set_number": "24/48i",
-      "file": "BA463_GA_GBL_24.png",
+      "file": "BA463_GA_GBL_24.webp",
       "name": "Darkness Chamber",
       "type": "gate",
       "card_class": "copper",
@@ -2900,7 +2900,7 @@
     },
     "rainbow_portal": {
       "set_number": "25/48i",
-      "file": "BA464_AB_GBL_25.png",
+      "file": "BA464_AB_GBL_25.webp",
       "name": "Rainbow Portal",
       "type": "ability",
       "persistent": "owner",
@@ -2941,7 +2941,7 @@
     },
     "rainbow_prism": {
       "set_number": "26/48i",
-      "file": "BA465_AB_GBL_26.png",
+      "file": "BA465_AB_GBL_26.webp",
       "name": "Rainbow Prism",
       "type": "ability",
       "persistent": "owner",
@@ -2974,7 +2974,7 @@
     },
     "taking_you_with_me": {
       "set_number": "27/48i",
-      "file": "BA466_AB_GBL_27.png",
+      "file": "BA466_AB_GBL_27.webp",
       "name": "Taking You With Me",
       "type": "ability",
       "card_class": "red",
@@ -3000,7 +3000,7 @@
     },
     "colorvoid": {
       "set_number": "28/48i",
-      "file": "BA467_AB_GBL_28.png",
+      "file": "BA467_AB_GBL_28.webp",
       "name": "Colorvoid",
       "type": "ability",
       "card_class": "red",
@@ -3039,7 +3039,7 @@
     },
     "flames_of_light": {
       "set_number": "29/48i",
-      "file": "BA468_AB_GBL_29.png",
+      "file": "BA468_AB_GBL_29.webp",
       "name": "Flames of Light",
       "type": "ability",
       "card_class": "red",
@@ -3078,7 +3078,7 @@
     },
     "hurricane_of_fire": {
       "set_number": "30/48i",
-      "file": "BA469_AB_GBL_30.png",
+      "file": "BA469_AB_GBL_30.webp",
       "name": "Hurricane of Fire",
       "type": "ability",
       "card_class": "red",
@@ -3117,7 +3117,7 @@
     },
     "magma_blast": {
       "set_number": "31/48i",
-      "file": "BA470_AB_GBL_31.png",
+      "file": "BA470_AB_GBL_31.webp",
       "name": "Magma Blast",
       "type": "ability",
       "card_class": "red",
@@ -3148,7 +3148,7 @@
     },
     "darkfire_blast": {
       "set_number": "32/48i",
-      "file": "BA471_AB_GBL_32.png",
+      "file": "BA471_AB_GBL_32.webp",
       "name": "Darkfire Blast",
       "type": "ability",
       "card_class": "red",
@@ -3187,7 +3187,7 @@
     },
     "char_the_earth": {
       "set_number": "33/48i",
-      "file": "BA472_AB_GBL_33.png",
+      "file": "BA472_AB_GBL_33.webp",
       "name": "Char the Earth",
       "type": "ability",
       "card_class": "blue",
@@ -3232,7 +3232,7 @@
     },
     "bathed_in_light": {
       "set_number": "34/48i",
-      "file": "BA473_AB_GBL_34.png",
+      "file": "BA473_AB_GBL_34.webp",
       "name": "Bathed in Light",
       "type": "ability",
       "card_class": "blue",
@@ -3269,7 +3269,7 @@
     },
     "thundercrack": {
       "set_number": "35/48i",
-      "file": "BA474_AB_GBL_35.png",
+      "file": "BA474_AB_GBL_35.webp",
       "name": "Thundercrack",
       "type": "ability",
       "card_class": "blue",
@@ -3310,7 +3310,7 @@
     },
     "colorstorm": {
       "set_number": "36/48i",
-      "file": "BA475_AB_GBL_36.png",
+      "file": "BA475_AB_GBL_36.webp",
       "name": "Colorstorm",
       "type": "ability",
       "card_class": "blue",
@@ -3336,7 +3336,7 @@
     },
     "helios": {
       "set_number": "37/48i",
-      "file": "BA476_AB_GBL_37.png",
+      "file": "BA476_AB_GBL_37.webp",
       "name": "Helios",
       "type": "ability",
       "card_class": "blue",
@@ -3368,7 +3368,7 @@
     },
     "scraper": {
       "set_number": "38/48i",
-      "file": "BA477_AB_GBL_38.png",
+      "file": "BA477_AB_GBL_38.webp",
       "name": "Scraper",
       "type": "ability",
       "card_class": "blue",
@@ -3400,7 +3400,7 @@
     },
     "klawgor": {
       "set_number": "39/48i",
-      "file": "BA478_AB_GBL_39.png",
+      "file": "BA478_AB_GBL_39.webp",
       "name": "Klawgor",
       "type": "ability",
       "card_class": "blue",
@@ -3440,7 +3440,7 @@
     },
     "leefram": {
       "set_number": "40/48i",
-      "file": "BA479_AB_GBL_40.png",
+      "file": "BA479_AB_GBL_40.webp",
       "name": "Leefram",
       "type": "ability",
       "card_class": "blue",
@@ -3472,7 +3472,7 @@
     },
     "shadowfire": {
       "set_number": "41/48i",
-      "file": "BA480_AB_GBL_41.png",
+      "file": "BA480_AB_GBL_41.webp",
       "name": "Shadowfire",
       "type": "ability",
       "card_class": "green",
@@ -3506,7 +3506,7 @@
     },
     "shadow_vortex": {
       "set_number": "42/48i",
-      "file": "BA481_AB_GBL_42.png",
+      "file": "BA481_AB_GBL_42.webp",
       "name": "Shadow Vortex",
       "type": "ability",
       "card_class": "green",
@@ -3540,7 +3540,7 @@
     },
     "shadow_lash": {
       "set_number": "43/48i",
-      "file": "BA482_AB_GBL_43.png",
+      "file": "BA482_AB_GBL_43.webp",
       "name": "Shadow Lash",
       "type": "ability",
       "card_class": "green",
@@ -3574,7 +3574,7 @@
     },
     "rain_of_shadows": {
       "set_number": "44/48i",
-      "file": "BA483_AB_GBL_44.png",
+      "file": "BA483_AB_GBL_44.webp",
       "name": "Rain of Shadows",
       "type": "ability",
       "card_class": "green",
@@ -3616,7 +3616,7 @@
     },
     "red_green_combine": {
       "set_number": "45/48i",
-      "file": "BA484_AB_GBL_45.png",
+      "file": "BA484_AB_GBL_45.webp",
       "name": "Red-Green Combine",
       "type": "ability",
       "card_class": "green",
@@ -3647,7 +3647,7 @@
     },
     "blue_green_combine": {
       "set_number": "46/48i",
-      "file": "Blue-Green_Combine(NA).png",
+      "file": "Blue-Green_Combine(NA).webp",
       "name": "Blue-Green Combine",
       "type": "ability",
       "card_class": "green",
@@ -3688,7 +3688,7 @@
     },
     "vendetta": {
       "set_number": "47/48i",
-      "file": "BA486_AB_GBL_47.png",
+      "file": "BA486_AB_GBL_47.webp",
       "name": "Vendetta",
       "type": "ability",
       "card_class": "green",
@@ -3727,7 +3727,7 @@
     },
     "old_enemies": {
       "set_number": "48/48i",
-      "file": "BA487_AB_GBL_48.png",
+      "file": "BA487_AB_GBL_48.webp",
       "name": "Old Enemies",
       "type": "ability",
       "card_class": "green",
@@ -3766,7 +3766,7 @@
     },
     "ashen_gate": {
       "set_number": "1/18L",
-      "file": "AshenGate1L.png",
+      "file": "AshenGate1L.webp",
       "name": "Ashen Gate",
       "type": "gate",
       "card_class": "silver",
@@ -3787,7 +3787,7 @@
     },
     "summer_gate": {
       "set_number": "2/18L",
-      "file": "Summer-Gate2L.png",
+      "file": "Summer-Gate2L.webp",
       "name": "Summer Gate",
       "type": "gate",
       "card_class": "silver",
@@ -3808,7 +3808,7 @@
     },
     "spark_and_cinder": {
       "set_number": "3/18L",
-      "file": "SparkAndCinder3L.png",
+      "file": "SparkAndCinder3L.webp",
       "name": "Spark and Cinder",
       "type": "gate",
       "card_class": "silver",
@@ -3829,7 +3829,7 @@
     },
     "water_gate": {
       "set_number": "4/18L",
-      "file": "WaterGate4L.png",
+      "file": "WaterGate4L.webp",
       "name": "Water Gate",
       "type": "gate",
       "card_class": "silver",
@@ -3850,7 +3850,7 @@
     },
     "autumn_gate": {
       "set_number": "5/18L",
-      "file": "Autumn-Gate5L.png",
+      "file": "Autumn-Gate5L.webp",
       "name": "Autumn Gate",
       "type": "gate",
       "card_class": "silver",
@@ -3871,7 +3871,7 @@
     },
     "mud_and_sprinkle": {
       "set_number": "6/18L",
-      "file": "MudSprinkle.png",
+      "file": "MudSprinkle.webp",
       "name": "Mud and Sprinkle",
       "type": "gate",
       "card_class": "silver",
@@ -3892,7 +3892,7 @@
     },
     "vanishing_moon": {
       "set_number": "7/18L",
-      "file": "Vanishing-Moon7L.png",
+      "file": "Vanishing-Moon7L.webp",
       "name": "Vanishing Moon",
       "type": "gate",
       "card_class": "gold",
@@ -3913,7 +3913,7 @@
     },
     "bumpy_road": {
       "set_number": "8/18L",
-      "file": "Bumpy-Road8L.png",
+      "file": "Bumpy-Road8L.webp",
       "name": "Bumpy Road",
       "type": "gate",
       "card_class": "gold",
@@ -3934,7 +3934,7 @@
     },
     "void_and_earth": {
       "set_number": "9/18L",
-      "file": "VoidAndEarth9L.png",
+      "file": "VoidAndEarth9L.webp",
       "name": "Void and Earth",
       "type": "gate",
       "card_class": "gold",
@@ -3955,7 +3955,7 @@
     },
     "stormy_weather": {
       "set_number": "10/18L",
-      "file": "StormyWeather10L.png",
+      "file": "StormyWeather10L.webp",
       "name": "Stormy Weather",
       "type": "gate",
       "card_class": "gold",
@@ -3976,7 +3976,7 @@
     },
     "sunny_day": {
       "set_number": "11/18L",
-      "file": "SunnyDay11L.png",
+      "file": "SunnyDay11L.webp",
       "name": "Sunny Day",
       "type": "gate",
       "card_class": "gold",
@@ -3997,7 +3997,7 @@
     },
     "dust_and_light": {
       "set_number": "12/18L",
-      "file": "Dust-and-Light12L.png",
+      "file": "Dust-and-Light12L.webp",
       "name": "Dust and Light",
       "type": "gate",
       "card_class": "gold",
@@ -4018,7 +4018,7 @@
     },
     "eye_of_the_storm": {
       "set_number": "13/18L",
-      "file": "EyeoftheStorm13L.png",
+      "file": "EyeoftheStorm13L.webp",
       "name": "Eye of the Storm",
       "type": "gate",
       "card_class": "copper",
@@ -4047,7 +4047,7 @@
     },
     "tidal_surge": {
       "set_number": "14/18L",
-      "file": "TidalSurge14L.png",
+      "file": "TidalSurge14L.webp",
       "name": "Tidal Surge",
       "type": "gate",
       "card_class": "copper",
@@ -4068,7 +4068,7 @@
     },
     "prism_lake": {
       "set_number": "15/18L",
-      "file": "Prism-Lake15L.png",
+      "file": "Prism-Lake15L.webp",
       "name": "Prism Lake",
       "type": "gate",
       "card_class": "copper",
@@ -4089,7 +4089,7 @@
     },
     "muggy_night": {
       "set_number": "16/18L",
-      "file": "MuggyNight16L.png",
+      "file": "MuggyNight16L.webp",
       "name": "Muggy Night",
       "type": "gate",
       "card_class": "copper",
@@ -4118,7 +4118,7 @@
     },
     "low_point_ridge": {
       "set_number": "17/18L",
-      "file": "Low-Point-Ridge17L.png",
+      "file": "Low-Point-Ridge17L.webp",
       "name": "Low Point Ridge",
       "type": "gate",
       "card_class": "copper",
@@ -4139,7 +4139,7 @@
     },
     "blue_flame": {
       "set_number": "18/18L",
-      "file": "Blue-Flame18L.png",
+      "file": "Blue-Flame18L.webp",
       "name": "Blue Flame",
       "type": "gate",
       "card_class": "copper",
@@ -4160,7 +4160,7 @@
     },
     "gloomy_gate": {
       "set_number": "1/48n",
-      "file": "Gloomy_Gate_1-48n.png",
+      "file": "Gloomy_Gate_1-48n.webp",
       "name": "Gloomy Gate",
       "type": "gate",
       "card_class": "silver",
@@ -4181,7 +4181,7 @@
     },
     "tidal_breeze": {
       "set_number": "2/48n",
-      "file": "Tidal_Breeze_2-48n.png",
+      "file": "Tidal_Breeze_2-48n.webp",
       "name": "Tidal Breeze",
       "type": "gate",
       "card_class": "silver",
@@ -4202,7 +4202,7 @@
     },
     "baked_soil": {
       "set_number": "3/48n",
-      "file": "Baked_Soil_3-48n.png",
+      "file": "Baked_Soil_3-48n.webp",
       "name": "Baked Soil",
       "type": "gate",
       "card_class": "silver",
@@ -4223,7 +4223,7 @@
     },
     "reflection_gate": {
       "set_number": "4/48n",
-      "file": "Reflection_Gate_4-48n.png",
+      "file": "Reflection_Gate_4-48n.webp",
       "name": "Reflection Gate",
       "type": "gate",
       "card_class": "silver",
@@ -4244,7 +4244,7 @@
     },
     "deep_tan": {
       "set_number": "5/48n",
-      "file": "Deep_Tan_5-48n.png",
+      "file": "Deep_Tan_5-48n.webp",
       "name": "Deep Tan",
       "type": "gate",
       "card_class": "silver",
@@ -4265,7 +4265,7 @@
     },
     "moonburn": {
       "set_number": "6/48n",
-      "file": "Moonburn_6-48n.png",
+      "file": "Moonburn_6-48n.webp",
       "name": "Moonburn",
       "type": "gate",
       "card_class": "silver",
@@ -4286,7 +4286,7 @@
     },
     "ocean_spray": {
       "set_number": "7/48n",
-      "file": "Ocean_Spray_7-48n.png",
+      "file": "Ocean_Spray_7-48n.webp",
       "name": "Ocean Spray",
       "type": "gate",
       "card_class": "silver",
@@ -4307,7 +4307,7 @@
     },
     "deep_well": {
       "set_number": "8/48n",
-      "file": "Deep_Well_8-48n.png",
+      "file": "Deep_Well_8-48n.webp",
       "name": "Deep Well",
       "type": "gate",
       "card_class": "silver",
@@ -4328,7 +4328,7 @@
     },
     "percival_field": {
       "set_number": "9/48n",
-      "file": "Percival_Field_9-48n.png",
+      "file": "Percival_Field_9-48n.webp",
       "name": "Percival Field",
       "type": "gate",
       "card_class": "gold",
@@ -4355,7 +4355,7 @@
     },
     "pleasant_stone": {
       "set_number": "10/48n",
-      "file": "Pleasant_Stone_10-48n.png",
+      "file": "Pleasant_Stone_10-48n.webp",
       "name": "Pleasant Stone",
       "type": "gate",
       "card_class": "gold",
@@ -4390,7 +4390,7 @@
     },
     "friendly_fire": {
       "set_number": "11/48n",
-      "file": "Friendly_Fire_11-48n.png",
+      "file": "Friendly_Fire_11-48n.webp",
       "name": "Friendly Fire",
       "type": "gate",
       "card_class": "gold",
@@ -4425,7 +4425,7 @@
     },
     "light_in_the_dark": {
       "set_number": "12/48n",
-      "file": "Light_In_The_Dark_12-48n.png",
+      "file": "Light_In_The_Dark_12-48n.webp",
       "name": "Light in the Dark",
       "type": "gate",
       "card_class": "gold",
@@ -4460,7 +4460,7 @@
     },
     "building_gate": {
       "set_number": "13/48n",
-      "file": "Building_Gate_(NA).png",
+      "file": "Building_Gate_(NA).webp",
       "name": "Building Gate",
       "type": "gate",
       "card_class": "gold",
@@ -4489,7 +4489,7 @@
     },
     "construction_gate": {
       "set_number": "14/48n",
-      "file": "Construction_Gate_14-48n.png",
+      "file": "Construction_Gate_14-48n.webp",
       "name": "Construction Gate",
       "type": "gate",
       "card_class": "gold",
@@ -4518,7 +4518,7 @@
     },
     "lightning_field": {
       "set_number": "15/48n",
-      "file": "Lightning_Field_15-48n.png",
+      "file": "Lightning_Field_15-48n.webp",
       "name": "Lightning Field",
       "type": "gate",
       "card_class": "gold",
@@ -4546,7 +4546,7 @@
     },
     "galeforce": {
       "set_number": "16/48n",
-      "file": "Galeforce16-48n.png",
+      "file": "Galeforce16-48n.webp",
       "name": "Galeforce",
       "type": "gate",
       "card_class": "gold",
@@ -4576,7 +4576,7 @@
     },
     "needles_eye": {
       "set_number": "17/48n",
-      "file": "Needle's_Eye_17-48n.png",
+      "file": "Needle's_Eye_17-48n.webp",
       "name": "Needle's Eye",
       "type": "gate",
       "card_class": "copper",
@@ -4603,7 +4603,7 @@
     },
     "drain_color": {
       "set_number": "18/48n",
-      "file": "Drain_Color_18-48n.png",
+      "file": "Drain_Color_18-48n.webp",
       "name": "Drain Color",
       "type": "gate",
       "card_class": "copper",
@@ -4632,7 +4632,7 @@
     },
     "cheering_section": {
       "set_number": "19/48n",
-      "file": "Cheering_Section_Card.png",
+      "file": "Cheering_Section_Card.webp",
       "name": "Cheering Section",
       "type": "gate",
       "card_class": "copper",
@@ -4659,7 +4659,7 @@
     },
     "anger_rooms": {
       "set_number": "20/48n",
-      "file": "Anger_Rooms_Card.png",
+      "file": "Anger_Rooms_Card.webp",
       "name": "Anger Rooms",
       "type": "gate",
       "card_class": "copper",
@@ -4686,7 +4686,7 @@
     },
     "tri_color_power": {
       "set_number": "21/48n",
-      "file": "Tri-Color_Power_21-48n.png",
+      "file": "Tri-Color_Power_21-48n.webp",
       "name": "Tri-Color Power",
       "type": "gate",
       "card_class": "copper",
@@ -4716,7 +4716,7 @@
     },
     "tri_color_boost": {
       "set_number": "22/48n",
-      "file": "Tri-Color_Boost_22-48n.png",
+      "file": "Tri-Color_Boost_22-48n.webp",
       "name": "Tri-Color Boost",
       "type": "gate",
       "card_class": "copper",
@@ -4746,7 +4746,7 @@
     },
     "shades_of_death": {
       "set_number": "23/48n",
-      "file": "Shades_Of_Death_23-48n.png",
+      "file": "Shades_Of_Death_23-48n.webp",
       "name": "Shades of Death",
       "type": "gate",
       "card_class": "copper",
@@ -4780,7 +4780,7 @@
     },
     "furys_gate": {
       "set_number": "24/48n",
-      "file": "Fury's_Gate_24-48n.png",
+      "file": "Fury's_Gate_24-48n.webp",
       "name": "Fury's Gate",
       "type": "gate",
       "card_class": "copper",
@@ -4808,7 +4808,7 @@
     },
     "fire_wind": {
       "set_number": "25/48n",
-      "file": "BK_PD_Card552.png",
+      "file": "BK_PD_Card552.webp",
       "name": "Fire Wind",
       "type": "ability",
       "card_class": "red",
@@ -4848,7 +4848,7 @@
     },
     "water_wind": {
       "set_number": "26/48n",
-      "file": "Water_Wind_26-48n.png",
+      "file": "Water_Wind_26-48n.webp",
       "name": "Water Wind",
       "type": "ability",
       "card_class": "red",
@@ -4880,7 +4880,7 @@
     },
     "light_wind": {
       "set_number": "27/48n",
-      "file": "Light_Wind_27-48n.png",
+      "file": "Light_Wind_27-48n.webp",
       "name": "Light Wind",
       "type": "ability",
       "card_class": "red",
@@ -4912,7 +4912,7 @@
     },
     "dark_wind": {
       "set_number": "28/48n",
-      "file": "Dark_Wind_28-48n.png",
+      "file": "Dark_Wind_28-48n.webp",
       "name": "Dark Wind",
       "type": "ability",
       "card_class": "red",
@@ -4944,7 +4944,7 @@
     },
     "fire_stone": {
       "set_number": "29/48n",
-      "file": "Fire_Stone_29-48n.png",
+      "file": "Fire_Stone_29-48n.webp",
       "name": "Fire Stone",
       "type": "ability",
       "card_class": "red",
@@ -4977,7 +4977,7 @@
     },
     "water_stone": {
       "set_number": "30/48n",
-      "file": "Water_Stone_(NA).png",
+      "file": "Water_Stone_(NA).webp",
       "name": "Water Stone",
       "type": "ability",
       "card_class": "red",
@@ -5010,7 +5010,7 @@
     },
     "light_stone": {
       "set_number": "31/48n",
-      "file": "Light_Stone_31-48n.png",
+      "file": "Light_Stone_31-48n.webp",
       "name": "Light Stone",
       "type": "ability",
       "card_class": "red",
@@ -5043,7 +5043,7 @@
     },
     "dark_stone": {
       "set_number": "32/48n",
-      "file": "Dark_Stone_32-48n.png",
+      "file": "Dark_Stone_32-48n.webp",
       "name": "Dark Stone",
       "type": "ability",
       "card_class": "red",
@@ -5076,7 +5076,7 @@
     },
     "copper_launcher": {
       "set_number": "33/48n",
-      "file": "Copper_Launcher_33-48n.png",
+      "file": "Copper_Launcher_33-48n.webp",
       "name": "Copper Launcher",
       "type": "ability",
       "card_class": "blue",
@@ -5116,7 +5116,7 @@
     },
     "bronz_launcher": {
       "set_number": "34/48n",
-      "file": "Bronz_Launcher_34-48n.png",
+      "file": "Bronz_Launcher_34-48n.webp",
       "name": "Bronz Launcher",
       "type": "ability",
       "card_class": "blue",
@@ -5156,7 +5156,7 @@
     },
     "golden_launcher": {
       "set_number": "35/48n",
-      "file": "Golden_Launcher_35-48n.png",
+      "file": "Golden_Launcher_35-48n.webp",
       "name": "Golden Launcher",
       "type": "ability",
       "card_class": "blue",
@@ -5196,7 +5196,7 @@
     },
     "pip": {
       "set_number": "36/48n",
-      "file": "Pip_36-48n.png",
+      "file": "Pip_36-48n.webp",
       "name": "Pip",
       "type": "ability",
       "card_class": "blue",
@@ -5222,7 +5222,7 @@
     },
     "trap_squeeze": {
       "set_number": "37/48n",
-      "file": "Trap_Squeeze_37-48n.png",
+      "file": "Trap_Squeeze_37-48n.webp",
       "name": "Trap Squeeze",
       "type": "ability",
       "card_class": "blue",
@@ -5251,7 +5251,7 @@
     },
     "trap_squash": {
       "set_number": "38/48n",
-      "file": "Trap_Squash_38-48n.png",
+      "file": "Trap_Squash_38-48n.webp",
       "name": "Trap Squash",
       "type": "ability",
       "card_class": "blue",
@@ -5280,7 +5280,7 @@
     },
     "trap_slam": {
       "set_number": "39/48n",
-      "file": "Trap_Slam_39-48n.png",
+      "file": "Trap_Slam_39-48n.webp",
       "name": "Trap Slam",
       "type": "ability",
       "card_class": "blue",
@@ -5317,7 +5317,7 @@
     },
     "clean_house": {
       "set_number": "40/48n",
-      "file": "Clean_House_Card.png",
+      "file": "Clean_House_Card.webp",
       "name": "Clean House",
       "type": "ability",
       "card_class": "blue",
@@ -5347,7 +5347,7 @@
     },
     "aquos_hex": {
       "set_number": "41/48n",
-      "file": "Aquos_Hex_Card.png",
+      "file": "Aquos_Hex_Card.webp",
       "name": "Aquos Hex",
       "type": "ability",
       "card_class": "green",
@@ -5381,7 +5381,7 @@
     },
     "ventus_hex": {
       "set_number": "42/48n",
-      "file": "Ventus_Hex_42-48n.png",
+      "file": "Ventus_Hex_42-48n.webp",
       "name": "Ventus Hex",
       "type": "ability",
       "card_class": "green",
@@ -5415,7 +5415,7 @@
     },
     "darkus_hex": {
       "set_number": "43/48n",
-      "file": "Darkus_Hex_43-48n.png",
+      "file": "Darkus_Hex_43-48n.webp",
       "name": "Darkus Hex",
       "type": "ability",
       "card_class": "green",
@@ -5449,7 +5449,7 @@
     },
     "rock_on": {
       "set_number": "44/48n",
-      "file": "Rock_On_44-48n.png",
+      "file": "Rock_On_44-48n.webp",
       "name": "Rock On",
       "type": "ability",
       "card_class": "green",
@@ -5482,7 +5482,7 @@
     },
     "power_card_alpha": {
       "set_number": "45/48n",
-      "file": "Power_Card_Alpha_45-48n.png",
+      "file": "Power_Card_Alpha_45-48n.webp",
       "name": "Power Card Alpha",
       "type": "ability",
       "persistent": "global",
@@ -5515,7 +5515,7 @@
     },
     "power_card_zeta": {
       "set_number": "46/48n",
-      "file": "Power_Card_Zeta_46-48n.png",
+      "file": "Power_Card_Zeta_46-48n.webp",
       "name": "Power Card Zeta",
       "type": "ability",
       "persistent": "global",
@@ -5548,7 +5548,7 @@
     },
     "counter_trap_alpha": {
       "set_number": "47/48n",
-      "file": "Counter_Trap_Alpha_47-48n.png",
+      "file": "Counter_Trap_Alpha_47-48n.webp",
       "name": "Counter Trap Alpha",
       "type": "ability",
       "persistent": "global",
@@ -5581,7 +5581,7 @@
     },
     "counter_trap_beta": {
       "set_number": "48/48n",
-      "file": "Counter_Trap_Beta_48-48n.png",
+      "file": "Counter_Trap_Beta_48-48n.webp",
       "name": "Counter Trap Beta",
       "type": "ability",
       "persistent": "global",
@@ -5614,7 +5614,7 @@
     },
     "clean_woods": {
       "set_number": "1/48q",
-      "file": "1q_Clean_Woods.png",
+      "file": "1q_Clean_Woods.webp",
       "name": "Clean Woods",
       "type": "gate",
       "card_class": "silver",
@@ -5635,7 +5635,7 @@
     },
     "clear_river": {
       "set_number": "2/48q",
-      "file": "2q_Clear_River.png",
+      "file": "2q_Clear_River.webp",
       "name": "Clear River",
       "type": "gate",
       "card_class": "silver",
@@ -5656,7 +5656,7 @@
     },
     "sunny_plains": {
       "set_number": "3/48q",
-      "file": "3q_Sunny_Plains.png",
+      "file": "3q_Sunny_Plains.webp",
       "name": "Sunny Plains",
       "type": "gate",
       "card_class": "silver",
@@ -5677,7 +5677,7 @@
     },
     "warming_trends": {
       "set_number": "4/48q",
-      "file": "4q_Warming_Trends.png",
+      "file": "4q_Warming_Trends.webp",
       "name": "Warming Trends",
       "type": "gate",
       "card_class": "silver",
@@ -5698,7 +5698,7 @@
     },
     "reduce": {
       "set_number": "5/48q",
-      "file": "5q_Reduce.png",
+      "file": "5q_Reduce.webp",
       "name": "Reduce",
       "type": "gate",
       "card_class": "silver",
@@ -5739,7 +5739,7 @@
     },
     "recycle": {
       "set_number": "6/48q",
-      "file": "6q_Recycle.png",
+      "file": "6q_Recycle.webp",
       "name": "Recycle",
       "type": "gate",
       "card_class": "silver",
@@ -5772,7 +5772,7 @@
     },
     "reuse": {
       "set_number": "7/48q",
-      "file": "7q_Reuse.png",
+      "file": "7q_Reuse.webp",
       "name": "Reuse",
       "type": "gate",
       "card_class": "silver",
@@ -5813,7 +5813,7 @@
     },
     "deep_cave": {
       "set_number": "8/48q",
-      "file": "8q_Deep_Cave.png",
+      "file": "8q_Deep_Cave.webp",
       "name": "Deep Cave",
       "type": "gate",
       "card_class": "silver",
@@ -5842,7 +5842,7 @@
     },
     "under_current": {
       "set_number": "9/48q",
-      "file": "9q_Under_Current.png",
+      "file": "9q_Under_Current.webp",
       "name": "Under Current",
       "type": "gate",
       "card_class": "gold",
@@ -5875,7 +5875,7 @@
     },
     "beneficial_wind": {
       "set_number": "10/48q",
-      "file": "Beneficial_Wind_Card.png",
+      "file": "Beneficial_Wind_Card.webp",
       "name": "Beneficial Wind",
       "type": "gate",
       "card_class": "gold",
@@ -5910,7 +5910,7 @@
     },
     "hydro_power": {
       "set_number": "11/48q",
-      "file": "11q_Hydro_Power.png",
+      "file": "11q_Hydro_Power.webp",
       "name": "Hydro Power",
       "type": "gate",
       "card_class": "gold",
@@ -5945,7 +5945,7 @@
     },
     "starry_night": {
       "set_number": "12/48q",
-      "file": "12q_Starry_Night.png",
+      "file": "12q_Starry_Night.webp",
       "name": "Starry Night",
       "type": "gate",
       "card_class": "gold",
@@ -5980,7 +5980,7 @@
     },
     "recharge": {
       "set_number": "13/48q",
-      "file": "13q_Recharge.png",
+      "file": "13q_Recharge.webp",
       "name": "Recharge",
       "type": "gate",
       "card_class": "gold",
@@ -6015,7 +6015,7 @@
     },
     "energize": {
       "set_number": "14/48q",
-      "file": "14q_Energize.png",
+      "file": "14q_Energize.webp",
       "name": "Energize",
       "type": "gate",
       "card_class": "gold",
@@ -6042,7 +6042,7 @@
     },
     "viper_helios": {
       "set_number": "15/48q",
-      "file": "15q_Viper_Helios.png",
+      "file": "15q_Viper_Helios.webp",
       "name": "Viper Helios",
       "type": "gate",
       "card_class": "gold",
@@ -6074,7 +6074,7 @@
     },
     "flash_hurricane": {
       "set_number": "16/48q",
-      "file": "16q_Flash_Hurricane.png",
+      "file": "16q_Flash_Hurricane.webp",
       "name": "Flash Hurricane",
       "type": "gate",
       "card_class": "gold",
@@ -6114,7 +6114,7 @@
     },
     "limbo_gate": {
       "set_number": "17/48q",
-      "file": "17q_Limbo_Gate.png",
+      "file": "17q_Limbo_Gate.webp",
       "name": "Limbo Gate",
       "type": "gate",
       "card_class": "copper",
@@ -6141,7 +6141,7 @@
     },
     "spectrum_null_gate": {
       "set_number": "18/48q",
-      "file": "18q_Spectrum_Null_Gate.png",
+      "file": "18q_Spectrum_Null_Gate.webp",
       "name": "Spectrum Null Gate",
       "type": "gate",
       "card_class": "copper",
@@ -6168,7 +6168,7 @@
     },
     "building_blocks": {
       "set_number": "19/48q",
-      "file": "Building_Blocks_Card.png",
+      "file": "Building_Blocks_Card.webp",
       "name": "Building Blocks",
       "type": "gate",
       "card_class": "copper",
@@ -6200,7 +6200,7 @@
     },
     "altair": {
       "set_number": "20/48q",
-      "file": "BA602_GA_GBL_20.png",
+      "file": "BA602_GA_GBL_20.webp",
       "name": "Altair",
       "type": "gate",
       "card_class": "copper",
@@ -6232,7 +6232,7 @@
     },
     "tri_color_fist": {
       "set_number": "21/48q",
-      "file": "21q_Tri-color_Fist.png",
+      "file": "21q_Tri-color_Fist.webp",
       "name": "Tri-Color Fist",
       "type": "gate",
       "card_class": "copper",
@@ -6270,7 +6270,7 @@
     },
     "tri_color_boot": {
       "set_number": "22/48q",
-      "file": "22q_Tri-color_Boot.png",
+      "file": "22q_Tri-color_Boot.webp",
       "name": "Tri-Color Boot",
       "type": "gate",
       "card_class": "copper",
@@ -6300,7 +6300,7 @@
     },
     "varietys_curse": {
       "set_number": "23/48q",
-      "file": "23q_Varietys_Curse.png",
+      "file": "23q_Varietys_Curse.webp",
       "name": "Variety's Curse",
       "type": "gate",
       "card_class": "copper",
@@ -6334,7 +6334,7 @@
     },
     "hate_gate": {
       "set_number": "24/48q",
-      "file": "24q_Hate_Gate.png",
+      "file": "24q_Hate_Gate.webp",
       "name": "Hate Gate",
       "type": "gate",
       "card_class": "copper",
@@ -6364,7 +6364,7 @@
     },
     "dan_and_marucho": {
       "set_number": "25/48q",
-      "file": "25q_Dan_Marucho.png",
+      "file": "25q_Dan_Marucho.webp",
       "name": "Dan and Marucho",
       "type": "ability",
       "card_class": "red",
@@ -6407,7 +6407,7 @@
     },
     "mira_and_shun": {
       "set_number": "26/48q",
-      "file": "26q_Mira_Shun.png",
+      "file": "26q_Mira_Shun.webp",
       "name": "Mira and Shun",
       "type": "ability",
       "card_class": "red",
@@ -6442,7 +6442,7 @@
     },
     "ace_and_baron": {
       "set_number": "27/48q",
-      "file": "Ace_and_Baron_Card.png",
+      "file": "Ace_and_Baron_Card.webp",
       "name": "Ace and Baron",
       "type": "ability",
       "card_class": "red",
@@ -6477,7 +6477,7 @@
     },
     "peek": {
       "set_number": "28/48q",
-      "file": "28q_Peek.png",
+      "file": "28q_Peek.webp",
       "name": "Peek",
       "type": "ability",
       "card_class": "red",
@@ -6543,7 +6543,7 @@
     },
     "dark_snap": {
       "set_number": "30/48q",
-      "file": "30q_Dark_Snap.png",
+      "file": "30q_Dark_Snap.webp",
       "name": "Dark Snap",
       "type": "ability",
       "card_class": "red",
@@ -6649,7 +6649,7 @@
     },
     "copper_boost": {
       "set_number": "33/48q",
-      "file": "33q_Copper_Boost.png",
+      "file": "33q_Copper_Boost.webp",
       "name": "Copper Boost",
       "type": "ability",
       "card_class": "blue",
@@ -6681,7 +6681,7 @@
     },
     "bronze_boost": {
       "set_number": "34/48q",
-      "file": "Bronze_Boost_Card.png",
+      "file": "Bronze_Boost_Card.webp",
       "name": "Bronze Boost",
       "type": "ability",
       "card_class": "blue",
@@ -6713,7 +6713,7 @@
     },
     "golden_boost": {
       "set_number": "35/48q",
-      "file": "35q_Golden_Boost.png",
+      "file": "35q_Golden_Boost.webp",
       "name": "Golden Boost",
       "type": "ability",
       "card_class": "blue",
@@ -6745,7 +6745,7 @@
     },
     "elico_pop": {
       "set_number": "36/48q",
-      "file": "36q_Elico_Pop.png",
+      "file": "36q_Elico_Pop.webp",
       "name": "Elico Pop",
       "type": "ability",
       "card_class": "blue",
@@ -6774,7 +6774,7 @@
     },
     "graveyard_fire": {
       "set_number": "37/48q",
-      "file": "37q_Graveyard_Fire.png",
+      "file": "37q_Graveyard_Fire.webp",
       "name": "Graveyard Fire",
       "type": "ability",
       "card_class": "blue",
@@ -6800,7 +6800,7 @@
     },
     "graveyard_howl": {
       "set_number": "38/48q",
-      "file": "38q_Graveyard_Howl.png",
+      "file": "38q_Graveyard_Howl.webp",
       "name": "Graveyard Howl",
       "type": "ability",
       "card_class": "blue",
@@ -6826,7 +6826,7 @@
     },
     "graveyard_candle": {
       "set_number": "39/48q",
-      "file": "39q_Graveyard_Candle.png",
+      "file": "39q_Graveyard_Candle.webp",
       "name": "Graveyard Candle",
       "type": "ability",
       "card_class": "blue",
@@ -6860,7 +6860,7 @@
     },
     "landmine_pyro": {
       "set_number": "40/48q",
-      "file": "40q_Landmine_Pyro.png",
+      "file": "40q_Landmine_Pyro.webp",
       "name": "Landmine Pyro",
       "type": "ability",
       "card_class": "blue",
@@ -6889,7 +6889,7 @@
     },
     "sub_terra_vexos": {
       "set_number": "41/48q",
-      "file": "41q_Subterra_Vexos.png",
+      "file": "41q_Subterra_Vexos.webp",
       "name": "Sub Terra Vexos",
       "type": "ability",
       "card_class": "green",
@@ -6923,7 +6923,7 @@
     },
     "pyrus_vexos": {
       "set_number": "42/48q",
-      "file": "42q_Pyrus_Vexos.png",
+      "file": "42q_Pyrus_Vexos.webp",
       "name": "Pyrus Vexos",
       "type": "ability",
       "card_class": "green",
@@ -6957,7 +6957,7 @@
     },
     "haos_vexos": {
       "set_number": "43/48q",
-      "file": "43q_Haos_Vexos.png",
+      "file": "43q_Haos_Vexos.webp",
       "name": "Haos Vexos",
       "type": "ability",
       "card_class": "green",
@@ -6991,7 +6991,7 @@
     },
     "windmills": {
       "set_number": "44/48q",
-      "file": "44q_Windmills.png",
+      "file": "44q_Windmills.webp",
       "name": "Windmills",
       "type": "ability",
       "card_class": "green",
@@ -7024,7 +7024,7 @@
     },
     "double_switch": {
       "set_number": "45/48q",
-      "file": "45q_Double_Switch.png",
+      "file": "45q_Double_Switch.webp",
       "name": "Double Switch",
       "type": "ability",
       "card_class": "green",
@@ -7061,7 +7061,7 @@
     },
     "double_trap": {
       "set_number": "46/48q",
-      "file": "46q_Double_Trap.png",
+      "file": "46q_Double_Trap.webp",
       "name": "Double Trap",
       "type": "ability",
       "card_class": "green",
@@ -7090,7 +7090,7 @@
     },
     "ingram_beam": {
       "set_number": "47/48q",
-      "file": "47q_Ingram_Beam.png",
+      "file": "47q_Ingram_Beam.webp",
       "name": "Ingram Beam",
       "type": "ability",
       "card_class": "green",
@@ -7118,7 +7118,7 @@
     },
     "super_quake": {
       "set_number": "48/48q",
-      "file": "48q_Super_Quake.png",
+      "file": "48q_Super_Quake.webp",
       "name": "Super Quake",
       "type": "ability",
       "card_class": "green",
@@ -7150,7 +7150,7 @@
     },
     "deep_roots": {
       "set_number": "1/48q",
-      "file": "1q_Deep_Roots.png",
+      "file": "1q_Deep_Roots.webp",
       "name": "Deep Roots",
       "type": "gate",
       "card_class": "silver",
@@ -7171,7 +7171,7 @@
     },
     "half_moon": {
       "set_number": "2/48q",
-      "file": "2q_Half_Moon.png",
+      "file": "2q_Half_Moon.webp",
       "name": "Half Moon",
       "type": "gate",
       "card_class": "silver",
@@ -7192,7 +7192,7 @@
     },
     "steam_gate": {
       "set_number": "3/48q",
-      "file": "3q_Steam_Gate.png",
+      "file": "3q_Steam_Gate.webp",
       "name": "Steam Gate",
       "type": "gate",
       "card_class": "silver",
@@ -7213,7 +7213,7 @@
     },
     "impact_site": {
       "set_number": "4/48q",
-      "file": "4q_Impact_Site.png",
+      "file": "4q_Impact_Site.webp",
       "name": "Impact Site",
       "type": "gate",
       "card_class": "silver",
@@ -7234,7 +7234,7 @@
     },
     "repurpose": {
       "set_number": "5/48q",
-      "file": "5q_Repurpose.png",
+      "file": "5q_Repurpose.webp",
       "name": "Repurpose",
       "type": "gate",
       "card_class": "silver",
@@ -7269,7 +7269,7 @@
     },
     "flybeetle_rescue": {
       "set_number": "6/48q",
-      "file": "6q_Flybeetle_Rescue.png",
+      "file": "6q_Flybeetle_Rescue.webp",
       "name": "Flybeetle Rescue",
       "type": "gate",
       "card_class": "silver",
@@ -7304,7 +7304,7 @@
     },
     "reclaim": {
       "set_number": "7/48q",
-      "file": "7q_Reclaim.png",
+      "file": "7q_Reclaim.webp",
       "name": "Reclaim",
       "type": "gate",
       "card_class": "silver",
@@ -7339,7 +7339,7 @@
     },
     "whiplash": {
       "set_number": "8/48q",
-      "file": "8q_Whiplash.png",
+      "file": "8q_Whiplash.webp",
       "name": "Whiplash",
       "type": "gate",
       "card_class": "silver",
@@ -7367,7 +7367,7 @@
     },
     "worn_stone": {
       "set_number": "9/48q",
-      "file": "9q_Worn_Stone.png",
+      "file": "9q_Worn_Stone.webp",
       "name": "Worn Stone",
       "type": "gate",
       "card_class": "gold",
@@ -7400,7 +7400,7 @@
     },
     "rock_slide": {
       "set_number": "10/48q",
-      "file": "10q_Rock_Slide.png",
+      "file": "10q_Rock_Slide.webp",
       "name": "Rock Slide",
       "type": "gate",
       "card_class": "gold",
@@ -7435,7 +7435,7 @@
     },
     "water_fall": {
       "set_number": "11/48q",
-      "file": "11q_Water_Fall.png",
+      "file": "11q_Water_Fall.webp",
       "name": "Water Fall",
       "type": "gate",
       "card_class": "gold",
@@ -7470,7 +7470,7 @@
     },
     "night_fall": {
       "set_number": "12/48q",
-      "file": "12q_Night_Fall.png",
+      "file": "12q_Night_Fall.webp",
       "name": "Night Fall",
       "type": "gate",
       "card_class": "gold",
@@ -7505,7 +7505,7 @@
     },
     "washback": {
       "set_number": "13/48q",
-      "file": "13q_Washback.png",
+      "file": "13q_Washback.webp",
       "name": "Washback",
       "type": "gate",
       "card_class": "gold",
@@ -7533,7 +7533,7 @@
     },
     "blowback": {
       "set_number": "14/48q",
-      "file": "Blowback_Card.png",
+      "file": "Blowback_Card.webp",
       "name": "Blowback",
       "type": "gate",
       "card_class": "gold",
@@ -7561,7 +7561,7 @@
     },
     "alto_brontes": {
       "set_number": "15/48q",
-      "file": "15q_Alto_Brontes.png",
+      "file": "15q_Alto_Brontes.webp",
       "name": "Alto Brontes",
       "type": "gate",
       "card_class": "gold",
@@ -7589,7 +7589,7 @@
     },
     "evolve_fire": {
       "set_number": "16/48q",
-      "file": "16q_Evolve_Fire.png",
+      "file": "16q_Evolve_Fire.webp",
       "name": "Evolve Fire!",
       "type": "gate",
       "card_class": "gold",
@@ -7616,7 +7616,7 @@
     },
     "short_fuse": {
       "set_number": "17/48q",
-      "file": "17q_Short_Fuse.png",
+      "file": "17q_Short_Fuse.webp",
       "name": "Short Fuse",
       "type": "gate",
       "card_class": "copper",
@@ -7643,7 +7643,7 @@
     },
     "overeager": {
       "set_number": "18/48q",
-      "file": "18q_Overeager.png",
+      "file": "18q_Overeager.webp",
       "name": "Overeager",
       "type": "gate",
       "card_class": "copper",
@@ -7670,7 +7670,7 @@
     },
     "mixing_bowl": {
       "set_number": "19/48q",
-      "file": "19q_Mixing_Bowl.png",
+      "file": "19q_Mixing_Bowl.webp",
       "name": "Mixing Bowl",
       "type": "gate",
       "card_class": "copper",
@@ -7697,7 +7697,7 @@
     },
     "swirling_desert": {
       "set_number": "20/48q",
-      "file": "20q_Swirling_Desert.png",
+      "file": "20q_Swirling_Desert.webp",
       "name": "Swirling Desert",
       "type": "gate",
       "card_class": "copper",
@@ -7724,7 +7724,7 @@
     },
     "green_drain": {
       "set_number": "21/48q",
-      "file": "21q_Green_Drain.png",
+      "file": "21q_Green_Drain.webp",
       "name": "Green Drain",
       "type": "gate",
       "card_class": "copper",
@@ -7756,7 +7756,7 @@
     },
     "red_drain": {
       "set_number": "22/48q",
-      "file": "22q_Red_Drain.png",
+      "file": "22q_Red_Drain.webp",
       "name": "Red Drain",
       "type": "gate",
       "card_class": "copper",
@@ -7788,7 +7788,7 @@
     },
     "blue_drain": {
       "set_number": "23/48q",
-      "file": "Blue_Drain_Card.png",
+      "file": "Blue_Drain_Card.webp",
       "name": "Blue Drain",
       "type": "gate",
       "card_class": "copper",
@@ -7820,7 +7820,7 @@
     },
     "angers_gate": {
       "set_number": "24/48q",
-      "file": "24q_Angers_Gate.png",
+      "file": "24q_Angers_Gate.webp",
       "name": "Anger's Gate",
       "type": "gate",
       "card_class": "copper",
@@ -7851,7 +7851,7 @@
     },
     "hot_to_touch": {
       "set_number": "25/48q",
-      "file": "25q_Hot_to_Touch.png",
+      "file": "25q_Hot_to_Touch.webp",
       "name": "Hot to Touch",
       "type": "ability",
       "card_class": "red",
@@ -7881,7 +7881,7 @@
     },
     "lost_jump": {
       "set_number": "26/48q",
-      "file": "26q_Lost_Jump.png",
+      "file": "26q_Lost_Jump.webp",
       "name": "Lost Jump",
       "type": "ability",
       "card_class": "red",
@@ -7912,7 +7912,7 @@
     },
     "mirror_play": {
       "set_number": "27/48q",
-      "file": "27q_Mirror_Play.png",
+      "file": "27q_Mirror_Play.webp",
       "name": "Mirror Play",
       "type": "ability",
       "card_class": "red",
@@ -7943,7 +7943,7 @@
     },
     "spy_plain": {
       "set_number": "28/48q",
-      "file": "28q_Spy_Plain.png",
+      "file": "28q_Spy_Plain.webp",
       "name": "Spy Plain",
       "type": "ability",
       "card_class": "red",
@@ -7975,7 +7975,7 @@
     },
     "moskeeto": {
       "set_number": "29/48q",
-      "file": "29q_Moskeeto.png",
+      "file": "29q_Moskeeto.webp",
       "name": "Moskeeto",
       "type": "ability",
       "card_class": "red",
@@ -8009,7 +8009,7 @@
     },
     "fear_of_the_unique": {
       "set_number": "30/48q",
-      "file": "30q_Fear_ofthe_Unique.png",
+      "file": "30q_Fear_ofthe_Unique.webp",
       "name": "Fear of the Unique",
       "type": "ability",
       "card_class": "red",
@@ -8040,7 +8040,7 @@
     },
     "gate_shift": {
       "set_number": "31/48q",
-      "file": "31q_Gate_Shift.png",
+      "file": "31q_Gate_Shift.webp",
       "name": "Gate Shift",
       "type": "ability",
       "card_class": "red",
@@ -8070,7 +8070,7 @@
     },
     "history_lesson": {
       "set_number": "32/48q",
-      "file": "32q_History_Lesson.png",
+      "file": "32q_History_Lesson.webp",
       "name": "History Lesson",
       "type": "ability",
       "card_class": "red",
@@ -8101,7 +8101,7 @@
     },
     "fire_mana": {
       "set_number": "33/48q",
-      "file": "33q_Fire_Mana.png",
+      "file": "33q_Fire_Mana.webp",
       "name": "Fire Mana",
       "type": "ability",
       "card_class": "blue",
@@ -8132,7 +8132,7 @@
     },
     "soil_mana": {
       "set_number": "34/48q",
-      "file": "34q_Soil_Mana.png",
+      "file": "34q_Soil_Mana.webp",
       "name": "Soil Mana",
       "type": "ability",
       "card_class": "blue",
@@ -8163,7 +8163,7 @@
     },
     "light_mana": {
       "set_number": "35/48q",
-      "file": "35q_Light_Mana.png",
+      "file": "35q_Light_Mana.webp",
       "name": "Light Mana",
       "type": "ability",
       "card_class": "blue",
@@ -8194,7 +8194,7 @@
     },
     "sneak": {
       "set_number": "36/48q",
-      "file": "36q_Sneak.png",
+      "file": "36q_Sneak.webp",
       "name": "Sneak",
       "type": "ability",
       "card_class": "blue",
@@ -8223,7 +8223,7 @@
     },
     "water_gun": {
       "set_number": "37/48q",
-      "file": "37q_Water_Gun.png",
+      "file": "37q_Water_Gun.webp",
       "name": "Water Gun",
       "type": "ability",
       "card_class": "blue",
@@ -8252,7 +8252,7 @@
     },
     "shade": {
       "set_number": "38/48q",
-      "file": "38q_Shade.png",
+      "file": "38q_Shade.webp",
       "name": "Shade",
       "type": "ability",
       "card_class": "blue",
@@ -8289,7 +8289,7 @@
     },
     "pushing_wind": {
       "set_number": "39/48q",
-      "file": "39q_Pushing_Wind.png",
+      "file": "39q_Pushing_Wind.webp",
       "name": "Pushing Wind",
       "type": "ability",
       "card_class": "blue",
@@ -8318,7 +8318,7 @@
     },
     "distracting_friend": {
       "set_number": "40/48q",
-      "file": "40q_Distracting_Friend.png",
+      "file": "40q_Distracting_Friend.webp",
       "name": "Distracting Friend",
       "type": "ability",
       "card_class": "blue",
@@ -8347,7 +8347,7 @@
     },
     "verias": {
       "set_number": "41/48q",
-      "file": "41q_Verias.png",
+      "file": "41q_Verias.webp",
       "name": "Verias",
       "type": "ability",
       "card_class": "green",
@@ -8374,7 +8374,7 @@
     },
     "thunder_wilda": {
       "set_number": "42/48q",
-      "file": "42q_Thunder_Wilda.png",
+      "file": "42q_Thunder_Wilda.webp",
       "name": "Thunder Wilda",
       "type": "ability",
       "card_class": "green",
@@ -8403,7 +8403,7 @@
     },
     "balance_echo": {
       "set_number": "43/48q",
-      "file": "43q_Balance_Echo.png",
+      "file": "43q_Balance_Echo.webp",
       "name": "Balance Echo",
       "type": "ability",
       "card_class": "green",
@@ -8430,7 +8430,7 @@
     },
     "dynamo_charge": {
       "set_number": "44/48q",
-      "file": "44q_Dynamo_Charge.png",
+      "file": "44q_Dynamo_Charge.webp",
       "name": "Dynamo Charge!",
       "type": "ability",
       "card_class": "green",
@@ -8464,7 +8464,7 @@
     },
     "suction_surge": {
       "set_number": "45/48q",
-      "file": "45q_Suction_Surge.png",
+      "file": "45q_Suction_Surge.webp",
       "name": "Suction Surge",
       "type": "ability",
       "card_class": "green",
@@ -8493,7 +8493,7 @@
     },
     "abisomega": {
       "set_number": "46/48q",
-      "file": "46q_Abisomega.png",
+      "file": "46q_Abisomega.webp",
       "name": "Abisomega",
       "type": "ability",
       "card_class": "green",
@@ -8525,7 +8525,7 @@
     },
     "brilliant_night": {
       "set_number": "47/48q",
-      "file": "47q_Brilliant_Night.png",
+      "file": "47q_Brilliant_Night.webp",
       "name": "Brilliant Night",
       "type": "ability",
       "persistent": "owner",
@@ -8566,7 +8566,7 @@
     },
     "dust_devil": {
       "set_number": "48/48q",
-      "file": "48q_Dust_Devil.png",
+      "file": "48q_Dust_Devil.webp",
       "name": "Dust Devil",
       "type": "ability",
       "persistent": "owner",
@@ -8607,7 +8607,7 @@
     },
     "stone_wing_gate": {
       "set_number": "1/48ah",
-      "file": "1ah_Stone_Wing_Gate.png",
+      "file": "1ah_Stone_Wing_Gate.webp",
       "name": "Stone Wing Gate",
       "type": "gate",
       "card_class": "silver",
@@ -8628,7 +8628,7 @@
     },
     "gate_of_rays": {
       "set_number": "2/48ah",
-      "file": "2ah_Gate_of_Rays.png",
+      "file": "2ah_Gate_of_Rays.webp",
       "name": "Gate of Rays",
       "type": "gate",
       "card_class": "silver",
@@ -8649,7 +8649,7 @@
     },
     "baxter_sea": {
       "set_number": "3/48ah",
-      "file": "Baxter_Sea_Card.png",
+      "file": "Baxter_Sea_Card.webp",
       "name": "Baxter Sea",
       "type": "gate",
       "card_class": "silver",
@@ -8670,7 +8670,7 @@
     },
     "carpus_crypt": {
       "set_number": "4/48ah",
-      "file": "Carpus_Crypt_Card.png",
+      "file": "Carpus_Crypt_Card.webp",
       "name": "Carpus Crypt",
       "type": "gate",
       "card_class": "silver",
@@ -8691,7 +8691,7 @@
     },
     "gatecrash": {
       "set_number": "5/48ah",
-      "file": "5ah_Gatecrash.png",
+      "file": "5ah_Gatecrash.webp",
       "name": "Gatecrash",
       "type": "gate",
       "card_class": "silver",
@@ -8712,7 +8712,7 @@
     },
     "sacra_raga": {
       "set_number": "6/48ah",
-      "file": "6ah_Sacra_Raga.png",
+      "file": "6ah_Sacra_Raga.webp",
       "name": "Sacra Raga",
       "type": "gate",
       "card_class": "silver",
@@ -8733,7 +8733,7 @@
     },
     "abbots_cavern": {
       "set_number": "7/48ah",
-      "file": "7ah_Abbots_Cavern.png",
+      "file": "7ah_Abbots_Cavern.webp",
       "name": "Abbot's Cavern",
       "type": "gate",
       "card_class": "silver",
@@ -8754,7 +8754,7 @@
     },
     "gloomicron": {
       "set_number": "8/48ah",
-      "file": "8ah_Gloomicron.png",
+      "file": "8ah_Gloomicron.webp",
       "name": "Gloomicron",
       "type": "gate",
       "card_class": "silver",
@@ -8788,7 +8788,7 @@
     },
     "tyr_sixteen": {
       "set_number": "9/48ah",
-      "file": "9ah_Tyr_Sixteen.png",
+      "file": "9ah_Tyr_Sixteen.webp",
       "name": "Tyr Sixteen",
       "type": "gate",
       "card_class": "gold",
@@ -8818,7 +8818,7 @@
     },
     "garvarion": {
       "set_number": "10/48ah",
-      "file": "10ah_Garvarion.png",
+      "file": "10ah_Garvarion.webp",
       "name": "Garvarion",
       "type": "gate",
       "card_class": "gold",
@@ -8850,7 +8850,7 @@
     },
     "horus_m": {
       "set_number": "11/48ah",
-      "file": "11ah_Horus_M.png",
+      "file": "11ah_Horus_M.webp",
       "name": "Horus M",
       "type": "gate",
       "card_class": "gold",
@@ -8882,7 +8882,7 @@
     },
     "quasar_machine": {
       "set_number": "12/48ah",
-      "file": "12ah_Quasar_Machine.png",
+      "file": "12ah_Quasar_Machine.webp",
       "name": "Quasar Machine",
       "type": "gate",
       "card_class": "gold",
@@ -8914,7 +8914,7 @@
     },
     "myriad_hades": {
       "set_number": "13/48ah",
-      "file": "13ah_Myriad_Hades.png",
+      "file": "13ah_Myriad_Hades.webp",
       "name": "Myriad Hades",
       "type": "gate",
       "card_class": "gold",
@@ -8948,7 +8948,7 @@
     },
     "atmos": {
       "set_number": "14/48ah",
-      "file": "Atmos_Card.png",
+      "file": "Atmos_Card.webp",
       "name": "Atmos",
       "type": "gate",
       "card_class": "gold",
@@ -8978,7 +8978,7 @@
     },
     "gate_mantha": {
       "set_number": "15/48ah",
-      "file": "15ah_Gate_Mantha.png",
+      "file": "15ah_Gate_Mantha.webp",
       "name": "Gate Mantha",
       "type": "gate",
       "card_class": "gold",
@@ -9005,7 +9005,7 @@
     },
     "ultra_dragonoid": {
       "set_number": "16/48ah",
-      "file": "16ah_Ultra_Dragonoid.png",
+      "file": "16ah_Ultra_Dragonoid.webp",
       "name": "Ultra Dragonoid",
       "type": "gate",
       "card_class": "gold",
@@ -9035,7 +9035,7 @@
     },
     "crelos": {
       "set_number": "17/48ah",
-      "file": "Crelos_(NA).png",
+      "file": "Crelos_(NA).webp",
       "name": "Crelos",
       "type": "gate",
       "card_class": "copper",
@@ -9061,7 +9061,7 @@
     },
     "super_phantom": {
       "set_number": "18/48ah",
-      "file": "18ah_Super_Phantom.png",
+      "file": "18ah_Super_Phantom.webp",
       "name": "Super Phantom",
       "type": "gate",
       "card_class": "copper",
@@ -9091,7 +9091,7 @@
     },
     "flux_chamber": {
       "set_number": "19/48ah",
-      "file": "19ah_Flux_Chamber.png",
+      "file": "19ah_Flux_Chamber.webp",
       "name": "Flux Chamber",
       "type": "gate",
       "card_class": "copper",
@@ -9128,7 +9128,7 @@
     },
     "adamantine_seal": {
       "set_number": "20/48ah",
-      "file": "20ah_Adamantine_Seal.png",
+      "file": "20ah_Adamantine_Seal.webp",
       "name": "Adamantine Seal",
       "type": "gate",
       "card_class": "copper",
@@ -9159,7 +9159,7 @@
     },
     "titanium_seal": {
       "set_number": "21/48ah",
-      "file": "21ah_Titanium_Seal.png",
+      "file": "21ah_Titanium_Seal.webp",
       "name": "Titanium Seal",
       "type": "gate",
       "card_class": "copper",
@@ -9190,7 +9190,7 @@
     },
     "carbon_seal": {
       "set_number": "22/48ah",
-      "file": "Carbon_Seal_Card.png",
+      "file": "Carbon_Seal_Card.webp",
       "name": "Carbon Seal",
       "type": "gate",
       "card_class": "copper",
@@ -9221,7 +9221,7 @@
     },
     "haunted_castle": {
       "set_number": "23/48ah",
-      "file": "23ah_Haunted_Castle.png",
+      "file": "23ah_Haunted_Castle.webp",
       "name": "Haunted Castle",
       "type": "gate",
       "card_class": "copper",
@@ -9248,7 +9248,7 @@
     },
     "dragonoid_nexus": {
       "set_number": "24/48ah",
-      "file": "24ah_Dragonoid_Nexus.png",
+      "file": "24ah_Dragonoid_Nexus.webp",
       "name": "Dragonoid Nexus",
       "type": "gate",
       "card_class": "copper",
@@ -9274,7 +9274,7 @@
     },
     "guard_hammer": {
       "set_number": "25/48ah",
-      "file": "25ah_Guard_Hammer.png",
+      "file": "25ah_Guard_Hammer.webp",
       "name": "Guard Hammer",
       "type": "ability",
       "card_class": "red",
@@ -9304,7 +9304,7 @@
     },
     "moon_lance": {
       "set_number": "26/48ah",
-      "file": "26ah_Moon_Lance.png",
+      "file": "26ah_Moon_Lance.webp",
       "name": "Moon Lance",
       "type": "ability",
       "card_class": "red",
@@ -9334,7 +9334,7 @@
     },
     "skull_shogun": {
       "set_number": "27/48ah",
-      "file": "27ah_Skull_Shogun.png",
+      "file": "27ah_Skull_Shogun.webp",
       "name": "Skull Shogun",
       "type": "ability",
       "card_class": "red",
@@ -9363,7 +9363,7 @@
     },
     "spirit_sabre": {
       "set_number": "28/48ah",
-      "file": "28ah_Spirit_Sabre.png",
+      "file": "28ah_Spirit_Sabre.webp",
       "name": "Spirit Sabre",
       "type": "ability",
       "card_class": "red",
@@ -9392,7 +9392,7 @@
     },
     "great_mountain_breaker": {
       "set_number": "29/48ah",
-      "file": "29ah_Great_Mountain_Breaker.png",
+      "file": "29ah_Great_Mountain_Breaker.webp",
       "name": "Great Mountain Breaker",
       "type": "ability",
       "card_class": "red",
@@ -9434,7 +9434,7 @@
     "wind_blade": {
       "set_number": "30/48ah",
       "printed_set_number": "29/48ah",
-      "file": "29ah_Wind_Blade.png",
+      "file": "29ah_Wind_Blade.webp",
       "name": "Wind Blade",
       "type": "ability",
       "card_class": "red",
@@ -9477,7 +9477,7 @@
     },
     "water_blade": {
       "set_number": "31/48ah",
-      "file": "31ah_Water_Blade.png",
+      "file": "31ah_Water_Blade.webp",
       "name": "Water Blade",
       "type": "ability",
       "card_class": "red",
@@ -9512,7 +9512,7 @@
     },
     "fire_blade": {
       "set_number": "32/48ah",
-      "file": "32ah_Fire_Blade.png",
+      "file": "32ah_Fire_Blade.webp",
       "name": "Fire Blade",
       "type": "ability",
       "card_class": "red",
@@ -9547,7 +9547,7 @@
     },
     "quaking_phoenix": {
       "set_number": "33/48ah",
-      "file": "33ah_Quaking_Phoenix.png",
+      "file": "33ah_Quaking_Phoenix.webp",
       "name": "Quaking Phoenix",
       "type": "ability",
       "card_class": "blue",
@@ -9577,7 +9577,7 @@
     },
     "granite_gauntlet": {
       "set_number": "34/48ah",
-      "file": "34ah_Granite_Gauntlet.png",
+      "file": "34ah_Granite_Gauntlet.webp",
       "name": "Granite Gauntlet",
       "type": "ability",
       "card_class": "blue",
@@ -9607,7 +9607,7 @@
     },
     "shadow_avatar": {
       "set_number": "35/48ah",
-      "file": "35ah_Shadow_Avatar.png",
+      "file": "35ah_Shadow_Avatar.webp",
       "name": "Shadow Avatar",
       "type": "ability",
       "card_class": "blue",
@@ -9637,7 +9637,7 @@
     },
     "teamwork_haos": {
       "set_number": "36/48ah",
-      "file": "36ah_Teamwork_Haos.png",
+      "file": "36ah_Teamwork_Haos.webp",
       "name": "Teamwork Haos",
       "type": "ability",
       "card_class": "blue",
@@ -9670,7 +9670,7 @@
     },
     "teamwork_aquos": {
       "set_number": "37/48ah",
-      "file": "37ah_Teamwork_Aquos.png",
+      "file": "37ah_Teamwork_Aquos.webp",
       "name": "Teamwork Aquos",
       "type": "ability",
       "card_class": "blue",
@@ -9703,7 +9703,7 @@
     },
     "teamwork_ventus": {
       "set_number": "38/48ah",
-      "file": "38ah_Teamwork_Ventus.png",
+      "file": "38ah_Teamwork_Ventus.webp",
       "name": "Teamwork Ventus",
       "type": "ability",
       "card_class": "blue",
@@ -9736,7 +9736,7 @@
     },
     "lightning_berserker": {
       "set_number": "39/48ah",
-      "file": "39ah_Lightning_Berserker.png",
+      "file": "39ah_Lightning_Berserker.webp",
       "name": "Lightning Berserker",
       "type": "ability",
       "card_class": "blue",
@@ -9766,7 +9766,7 @@
     },
     "timber_berserker": {
       "set_number": "40/48ah",
-      "file": "40ah_Timber_Berserker.png",
+      "file": "40ah_Timber_Berserker.webp",
       "name": "Timber Berserker",
       "type": "ability",
       "card_class": "blue",
@@ -9796,7 +9796,7 @@
     },
     "anemoys_call": {
       "set_number": "41/48ah",
-      "file": "41ah_Anemoys_Call.png",
+      "file": "41ah_Anemoys_Call.webp",
       "name": "Anemoy's Call",
       "type": "ability",
       "card_class": "green",
@@ -9834,7 +9834,7 @@
     },
     "hefestus_call": {
       "set_number": "42/48ah",
-      "file": "42ah_Hefestus_Call.png",
+      "file": "42ah_Hefestus_Call.webp",
       "name": "Hefestus' Call",
       "type": "ability",
       "card_class": "green",
@@ -9872,7 +9872,7 @@
     },
     "posidons_call": {
       "set_number": "43/48ah",
-      "file": "43ah_Posidons_Call.png",
+      "file": "43ah_Posidons_Call.webp",
       "name": "Posidon's Call",
       "type": "ability",
       "card_class": "green",
@@ -9910,7 +9910,7 @@
     },
     "banish_trickery": {
       "set_number": "44/48ah",
-      "file": "44ah_Banish_Trickery.png",
+      "file": "44ah_Banish_Trickery.webp",
       "name": "Banish Trickery",
       "type": "ability",
       "card_class": "green",
@@ -9939,7 +9939,7 @@
     },
     "relish_victory": {
       "set_number": "45/48ah",
-      "file": "45ah_Relish_Victory.png",
+      "file": "45ah_Relish_Victory.webp",
       "name": "Relish Victory",
       "type": "ability",
       "card_class": "green",
@@ -9981,7 +9981,7 @@
     },
     "freezer": {
       "set_number": "46/48ah",
-      "file": "46ah_Freezer.png",
+      "file": "46ah_Freezer.webp",
       "name": "Freezer",
       "type": "ability",
       "card_class": "green",
@@ -10017,7 +10017,7 @@
     },
     "whiplash_2": {
       "set_number": "47/48ah",
-      "file": "Whiplash_card.png",
+      "file": "Whiplash_card.webp",
       "name": "Whiplash",
       "type": "ability",
       "card_class": "green",
@@ -10056,7 +10056,7 @@
     },
     "stug": {
       "set_number": "48/48ah",
-      "file": "48ah_Stug.png",
+      "file": "48ah_Stug.webp",
       "name": "Stug",
       "type": "ability",
       "card_class": "green",
