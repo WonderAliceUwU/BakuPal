@@ -1285,6 +1285,7 @@ Future<void> loadAvailableBakugans() async {
       rootBundle,
     );
     final allAssetPaths = manifest.listAssets().toList();
+    _indexCartoonSprites(allAssetPaths);
     final modelAssetPaths = allAssetPaths.where((String key) {
       return key.startsWith(_seasonOneModelsRoot) ||
           key.startsWith(_seasonTwoModelsRoot);

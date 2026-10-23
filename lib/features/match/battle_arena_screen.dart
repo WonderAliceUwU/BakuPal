@@ -463,10 +463,16 @@ class _BattleArenaScreenState extends State<BattleArenaScreen>
             showGridBackground: false,
             mirrorImage: isLeft,
             illustrationAssetPath: illustrationPath,
+            // Without an illustration, cartoon mode shows the sprite.
+            cartoonWhenLarge: true,
             showIllustrationShadow: true,
             illustrationShadowOffset: const Offset(28, 30),
             illustrationShadowOpacity: 0.58,
             illustrationShadowBlur: 16,
+            // Each illustration file is cropped to this 500x760 frame, so it
+            // is drawn over the whole frame as it is. The name label covers
+            // the top ~70 px and the G-Power footer the bottom 76 px.
+            illustrationFillsFrame: true,
             visualScaleOverride: 1.55,
             // Without an illustration (3D model): a bit lower in the frame.
             modelOffsetOverride: const Offset(0, 24),

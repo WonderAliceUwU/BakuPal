@@ -114,8 +114,74 @@ flutter:
     - assets/images/bakugan/tentaclear/
     - assets/images/bakugan/warius/
     - assets/images/bakugan/wired/
-    # Pyrus Dragonoid ball, emblem of the Bakugan inventory
-    - assets/models/Balls_cartoon/Season 1/DragoP.png
+    # Cartoon ball sprites (<attribute>.png) next to each model
+    - assets/models/Season_1_Battle_Brawlers/Alpha_Hydranoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Apollonir/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Battle_Ax_Vladitor/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Bee_Striker/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Blade_Tigrerra/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Centipoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Clayf/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Cycloid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Delta_Dragonoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Dragonoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Dual_Hydranoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/El_Condor/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Exedra/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Falconeer/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Fear_Ripper/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Fifth_Paladin/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Fourtress/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Frosch/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Gargonoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Gorem/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Griffon/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Hammer_Gorem/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Harpus/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Hydranoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Hynoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Juggernoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Lars_Lion/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Laserman/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Leonidas/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Limulus/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Manion/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Mantris/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Mecha_Chamelia/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Monarus/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Naga/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Oberus/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Omega_Leonidas/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Preyas/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Preyas_II_Angelo/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Preyas_II_Diablo/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Rattleoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Ravenoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Reaper/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Robotallion/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Saurus/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Serpenoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Siege/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Silent_Naga/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Sirenoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Skyress/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Stinglash/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Storm_Skyress/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Tentaclear/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Terrorclaw/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Tigrerra/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Tuskor/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Ultimate_Dragonoid/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Vladitor/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Warius/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Wavern/Cartoon/
+    - assets/models/Season_1_Battle_Brawlers/Wormquake/Cartoon/
+    - assets/models/Season_2_New_Vestroia/Fencer/Cartoon/
+    - assets/models/Season_2_New_Vestroia/Leefram/Cartoon/
+    - assets/models/Season_2_New_Vestroia/MAC_Spider/Cartoon/
+    - assets/models/Season_2_New_Vestroia/Nemus/Cartoon/
+    - assets/models/Season_2_New_Vestroia/Neo_Dragonoid/Cartoon/
+    - assets/models/Season_2_New_Vestroia/Wired/Cartoon/
     # Modelos OBJ y texturas normales por temporada
     - assets/models/Season_1_Battle_Brawlers/Alpha_Hydranoid/
     - assets/models/Season_1_Battle_Brawlers/Apollonir/

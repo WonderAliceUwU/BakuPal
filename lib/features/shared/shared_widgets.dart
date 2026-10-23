@@ -320,6 +320,12 @@ class BakuganPreview extends StatefulWidget {
   final bool showGridBackground;
   final double? gridOpacityOverride;
   final bool showIllustrationShadow;
+  // Large previews keep the 3D model in cartoon mode; this lets one use the
+  // cartoon sprite instead (the arena, when the Bakugan has no illustration).
+  final bool cartoonWhenLarge;
+  // The illustration file is already cropped to the frame: it is drawn over
+  // the whole frame as it is, ignoring the visual scale, alignment and padding.
+  final bool illustrationFillsFrame;
   final Offset illustrationShadowOffset;
   final double illustrationShadowOpacity;
   final double illustrationShadowBlur;
@@ -350,6 +356,8 @@ class BakuganPreview extends StatefulWidget {
     this.showGridBackground = true,
     this.gridOpacityOverride,
     this.showIllustrationShadow = false,
+    this.cartoonWhenLarge = false,
+    this.illustrationFillsFrame = false,
     this.illustrationShadowOffset = const Offset(14, 18),
     this.illustrationShadowOpacity = 0.42,
     this.illustrationShadowBlur = 10,
@@ -562,12 +570,9 @@ class _BakuganPreviewState extends State<BakuganPreview>
                     Positioned.fill(
                       child: Opacity(
                         opacity: widget.isTaken ? 0.2 : 1.0,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            bottom: widget.isLarge ? 65 : 20,
-                          ),
-                          child: _buildPreviewVisual(),
-                        ),
+                        child: widget.illustrationFillsFrame
+                            ? _buildPreviewVisual()
+                            : _padVisual(_buildPreviewVisual()),
                       ),
                     ),
 
@@ -637,6 +642,14 @@ class _BakuganPreviewState extends State<BakuganPreview>
     ).then((manifest) => manifest.listAssets().toSet());
   }
 
+  // Keeps the visual clear of the footer.
+  Widget _padVisual(Widget child) {
+    return Padding(
+      padding: EdgeInsets.only(bottom: widget.isLarge ? 65 : 20),
+      child: child,
+    );
+  }
+
   Widget _buildPreviewVisual() {
     final illustrationAssetPath = widget.illustrationAssetPath;
     if (illustrationAssetPath == null) return _buildPreviewVisualChecked();
@@ -650,7 +663,9 @@ class _BakuganPreviewState extends State<BakuganPreview>
       builder: (context, snapshot) {
         if (!snapshot.hasData) return const SizedBox.shrink();
         if (!snapshot.data!.contains(illustrationAssetPath)) {
-          return _buildModel();
+          return widget.illustrationFillsFrame
+              ? _padVisual(_buildModel())
+              : _buildModel();
         }
         return _buildPreviewVisualChecked();
       },
@@ -659,22 +674,30 @@ class _BakuganPreviewState extends State<BakuganPreview>
 
   Widget _buildPreviewVisualChecked() {
     final illustrationAssetPath = widget.illustrationAssetPath;
+    if (illustrationAssetPath != null && widget.illustrationFillsFrame) {
+      return _buildFramedIllustration(illustrationAssetPath);
+    }
     if (illustrationAssetPath != null) {
       final padding = widget.visualPaddingOverride ?? _illustrationPadding;
       final alignment =
           widget.visualAlignmentOverride ?? _illustrationAlignment;
       final scale = widget.visualScaleOverride ?? _illustrationScale;
+      // Mirrored like the sprites: the illustrations look left, so on the
+      // left side they are turned to face the opponent. The shadow keeps its
+      // offset, so the light still comes from the same side.
       Widget buildIllustration({bool includeKey = false}) {
-        return Image.asset(
-          illustrationAssetPath,
-          key: includeKey
-              ? ValueKey(
-                  'illustration_${illustrationAssetPath}_${widget.isLarge}',
-                )
-              : null,
-          fit: BoxFit.contain,
-          filterQuality: FilterQuality.high,
-          errorBuilder: (context, error, stackTrace) => _buildModel(),
+        return _wrapPngImage(
+          Image.asset(
+            illustrationAssetPath,
+            key: includeKey
+                ? ValueKey(
+                    'illustration_${illustrationAssetPath}_${widget.isLarge}_${widget.mirrorImage}',
+                  )
+                : null,
+            fit: BoxFit.contain,
+            filterQuality: FilterQuality.high,
+            errorBuilder: (context, error, stackTrace) => _buildModel(),
+          ),
         );
       }
 
@@ -727,7 +750,89 @@ class _BakuganPreviewState extends State<BakuganPreview>
     return _buildModel();
   }
 
+  Widget _buildFramedIllustration(String path) {
+    Widget buildIllustration({bool includeKey = false}) {
+      return _wrapPngImage(
+        Image.asset(
+          path,
+          key: includeKey
+              ? ValueKey('illustration_${path}_${widget.mirrorImage}')
+              : null,
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.high,
+          errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+        ),
+      );
+    }
+
+    // The file covers the frame plus a bleed on each side, so the slanted
+    // corners of the frame still show the drawing.
+    return IgnorePointer(
+      child: _unskewPreviewContent(
+        LayoutBuilder(
+          builder: (context, constraints) => OverflowBox(
+            minWidth: constraints.maxWidth * _illustrationBleedWidth,
+            maxWidth: constraints.maxWidth * _illustrationBleedWidth,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                if (widget.showIllustrationShadow)
+                  Transform.translate(
+                    offset: widget.illustrationShadowOffset,
+                    child: Opacity(
+                      opacity: (widget.illustrationShadowOpacity + 0.18).clamp(
+                        0.0,
+                        1.0,
+                      ),
+                      child: ImageFiltered(
+                        imageFilter: ImageFilter.blur(
+                          sigmaX: widget.illustrationShadowBlur / 2,
+                          sigmaY: widget.illustrationShadowBlur / 2,
+                        ),
+                        child: ColorFiltered(
+                          colorFilter: const ColorFilter.mode(
+                            Colors.black,
+                            BlendMode.srcATop,
+                          ),
+                          child: buildIllustration(),
+                        ),
+                      ),
+                    ),
+                  ),
+                buildIllustration(includeKey: true),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Width of the illustration files relative to the frame: 120 px of bleed on
+  // each side of the 500 px frame, so wide drawings reach the slanted corners.
+  static const double _illustrationBleedWidth = 740 / 500;
+
   Widget _buildModel({bool isDeck = false}) {
+    return ListenableBuilder(
+      listenable: PreviewStyleController.instance,
+      builder: (context, _) {
+        // The sprites replace only the small previews: the large ones keep
+        // the 3D model unless they ask for the sprite.
+        final spritePath =
+            (!widget.isLarge || widget.cartoonWhenLarge) &&
+                PreviewStyleController.instance.style ==
+                    BakuganPreviewStyle.cartoon
+            ? cartoonSpritePathFor(widget.variant)
+            : null;
+        if (spritePath != null) {
+          return _buildPngImage(spritePath, isCartoonSprite: true);
+        }
+        return _build3DModel(isDeck: isDeck);
+      },
+    );
+  }
+
+  Widget _build3DModel({bool isDeck = false}) {
     if (_usesObjViewer) {
       return IgnorePointer(
         ignoring: isDeck || widget.disableInteraction || !widget.isLarge,
@@ -770,37 +875,7 @@ class _BakuganPreviewState extends State<BakuganPreview>
       );
     }
 
-    if (!_uses3DViewer) {
-      final padding = widget.visualPaddingOverride ?? _pngPadding;
-      final alignment = widget.visualAlignmentOverride ?? _pngAlignment;
-      final scale = widget.visualScaleOverride ?? _pngScale;
-      return IgnorePointer(
-        ignoring: true,
-        child: Padding(
-          padding: padding,
-          child: _unskewPreviewContent(
-            Align(
-              alignment: alignment,
-              child: Transform.scale(
-                scale: scale,
-                child: _wrapPngImage(
-                  Image.asset(
-                    widget.variant.modelPath,
-                    key: ValueKey(
-                      'image_${widget.variant.modelPath}_${widget.isLarge}_${widget.mirrorImage}',
-                    ),
-                    fit: BoxFit.contain,
-                    filterQuality: FilterQuality.high,
-                    errorBuilder: (context, error, stackTrace) =>
-                        const SizedBox.shrink(),
-                  ),
-                ),
-              ),
-            ),
-          ),
-        ),
-      );
-    }
+    if (!_uses3DViewer) return _buildPngImage(widget.variant.modelPath);
 
     return IgnorePointer(
       ignoring: isDeck || widget.disableInteraction || !widget.isLarge,
@@ -822,6 +897,45 @@ class _BakuganPreviewState extends State<BakuganPreview>
           debugLogging: false,
           onWebViewCreated: (controller) =>
               unawaited(_makeWindowsModelViewTransparent(controller)),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPngImage(String path, {bool isCartoonSprite = false}) {
+    final padding = widget.visualPaddingOverride ?? _pngPadding;
+    // The scale and alignment overrides are tuned for the illustrations, which
+    // are cropped tighter than the sprites: a large sprite keeps its own.
+    final keepsOwnFraming = isCartoonSprite && widget.isLarge;
+    final alignment = keepsOwnFraming
+        ? const Alignment(0, 0.4)
+        : widget.visualAlignmentOverride ?? _pngAlignment;
+    final scale = keepsOwnFraming
+        ? 1.0
+        : widget.visualScaleOverride ?? _pngScale;
+    return IgnorePointer(
+      ignoring: true,
+      child: Padding(
+        padding: padding,
+        child: _unskewPreviewContent(
+          Align(
+            alignment: alignment,
+            child: Transform.scale(
+              scale: scale,
+              child: _wrapPngImage(
+                Image.asset(
+                  path,
+                  key: ValueKey(
+                    'image_${path}_${widget.isLarge}_${widget.mirrorImage}',
+                  ),
+                  fit: BoxFit.contain,
+                  filterQuality: FilterQuality.high,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const SizedBox.shrink(),
+                ),
+              ),
+            ),
+          ),
         ),
       ),
     );

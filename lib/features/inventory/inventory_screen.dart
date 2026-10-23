@@ -247,7 +247,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                         // The ball has a lot of empty margin: draw it bigger.
                         scale: 1.35,
                         child: Image.asset(
-                          'assets/models/Balls_cartoon/Season 1/DragoP.png',
+                          'assets/models/Season_1_Battle_Brawlers/Dragonoid/Cartoon/pyrus.png',
                           fit: BoxFit.contain,
                         ),
                       ),
@@ -279,7 +279,7 @@ class _InventoryScreenState extends State<InventoryScreen> {
                           // The ball has a lot of empty margin: draw it bigger.
                           scale: 1.35,
                           child: Image.asset(
-                            'assets/models/Balls_cartoon/Season 1/DragoP.png',
+                            'assets/models/Season_1_Battle_Brawlers/Dragonoid/Cartoon/pyrus.png',
                             fit: BoxFit.contain,
                           ),
                         ),
