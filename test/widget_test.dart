@@ -111,7 +111,7 @@ void main() {
     expect(
       fencer.variants.map((variant) => variant.modelPath),
       contains(
-        'assets/models/Season_2_New_Vestroia/Fencer/fencer_aquos_550g.png',
+        'assets/models/Season_2_New_Vestroia/Fencer/fencer_aquos_550g.webp',
       ),
     );
 
@@ -152,7 +152,7 @@ void main() {
     expect(
       silentNaga.variants.map((variant) => variant.texturePath),
       contains(
-        'assets/models/Season_1_Battle_Brawlers/Silent_Naga/Textures/Cores/Pyrus Silent Naga.png',
+        'assets/models/Season_1_Battle_Brawlers/Silent_Naga/Textures/Cores/Pyrus Silent Naga.webp',
       ),
     );
   });

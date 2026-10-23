@@ -1190,7 +1190,8 @@ int _visualModelPriority(String path) {
 
 bool _isNormalTexture(String path) {
   final lowerPath = path.toLowerCase();
-  if (!lowerPath.endsWith('.png') &&
+  if (!lowerPath.endsWith('.webp') &&
+      !lowerPath.endsWith('.png') &&
       !lowerPath.endsWith('.jpg') &&
       !lowerPath.endsWith('.jpeg')) {
     return false;
@@ -1441,7 +1442,8 @@ void _loadStage3LegacyImageModels(
 ) {
   for (final path in modelAssetPaths) {
     final lowerPath = path.toLowerCase();
-    if (!lowerPath.endsWith('.png') &&
+    if (!lowerPath.endsWith('.webp') &&
+        !lowerPath.endsWith('.png') &&
         !lowerPath.endsWith('.jpg') &&
         !lowerPath.endsWith('.jpeg')) {
       continue;
@@ -1497,7 +1499,7 @@ Future<void> _loadFallback() async {
           modelPath:
               'assets/models/Season_1_Battle_Brawlers/Dragonoid/Dragonoid Stand.obj',
           texturePath:
-              'assets/models/Season_1_Battle_Brawlers/Dragonoid/Textures/Core/Pyrus Dragonoid.png',
+              'assets/models/Season_1_Battle_Brawlers/Dragonoid/Textures/Core/Pyrus Dragonoid.webp',
           color: Colors.red,
           gPower: _gPowerFor('Dragonoid', 'pyrus'),
           speciesName: 'Dragonoid',
