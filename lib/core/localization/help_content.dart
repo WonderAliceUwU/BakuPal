@@ -277,109 +277,45 @@ const Map<String, _HelpTopic> _helpTopics = {
   ),
 };
 
-Future<void> _openHelpDialog(String topicId) async {
-  final topic = _helpTopics[topicId];
-  final navigatorContext = _appNavigatorKey.currentContext;
-  if (topic == null || navigatorContext == null) return;
-
-  _isAppSettingsOpen.value = true;
-  try {
-    await showGeneralDialog<void>(
-      context: navigatorContext,
-      barrierDismissible: true,
-      barrierLabel: 'Help',
-      barrierColor: Colors.black.withValues(alpha: 0.55),
-      transitionDuration: const Duration(milliseconds: 220),
-      pageBuilder: (context, animation, secondaryAnimation) {
-        return Material(
-          type: MaterialType.transparency,
-          child: Stack(
-            children: [
-              Positioned.fill(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
-                  child: Container(color: Colors.black.withValues(alpha: 0.35)),
-                ),
-              ),
-              Center(child: _HelpDialog(topic: topic)),
-            ],
-          ),
-        );
-      },
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        final curvedAnimation = CurvedAnimation(
-          parent: animation,
-          curve: Curves.easeOutBack,
-        );
-        return FadeTransition(
-          opacity: animation,
-          child: ScaleTransition(scale: curvedAnimation, child: child),
-        );
-      },
-    );
-  } finally {
-    _isAppSettingsOpen.value = false;
-  }
-}
-
-class _HelpDialog extends StatelessWidget {
+class _HelpTipsList extends StatelessWidget {
   final _HelpTopic topic;
+  final AppLanguage language;
 
-  const _HelpDialog({required this.topic});
+  const _HelpTipsList({required this.topic, required this.language});
 
   @override
   Widget build(BuildContext context) {
-    final language = LanguageController.instance.uiLanguage;
-
-    return BakuganModal(
-      title: topic.title(language),
-      icon: Icons.help_outline_rounded,
-      accentColor: Colors.amberAccent,
-      width: 900,
-      // The modal is skewed, so content needs extra side padding or its
-      // corners get clipped by the slanted edges.
-      contentPadding: const EdgeInsets.fromLTRB(80, 0, 80, 36),
-      edgePadding: const EdgeInsets.symmetric(horizontal: 40),
-      insetPadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 24),
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.6,
-        ),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              for (final tip in topic.tips)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 16),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Padding(
-                        padding: EdgeInsets.only(top: 3, right: 12),
-                        child: Icon(
-                          Icons.arrow_right_rounded,
-                          color: Colors.amberAccent,
-                          size: 22,
-                        ),
-                      ),
-                      Expanded(
-                        child: Text(
-                          tip.of(language),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 19,
-                            height: 1.35,
-                          ),
-                        ),
-                      ),
-                    ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final tip in topic.tips)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 3, right: 12),
+                  child: Icon(
+                    Icons.arrow_right_rounded,
+                    color: Colors.amberAccent,
+                    size: 22,
                   ),
                 ),
-            ],
+                Expanded(
+                  child: Text(
+                    tip.of(language),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 19,
+                      height: 1.35,
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ),
+      ],
     );
   }
 }

@@ -241,6 +241,9 @@ class AppLocalizations {
   String get backupImport => isEs ? 'COPIA / IMPORTAR' : 'BACKUP / IMPORT';
   String get help => isEs ? 'AYUDA' : 'HELP';
   String get automation => isEs ? 'AUTOMATIZACIÓN' : 'AUTOMATION';
+  String get previewStyle => isEs ? 'PREVIEWS' : 'PREVIEWS';
+  String get generalTab => 'GENERAL';
+  String get matchTab => isEs ? 'PARTIDA' : 'MATCH';
   String get settingsTitle => isEs ? 'AJUSTES' : 'SETTINGS';
   String get volume => isEs ? 'VOLUMEN' : 'VOLUME';
   String get languageLabel => isEs ? 'IDIOMA' : 'LANGUAGE';
