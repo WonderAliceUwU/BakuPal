@@ -36,6 +36,7 @@ part 'core/automation/automation.dart';
 part 'core/data/models.dart';
 part 'core/data/cards.dart';
 part 'core/data/preview_style.dart';
+part 'core/settings_storage.dart';
 part 'features/menu/menu_screens.dart';
 part 'features/inventory/inventory_screen.dart';
 part 'features/selection/character_select_screen.dart';
@@ -95,6 +96,7 @@ void main() async {
   await LanguageController.instance.init();
   await AutomationController.instance.init();
   await PreviewStyleController.instance.init();
+  await AppVolumeController.instance.init();
   await SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
   runApp(const BakuganApp());
 }

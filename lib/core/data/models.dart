@@ -467,6 +467,9 @@ class LeaderboardStore {
   final List<LeaderboardSeason> archivedSeasons;
   final List<MatchHistoryEntry> matchHistory;
   final BakuganInventoryState bakuganInventory;
+  // App settings (language, automation, previews, volume) by key, so they
+  // travel with the exported savegame.
+  final Map<String, dynamic> settings;
 
   const LeaderboardStore({
     required this.currentSeasonNumber,
@@ -475,6 +478,7 @@ class LeaderboardStore {
     this.archivedSeasons = const [],
     this.matchHistory = const [],
     this.bakuganInventory = const BakuganInventoryState(),
+    this.settings = const {},
   });
 
   factory LeaderboardStore.fromJson(Map<String, dynamic> json) {
@@ -512,6 +516,9 @@ class LeaderboardStore {
       bakuganInventory: BakuganInventoryState.fromJson(
         json['bakuganInventory'],
       ),
+      settings: json['settings'] is Map
+          ? Map<String, dynamic>.from(json['settings'] as Map)
+          : const {},
     );
   }
 
@@ -522,6 +529,7 @@ class LeaderboardStore {
     'archivedSeasons': archivedSeasons.map((entry) => entry.toJson()).toList(),
     'matchHistory': matchHistory.map((entry) => entry.toJson()).toList(),
     'bakuganInventory': bakuganInventory.toJson(),
+    'settings': settings,
   };
 
   LeaderboardStore copyWith({
@@ -531,6 +539,7 @@ class LeaderboardStore {
     List<LeaderboardSeason>? archivedSeasons,
     List<MatchHistoryEntry>? matchHistory,
     BakuganInventoryState? bakuganInventory,
+    Map<String, dynamic>? settings,
   }) {
     return LeaderboardStore(
       currentSeasonNumber: currentSeasonNumber ?? this.currentSeasonNumber,
@@ -539,6 +548,7 @@ class LeaderboardStore {
       archivedSeasons: archivedSeasons ?? this.archivedSeasons,
       matchHistory: matchHistory ?? this.matchHistory,
       bakuganInventory: bakuganInventory ?? this.bakuganInventory,
+      settings: settings ?? this.settings,
     );
   }
 }
@@ -1371,6 +1381,20 @@ class LeaderboardRepository {
     return _persistStore(store.copyWith(bakuganInventory: inventory));
   }
 
+  // Settings changes come in bursts (the volume slider): saving them one after
+  // the other keeps a later read from missing an earlier write.
+  Future<void> _settingsWrites = Future.value();
+
+  /// Merges [changes] into the saved app settings.
+  Future<void> saveSettings(Map<String, dynamic> changes) {
+    return _settingsWrites = _settingsWrites.then((_) async {
+      final store = await loadStore();
+      await _persistStore(
+        store.copyWith(settings: {...store.settings, ...changes}),
+      );
+    });
+  }
+
   LeaderboardStore _defaultStore() {
     return LeaderboardStore(
       currentSeasonNumber: _currentSeasonNumber,
@@ -1448,6 +1472,7 @@ class LeaderboardRepository {
       matchHistory: List<MatchHistoryEntry>.from(store.matchHistory)
         ..sort((a, b) => b.playedAt.compareTo(a.playedAt)),
       bakuganInventory: store.bakuganInventory.normalized(),
+      settings: store.settings,
     );
   }
 

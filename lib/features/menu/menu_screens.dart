@@ -716,6 +716,7 @@ class _MainMenuScreenState extends State<MainMenuScreen> {
         return;
       }
       await LeaderboardRepository.instance.importFromFile(selectedPath);
+      await applyImportedAppSettings();
       if (!mounted) return;
       await _playUiConfirmSound();
       messenger

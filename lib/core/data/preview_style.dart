@@ -43,35 +43,27 @@ class PreviewStyleController extends ChangeNotifier {
 
   Future<void> init() async {
     if (_initialized) return;
-    try {
-      final file = await _settingsFile();
-      if (await file.exists()) {
-        final data = jsonDecode(await file.readAsString());
-        if (data is Map) {
-          final saved = data['style']?.toString();
-          for (final style in BakuganPreviewStyle.values) {
-            if (style.code == saved) _style = style;
-          }
-        }
-      }
-    } catch (_) {}
+    _readSettings(await _loadAppSettings());
     _initialized = true;
     notifyListeners();
   }
 
-  Future<File> _settingsFile() async {
-    final dir = await getApplicationSupportDirectory();
-    return File('${dir.path}/bakugan_preview_style_settings.json');
+  void applySettings(Map<String, dynamic> settings) {
+    _readSettings(settings);
+    notifyListeners();
+  }
+
+  void _readSettings(Map<String, dynamic> settings) {
+    for (final style in BakuganPreviewStyle.values) {
+      if (style.code == settings['previewStyle']) _style = style;
+    }
   }
 
   Future<void> setStyle(BakuganPreviewStyle style) async {
     if (_style == style) return;
     _style = style;
     notifyListeners();
-    try {
-      final file = await _settingsFile();
-      await file.writeAsString(jsonEncode({'style': style.code}));
-    } catch (_) {}
+    await _saveAppSettings({'previewStyle': style.code});
   }
 }
 

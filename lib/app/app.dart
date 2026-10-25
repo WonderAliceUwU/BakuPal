@@ -123,6 +123,26 @@ class AppVolumeController extends ChangeNotifier {
   bool get isMuted => _isMuted;
   double get effectiveVolume => _isMuted ? 0 : _volume;
 
+  Timer? _saveTimer;
+
+  Future<void> init() async => applySettings(await _loadAppSettings());
+
+  Future<void> applySettings(Map<String, dynamic> settings) async {
+    final volume = settings['volume'];
+    if (volume is num) _volume = volume.toDouble().clamp(0, 1).toDouble();
+    if (settings['muted'] is bool) _isMuted = settings['muted'] as bool;
+    notifyListeners();
+    await _applyVolume();
+  }
+
+  // The slider calls setVolume on every move: save once it settles.
+  void _scheduleSave() {
+    _saveTimer?.cancel();
+    _saveTimer = Timer(const Duration(milliseconds: 400), () {
+      unawaited(_saveAppSettings({'volume': _volume, 'muted': _isMuted}));
+    });
+  }
+
   void register(AudioPlayer player, {double baseVolume = 1}) {
     _baseVolumes[player] = baseVolume;
     unawaited(player.setVolume(baseVolume * effectiveVolume));
@@ -158,12 +178,14 @@ class AppVolumeController extends ChangeNotifier {
     _volume = value.clamp(0, 1).toDouble();
     if (_volume > 0) _isMuted = false;
     notifyListeners();
+    _scheduleSave();
     await _applyVolume();
   }
 
   Future<void> toggleMute() async {
     _isMuted = !_isMuted;
     notifyListeners();
+    _scheduleSave();
     await _applyVolume();
   }
 
@@ -583,6 +605,16 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
     );
   }
 
+  // Saved as soon as it is picked, so closing the dialog any way keeps it.
+  void _saveLanguages() {
+    unawaited(
+      LanguageController.instance.setLanguages(
+        ui: _selectedUiLang,
+        card: _selectedCardLang,
+      ),
+    );
+  }
+
   // Fits the general tab, the tallest one, with the two-line description of
   // the cartoon previews; longer help topics scroll.
   static const double _tabContentHeight = 470;
@@ -808,6 +840,7 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
                 onTap: () {
                   _playUiConfirmSound();
                   setState(() => _selectedUiLang = language);
+                  _saveLanguages();
                 },
               ),
             ],
@@ -836,6 +869,7 @@ class _AppSettingsDialogState extends State<AppSettingsDialog> {
                 onTap: () {
                   _playUiConfirmSound();
                   setState(() => _selectedCardLang = language);
+                  _saveLanguages();
                 },
               ),
             ],

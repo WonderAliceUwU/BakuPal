@@ -129,30 +129,21 @@ class LanguageController extends ChangeNotifier {
 
   Future<void> init() async {
     if (_initialized) return;
-    try {
-      final file = await _settingsFile();
-      if (await file.exists()) {
-        final content = await file.readAsString();
-        if (content.trim().isNotEmpty) {
-          final data = jsonDecode(content);
-          if (data is Map) {
-            final ui = data['uiLanguage']?.toString();
-            final card = data['cardLanguage']?.toString();
-            if (ui == 'en') _uiLanguage = AppLanguage.en;
-            if (ui == 'es') _uiLanguage = AppLanguage.es;
-            if (card == 'en') _cardLanguage = AppLanguage.en;
-            if (card == 'es') _cardLanguage = AppLanguage.es;
-          }
-        }
-      }
-    } catch (_) {}
+    _readSettings(await _loadAppSettings());
     _initialized = true;
     notifyListeners();
   }
 
-  Future<File> _settingsFile() async {
-    final dir = await getApplicationSupportDirectory();
-    return File('${dir.path}/bakugan_language_settings.json');
+  void applySettings(Map<String, dynamic> settings) {
+    _readSettings(settings);
+    notifyListeners();
+  }
+
+  void _readSettings(Map<String, dynamic> settings) {
+    for (final language in AppLanguage.values) {
+      if (settings['uiLanguage'] == language.code) _uiLanguage = language;
+      if (settings['cardLanguage'] == language.code) _cardLanguage = language;
+    }
   }
 
   Future<void> setUiLanguage(AppLanguage lang) async {
@@ -180,16 +171,11 @@ class LanguageController extends ChangeNotifier {
     await _save();
   }
 
-  Future<void> _save() async {
-    try {
-      final file = await _settingsFile();
-      await file.writeAsString(
-        jsonEncode({
-          'uiLanguage': _uiLanguage.code,
-          'cardLanguage': _cardLanguage.code,
-        }),
-      );
-    } catch (_) {}
+  Future<void> _save() {
+    return _saveAppSettings({
+      'uiLanguage': _uiLanguage.code,
+      'cardLanguage': _cardLanguage.code,
+    });
   }
 }
 

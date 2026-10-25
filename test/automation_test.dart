@@ -46,12 +46,19 @@ void main() {
       await controller.setLevel(AutomationLevel.manual);
       expect(controller.level, AutomationLevel.manual);
 
-      final saved = File('${tempDir.path}/bakugan_automation_settings.json');
+      // In the savegame, with the rest of the app data.
+      final saved = File('${tempDir.path}/bakugan_leaderboard.json');
       expect(await saved.exists(), isTrue);
-      expect(await saved.readAsString(), contains('manual'));
+      expect(
+        await saved.readAsString(),
+        contains('"automationLevel": "manual"'),
+      );
 
       await controller.setLevel(AutomationLevel.assisted);
-      expect(await saved.readAsString(), contains('assisted'));
+      expect(
+        await saved.readAsString(),
+        contains('"automationLevel": "assisted"'),
+      );
     });
   });
 

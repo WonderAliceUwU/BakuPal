@@ -58,34 +58,26 @@ class AutomationController extends ChangeNotifier {
 
   Future<void> init() async {
     if (_initialized) return;
-    try {
-      final file = await _settingsFile();
-      if (await file.exists()) {
-        final data = jsonDecode(await file.readAsString());
-        if (data is Map) {
-          final saved = data['level']?.toString();
-          for (final level in AutomationLevel.values) {
-            if (level.code == saved) _level = level;
-          }
-        }
-      }
-    } catch (_) {}
+    _readSettings(await _loadAppSettings());
     _initialized = true;
     notifyListeners();
   }
 
-  Future<File> _settingsFile() async {
-    final dir = await getApplicationSupportDirectory();
-    return File('${dir.path}/bakugan_automation_settings.json');
+  void applySettings(Map<String, dynamic> settings) {
+    _readSettings(settings);
+    notifyListeners();
+  }
+
+  void _readSettings(Map<String, dynamic> settings) {
+    for (final level in AutomationLevel.values) {
+      if (level.code == settings['automationLevel']) _level = level;
+    }
   }
 
   Future<void> setLevel(AutomationLevel level) async {
     if (_level == level) return;
     _level = level;
     notifyListeners();
-    try {
-      final file = await _settingsFile();
-      await file.writeAsString(jsonEncode({'level': level.code}));
-    } catch (_) {}
+    await _saveAppSettings({'automationLevel': level.code});
   }
 }
