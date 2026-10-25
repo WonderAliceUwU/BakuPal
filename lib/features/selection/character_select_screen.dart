@@ -261,41 +261,47 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
                         const SizedBox(height: 26),
                         SizedBox(
                           height: 224,
-                          child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.only(left: 26, right: 16),
-                            itemCount: characters.length,
-                            itemBuilder: (context, index) {
-                              final character = characters[index];
-                              return Padding(
-                                padding: EdgeInsets.only(
-                                  right: index == characters.length - 1
-                                      ? 0
-                                      : 18,
-                                ),
-                                child: SizedBox(
-                                  width: 188,
-                                  child: Center(
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        _playClick();
-                                        setDialogState(() {
-                                          selectedCharacter = character;
-                                        });
-                                      },
-                                      child: SizedBox(
-                                        width: 176,
-                                        child: CharacterMiniature(
-                                          char: character,
-                                          isSelected:
-                                              selectedCharacter == character,
+                          child: _HorizontalMouseScroll(
+                            builder: (controller) => ListView.builder(
+                              controller: controller,
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.only(
+                                left: 26,
+                                right: 16,
+                              ),
+                              itemCount: characters.length,
+                              itemBuilder: (context, index) {
+                                final character = characters[index];
+                                return Padding(
+                                  padding: EdgeInsets.only(
+                                    right: index == characters.length - 1
+                                        ? 0
+                                        : 18,
+                                  ),
+                                  child: SizedBox(
+                                    width: 188,
+                                    child: Center(
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          _playClick();
+                                          setDialogState(() {
+                                            selectedCharacter = character;
+                                          });
+                                        },
+                                        child: SizedBox(
+                                          width: 176,
+                                          child: CharacterMiniature(
+                                            char: character,
+                                            isSelected:
+                                                selectedCharacter == character,
+                                          ),
                                         ),
                                       ),
                                     ),
                                   ),
-                                ),
-                              );
-                            },
+                                );
+                              },
+                            ),
                           ),
                         ),
                         const SizedBox(height: 24),
@@ -563,55 +569,60 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
                     children: [
                       const SizedBox(height: 12),
                       Expanded(
-                        child: ListView.separated(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          itemCount: _savedPlayers.length + 2,
-                          separatorBuilder: (_, _) => const SizedBox(width: 16),
-                          itemBuilder: (context, index) {
-                            if (index == 0) {
-                              return _ProfileActionCard(
-                                icon: Icons.person_add_alt_1_rounded,
-                                title: l10n.invite,
-                                subtitle: l10n.temporaryPlayer,
-                                accent: Colors.orangeAccent,
-                                onTap: () => _openPlayerProfilePrompt(
-                                  saveProfile: false,
-                                ),
-                              );
-                            }
-                            if (index == 1) {
-                              return _ProfileActionCard(
-                                icon: Icons.add_circle_rounded,
-                                title: l10n.register,
-                                subtitle: l10n.savePlayer,
-                                accent: Colors.cyanAccent,
-                                onTap: () =>
-                                    _openPlayerProfilePrompt(saveProfile: true),
-                              );
-                            }
+                        child: _HorizontalMouseScroll(
+                          builder: (controller) => ListView.separated(
+                            controller: controller,
+                            scrollDirection: Axis.horizontal,
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            itemCount: _savedPlayers.length + 2,
+                            separatorBuilder: (_, _) =>
+                                const SizedBox(width: 16),
+                            itemBuilder: (context, index) {
+                              if (index == 0) {
+                                return _ProfileActionCard(
+                                  icon: Icons.person_add_alt_1_rounded,
+                                  title: l10n.invite,
+                                  subtitle: l10n.temporaryPlayer,
+                                  accent: Colors.orangeAccent,
+                                  onTap: () => _openPlayerProfilePrompt(
+                                    saveProfile: false,
+                                  ),
+                                );
+                              }
+                              if (index == 1) {
+                                return _ProfileActionCard(
+                                  icon: Icons.add_circle_rounded,
+                                  title: l10n.register,
+                                  subtitle: l10n.savePlayer,
+                                  accent: Colors.cyanAccent,
+                                  onTap: () => _openPlayerProfilePrompt(
+                                    saveProfile: true,
+                                  ),
+                                );
+                              }
 
-                            final profile = _savedPlayers[index - 2];
-                            final currentKey = _playerNameKey(
-                              _currentSelectedPlayer?.name ?? '',
-                            );
-                            return SizedBox(
-                              width: 176,
-                              child: GestureDetector(
-                                onTap: () {
-                                  _playClick();
-                                  _assignPlayerToCurrentSlot(profile);
-                                },
-                                child: CharacterMiniature(
-                                  char: profile.character,
-                                  isSelected:
-                                      currentKey ==
-                                      _playerNameKey(profile.name),
-                                  label: profile.name,
+                              final profile = _savedPlayers[index - 2];
+                              final currentKey = _playerNameKey(
+                                _currentSelectedPlayer?.name ?? '',
+                              );
+                              return SizedBox(
+                                width: 176,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _playClick();
+                                    _assignPlayerToCurrentSlot(profile);
+                                  },
+                                  child: CharacterMiniature(
+                                    char: profile.character,
+                                    isSelected:
+                                        currentKey ==
+                                        _playerNameKey(profile.name),
+                                    label: profile.name,
+                                  ),
                                 ),
-                              ),
-                            );
-                          },
+                              );
+                            },
+                          ),
                         ),
                       ),
                     ],
@@ -629,6 +640,63 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A horizontal list for the desktop: it can be dragged with the mouse or the
+/// trackpad, the vertical mouse wheel scrolls it sideways, and it shows a
+/// scrollbar. Flutter's default only lets touch drag it.
+class _HorizontalMouseScroll extends StatefulWidget {
+  final Widget Function(ScrollController controller) builder;
+
+  const _HorizontalMouseScroll({required this.builder});
+
+  @override
+  State<_HorizontalMouseScroll> createState() => _HorizontalMouseScrollState();
+}
+
+class _HorizontalMouseScrollState extends State<_HorizontalMouseScroll> {
+  final ScrollController _controller = ScrollController();
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _onPointerSignal(PointerSignalEvent event) {
+    if (event is! PointerScrollEvent || !_controller.hasClients) return;
+    final delta = event.scrollDelta.dy;
+    if (delta == 0) return;
+    final position = _controller.position;
+    _controller.jumpTo(
+      (position.pixels + delta).clamp(
+        position.minScrollExtent,
+        position.maxScrollExtent,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ScrollConfiguration(
+      behavior: ScrollConfiguration.of(context).copyWith(
+        dragDevices: {
+          PointerDeviceKind.touch,
+          PointerDeviceKind.mouse,
+          PointerDeviceKind.trackpad,
+          PointerDeviceKind.stylus,
+        },
+      ),
+      child: Listener(
+        onPointerSignal: _onPointerSignal,
+        child: Scrollbar(
+          controller: _controller,
+          thumbVisibility: true,
+          child: widget.builder(_controller),
         ),
       ),
     );
