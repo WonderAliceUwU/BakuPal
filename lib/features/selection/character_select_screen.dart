@@ -168,216 +168,175 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
     String selectedCharacter = characters.first;
     final controller = TextEditingController();
 
-    final draft = await showDialog<SavedPlayerProfile>(
+    final draft = await showGeneralDialog<SavedPlayerProfile>(
       context: context,
       barrierDismissible: true,
-      builder: (context) {
+      barrierLabel: 'Player profile',
+      barrierColor: Colors.black.withValues(alpha: 0.55),
+      transitionDuration: const Duration(milliseconds: 220),
+      pageBuilder: (dialogContext, animation, secondaryAnimation) {
         return StatefulBuilder(
           builder: (context, setDialogState) {
-            return Dialog(
-              backgroundColor: Colors.transparent,
+            final modal = BakuganModal(
+              title: saveProfile
+                  ? AppLocalizations.current.registerPlayerTitle
+                  : AppLocalizations.current.invitePlayerTitle,
+              icon: saveProfile
+                  ? Icons.add_circle_rounded
+                  : Icons.person_add_alt_1_rounded,
+              accentColor: saveProfile
+                  ? Colors.cyanAccent
+                  : Colors.orangeAccent,
+              width: 1040,
+              // The frame is slanted: the side padding keeps the corners of
+              // the content inside it.
+              contentPadding: const EdgeInsets.fromLTRB(80, 0, 80, 28),
+              edgePadding: const EdgeInsets.fromLTRB(60, 0, 58, 0),
               insetPadding: const EdgeInsets.symmetric(
-                horizontal: 60,
-                vertical: 40,
+                horizontal: 24,
+                vertical: 24,
               ),
-              child: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.skewX(-0.08),
-                child: Container(
-                  width: 980,
-                  padding: const EdgeInsets.fromLTRB(30, 28, 30, 30),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF07131E),
-                    borderRadius: BorderRadius.circular(24),
-                    border: Border.all(color: Colors.cyanAccent, width: 2),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.cyanAccent.withValues(alpha: 0.18),
-                        blurRadius: 26,
-                        spreadRadius: 3,
-                      ),
-                    ],
-                  ),
-                  child: Transform(
-                    alignment: Alignment.center,
-                    transform: Matrix4.skewX(0.08),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          saveProfile
-                              ? AppLocalizations.current.registerPlayerTitle
-                              : AppLocalizations.current.invitePlayerTitle,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 28,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: 1.2,
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          saveProfile
-                              ? AppLocalizations.current.registerPlayerSub
-                              : AppLocalizations.current.invitePlayerSub,
-                          style: TextStyle(
-                            color: Colors.white.withValues(alpha: 0.72),
-                            fontSize: 15,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        const SizedBox(height: 18),
-                        TextField(
-                          controller: controller,
-                          textCapitalization: TextCapitalization.words,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 22,
-                            fontWeight: FontWeight.w800,
-                          ),
-                          decoration: InputDecoration(
-                            hintText: AppLocalizations.current.playerNameHint,
-                            hintStyle: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.35),
-                            ),
-                            filled: true,
-                            fillColor: Colors.black.withValues(alpha: 0.28),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Colors.white24,
-                              ),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                              borderSide: const BorderSide(
-                                color: Colors.cyanAccent,
-                                width: 2,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 26),
-                        SizedBox(
-                          height: 224,
-                          child: _HorizontalMouseScroll(
-                            builder: (controller) => ListView.builder(
-                              controller: controller,
-                              scrollDirection: Axis.horizontal,
-                              padding: const EdgeInsets.only(
-                                left: 26,
-                                right: 16,
-                              ),
-                              itemCount: characters.length,
-                              itemBuilder: (context, index) {
-                                final character = characters[index];
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                    right: index == characters.length - 1
-                                        ? 0
-                                        : 18,
-                                  ),
-                                  child: SizedBox(
-                                    width: 188,
-                                    child: Center(
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          _playClick();
-                                          setDialogState(() {
-                                            selectedCharacter = character;
-                                          });
-                                        },
-                                        child: SizedBox(
-                                          width: 176,
-                                          child: CharacterMiniature(
-                                            char: character,
-                                            isSelected:
-                                                selectedCharacter == character,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            TextButton(
-                              style: TextButton.styleFrom(
-                                foregroundColor: Colors.orangeAccent,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 18,
-                                  vertical: 14,
-                                ),
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                              onPressed: () {
-                                _playCancel();
-                                Navigator.of(context).pop();
-                              },
-                              child: Text(AppLocalizations.current.cancel),
-                            ),
-                            const SizedBox(width: 12),
-                            FilledButton(
-                              style: FilledButton.styleFrom(
-                                backgroundColor: saveProfile
-                                    ? Colors.cyanAccent
-                                    : Colors.orangeAccent,
-                                foregroundColor: Colors.black,
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 22,
-                                  vertical: 16,
-                                ),
-                                textStyle: const TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w900,
-                                  letterSpacing: 0.8,
-                                ),
-                              ),
-                              onPressed: () {
-                                _playClick();
-                                final sanitized = _sanitizePlayerName(
-                                  controller.text,
-                                );
-                                if (sanitized.isEmpty) {
-                                  _showCharacterSelectMessage(
-                                    AppLocalizations.current.enterNameMsg(),
-                                  );
-                                  return;
-                                }
-                                Navigator.of(context).pop(
-                                  SavedPlayerProfile(
-                                    name: sanitized,
-                                    character: selectedCharacter,
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                saveProfile
-                                    ? AppLocalizations.current.save
-                                    : AppLocalizations.current.invite,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    saveProfile
+                        ? AppLocalizations.current.registerPlayerSub
+                        : AppLocalizations.current.invitePlayerSub,
+                    style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.72),
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
+                  const SizedBox(height: 18),
+                  TextField(
+                    controller: controller,
+                    textCapitalization: TextCapitalization.words,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w800,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: AppLocalizations.current.playerNameHint,
+                      hintStyle: TextStyle(
+                        color: Colors.white.withValues(alpha: 0.35),
+                      ),
+                      filled: true,
+                      fillColor: Colors.black.withValues(alpha: 0.28),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(color: Colors.white24),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                        borderSide: const BorderSide(
+                          color: Colors.cyanAccent,
+                          width: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 26),
+                  SizedBox(
+                    height: 242,
+                    child: _HorizontalMouseScroll(
+                      builder: (controller) => ListView.builder(
+                        controller: controller,
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(left: 26, right: 16),
+                        itemCount: characters.length,
+                        itemBuilder: (context, index) {
+                          final character = characters[index];
+                          return Padding(
+                            padding: EdgeInsets.only(
+                              right: index == characters.length - 1 ? 0 : 18,
+                            ),
+                            child: SizedBox(
+                              width: 188,
+                              child: Center(
+                                child: GestureDetector(
+                                  onTap: () {
+                                    _playClick();
+                                    setDialogState(() {
+                                      selectedCharacter = character;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: 176,
+                                    child: CharacterMiniature(
+                                      char: character,
+                                      isSelected:
+                                          selectedCharacter == character,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              actions: [
+                BakuganModalActionButton(
+                  text: AppLocalizations.current.cancel,
+                  color: Colors.white70,
+                  useCancelSound: true,
+                  showGrid: false,
+                  useGradientBorder: false,
+                  onPressed: () => Navigator.of(dialogContext).pop(),
                 ),
+                BakuganModalActionButton(
+                  text: saveProfile
+                      ? AppLocalizations.current.save
+                      : AppLocalizations.current.invite,
+                  color: saveProfile ? Colors.cyanAccent : Colors.orangeAccent,
+                  showGrid: false,
+                  useGradientBorder: false,
+                  onPressed: () {
+                    final sanitized = _sanitizePlayerName(controller.text);
+                    if (sanitized.isEmpty) {
+                      _showCharacterSelectMessage(
+                        AppLocalizations.current.enterNameMsg(),
+                      );
+                      return;
+                    }
+                    Navigator.of(dialogContext).pop(
+                      SavedPlayerProfile(
+                        name: sanitized,
+                        character: selectedCharacter,
+                      ),
+                    );
+                  },
+                ),
+              ],
+            );
+            return Material(
+              type: MaterialType.transparency,
+              child: Stack(
+                children: [
+                  Positioned.fill(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 8, sigmaY: 8),
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.35),
+                      ),
+                    ),
+                  ),
+                  Center(child: modal),
+                ],
               ),
             );
           },
         );
+      },
+      transitionBuilder: (context, animation, secondaryAnimation, child) {
+        return FadeTransition(opacity: animation, child: child);
       },
     );
     controller.dispose();
@@ -557,7 +516,7 @@ class _CharacterSelectScreenState extends State<CharacterSelectScreen> {
                   ),
                 ),
                 Container(
-                  height: 230,
+                  height: 248,
                   width: double.infinity,
                   color: Colors.black45,
                   padding: const EdgeInsets.symmetric(
@@ -659,6 +618,7 @@ class _HorizontalMouseScroll extends StatefulWidget {
 }
 
 class _HorizontalMouseScrollState extends State<_HorizontalMouseScroll> {
+  static const double _scrollbarStrip = 18;
   final ScrollController _controller = ScrollController();
 
   @override
@@ -693,10 +653,14 @@ class _HorizontalMouseScrollState extends State<_HorizontalMouseScroll> {
       ),
       child: Listener(
         onPointerSignal: _onPointerSignal,
+        // The scrollbar goes in a strip under the list, not over the cards.
         child: Scrollbar(
           controller: _controller,
           thumbVisibility: true,
-          child: widget.builder(_controller),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: _scrollbarStrip),
+            child: widget.builder(_controller),
+          ),
         ),
       ),
     );
